@@ -19,17 +19,17 @@ import mpc4s.protocol.commands.{Idle, NoIdle}
   * mpd. When another command is issued, the idling is cancelled, the
   * command is send and afterwards the connection goes back to idle.
   *
-  * To explicitely close the connection, simply [[write]] a [[Close]]
-  * or [[NoIdle]] command.
+  * To explicitely close the connection, simply `write` a `Close`
+  * or `NoIdle` command.
   */
 trait MpdIdle[F[_]] {
 
   /** Continually reads responses from mpd. This may be an
-    * [[IdleAnswer]] or any answer to a command issued using
-    * [[write]].
+    * `IdleAnswer` or any answer to a command issued using
+    * `write`.
     *
-    * The answer is decoded using a registered [[LineCodec]] for each
-    * command. If for some reason there is none, a [[GenericAnswer]]
+    * The answer is decoded using a registered `LineCodec` for each
+    * command. If for some reason there is none, a `GenericAnswer`
     * is used that contains the string as is.
     */
   def read: Stream[F, Response[Answer]]

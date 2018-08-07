@@ -19,10 +19,16 @@ lazy val sharedSettings = Seq(
     "-Ywarn-unused-import"
   ),
   scalacOptions in (Compile, console) := Seq(),
-//  scalacOptions in (Test) := (scalacOptions in (Compile, console)).value,
   testFrameworks += new TestFramework("minitest.runner.Framework"),
-  publishArtifact in packageDoc := false,
-  organization := "com.github.eikek"
+  organization := "com.github.eikek",
+  licenses := Seq("GPLv3" -> url("https://spdx.org/licenses/GPL-3.0-or-later.html")),
+  homepage := Some(url("https://github.com/eikek/mpc4s")),
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/eikek/mpc4s.git"),
+      "scm:git:git@github.com:eikek/mpc4s.git"
+    )
+  )
 )
 
 lazy val runSettings = Seq(
@@ -38,12 +44,6 @@ lazy val runSettings = Seq(
 
 lazy val publishSettings = Seq(
   publishMavenStyle := true,
-  scmInfo := Some(
-    ScmInfo(
-      url("https://github.com/eikek/mpc4s.git"),
-      "scm:git:git@github.com:eikek/mpc4s.git"
-    )
-  ),
   developers := List(
     Developer(
       id = "eikek",

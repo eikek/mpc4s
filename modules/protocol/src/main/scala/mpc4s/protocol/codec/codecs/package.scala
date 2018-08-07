@@ -109,7 +109,7 @@ package object codecs {
         else Result.failure(ErrorMessage("Non-empty vector not allowed"))
       })
 
-  /** If [[existing]] fails, try the [[empty]] codec mapping it to the
+  /** If `existing` fails, try the `empty` codec mapping it to the
     * given empty element.
     */
   def allowEmpty[A](existing: LineCodec[A])(emptyA: A, isEmpty: A => Boolean): LineCodec[A] = {

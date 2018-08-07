@@ -41,7 +41,7 @@ object ElmPlugin extends AutoPlugin {
     elmSources in Test := (sourceDirectory in Test).value/"elm",
     elmDebug := false,
     elmMinify := false,
-    elmGithubRepo := (homepage.value match {
+    elmGithubRepo := (scmInfo.value.map(_.browseUrl) match {
       case Some(url) if url.toString.startsWith("https://github.com") => url.toString
       case _ => "https://github.com/user/repo.git"
     }),
