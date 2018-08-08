@@ -30,9 +30,12 @@ view covers lang model =
                  [div [class "seven wide column"]
                       [currentCover covers model
                       ]
-                 ,div [class "nine wide column"]
+                 ,div [class "nine wide column np-album-detail"]
                       [currentControls msg model
                       ]
+                 ,div [class "sixteen wide center aligned column np-controls"]
+                     [(playtimeSegment model)
+                     ]
                  ]
             ]
        ,div [class "ui container"]
@@ -64,7 +67,7 @@ currentControls msg model =
     case model.current of
         Just song ->
             div []
-                [div [class "ui basic segment no-margin-bottom"]
+                [div [class "ui basic segment"]
                      [h1 [class "ui header"]
                          [tagValue Title song msg.noTitle |> text
                          ,div [class "sub header"]
@@ -73,7 +76,7 @@ currentControls msg model =
                          ]
                      ]
                 ,(composerSegment msg song)
-                ,div [class "ui basic red attached segment noborder no-padding-bottom pointer"]
+                ,div [class "ui basic red attached segment noborder pointer"]
                      [h4 [class "ui header", onClick (GotoArtist (tagValue Artist song ""))]
                          [tagValue Artist song msg.noArtist |> text
                          ,div [class "sub header"]
@@ -81,7 +84,7 @@ currentControls msg model =
                               ]
                          ]
                      ]
-                ,div [class "ui basic attached segment noborder no-padding-bottom pointer"]
+                ,div [class "ui basic attached segment noborder pointer"]
                      [h4 [class "ui header", onClick (GotoAlbum (tagValue Album song ""))]
                          [tagValue Album song msg.noAlbum |> text
                          ,div [class "sub header"]
@@ -90,9 +93,6 @@ currentControls msg model =
                          ]
                      ]
                 ,(discTrackSegment msg song)
-                ,div []
-                     [(playtimeSegment model)
-                     ]
                 ]
         Nothing ->
             div [][]
@@ -106,72 +106,72 @@ playlist covers msg model =
             List.length model.playlist
     in
     div []
-        [table [class "ui table"]
-             [thead []
-                    [tr []
-                        [th [colspan 5]
-                            [div [class "ui secondary menu"]
-                                 [div [class "item"]
-                                      [plsize |> toString |> text
-                                      ,text (" " ++ msg.items)
-                                      ,text (", " ++ msg.total ++ ": ")
-                                      ,playlistLength model |> text
-                                      ]
-                                 ,div [classList [("item", True)
-                                                 ,("nodisplay", model.status.repeat || model.status.random)
-                                                 ]]
-                                      [text (msg.played ++ ": ")
-                                      ,playlistPlayedTime model |> text
-                                      ,text (", " ++ msg.remaining ++ ": ")
-                                      ,playlistRemainTime model |> text
-                                      ]
-                                 ,div [classList [("item", True)
-                                                 ,("nodisplay", model.status.repeat || model.currentTime <= 0)
-                                                 ]]
-                                      [text "Ends: "
-                                      ,playlistEndsAt model |> text
-                                      ]
-                                 ,div [class "right menu"]
-                                      [a [class "item", onClick (Run (DeleteRange (Range 0 activePos)))]
-                                           [div [class "icons"]
-                                                [i [class "alternate trash icon"][]
-                                                ,i [class "corner long alternate arrow up icon"][]
-                                                ]
-                                           ]
-                                      ,a [class "item", onClick (Run (DeleteRange (Range (activePos + 1) plsize)))]
-                                          [div [class "icons"]
-                                               [i [class "alternate trash icon"][]
-                                               ,i [class "corner long alternate arrow down icon"][]
-                                               ]
-                                          ]
-                                      ,a [class "item", onClick (Run Clear)]
-                                           [i [class "ui trash icon"][]
-                                           ]
-                                      ,a [class "item", onClick (Run Shuffle)]
-                                         [i [class "ui random icon"][]
-                                         ]
-                                      ,a [class "disabled item"]
-                                          [i [class "ui save icon"][]
-                                          ]
-                                      ,a [class "item", onClick ToggleAddUri]
-                                          [i [class "ui plus icon"][]
-                                          ]
+        [div [class "ui divider"][]
+        ,table [class "ui table"]
+            [thead []
+                 [tr []
+                     [th [colspan 5]
+                         [div [class "ui secondary menu"]
+                              [a [class "item", onClick (Run (DeleteRange (Range 0 activePos)))]
+                                 [div [class "icons"]
+                                      [i [class "alternate trash icon"][]
+                                      ,i [class "corner long alternate arrow up icon"][]
                                       ]
                                  ]
-                            ]
-                        ]
-                    ,tr [classList [("nodisplay", not model.addUriVisible)]
-                        ]
-                        [th [colspan 5]
-                            [div [class "right aligned"]
-                                 [div [class "ui fluid action input"]
-                                      [input [type_ "text"
-                                             ,placeholder "File/Uri..."
-                                             ,onInput AddUriChange
-                                             ][]
-                                      ,button [class "ui button", onClick AddUri][text "Add"]
+                              ,a [class "item", onClick (Run (DeleteRange (Range (activePos + 1) plsize)))]
+                                 [div [class "icons"]
+                                      [i [class "alternate trash icon"][]
+                                      ,i [class "corner long alternate arrow down icon"][]
                                       ]
                                  ]
+                              ,a [class "item", onClick (Run Clear)]
+                                 [i [class "ui trash icon"][]
+                                 ]
+                              ,a [class "item", onClick (Run Shuffle)]
+                                 [i [class "ui random icon"][]
+                                 ]
+                              ,a [class "disabled item"]
+                                 [i [class "ui save icon"][]
+                                 ]
+                              ,a [class "item", onClick ToggleAddUri]
+                                 [i [class "ui plus icon"][]
+                                 ]
+                              ]
+                         ]
+                     ]
+                 ,tr [classList [("nodisplay", not model.addUriVisible)]]
+                     [th [colspan 5]
+                         [div [class "right aligned"]
+                              [div [class "ui fluid action input"]
+                                   [input [type_ "text"
+                                          ,placeholder "File/Uri..."
+                                          ,onInput AddUriChange
+                                          ][]
+                                   ,button [class "ui button", onClick AddUri][text "Add"]
+                                   ]
+                              ]
+                         ]
+                     ]
+                    ,tr []
+                        [th [colspan 5, class "right aligned"]
+                            [span []
+                                 [plsize |> toString |> text
+                                 ,text (" " ++ msg.items)
+                                 ,text (" • " ++ msg.total ++ ": ")
+                                 ,playlistLength model |> text
+                                 ]
+                            ,span [classList [("nodisplay", model.status.repeat || model.status.random)]]
+                                [text " • "
+                                ,text (msg.played ++ ": ")
+                                ,playlistPlayedTime model |> text
+                                ,text (" • " ++ msg.remaining ++ ": ")
+                                ,playlistRemainTime model |> text
+                                ]
+                            ,span [classList [("nodisplay", model.status.repeat || model.currentTime <= 0)]]
+                                [text " • "
+                                ,text (msg.ends ++ ": ")
+                                ,playlistEndsAt model |> text
+                                ]
                             ]
                         ]
                     ,tr []
@@ -228,7 +228,7 @@ playtimeSegment: Model -> Html Msg
 playtimeSegment model =
     case model.status.time of
         Just range ->
-            div [class "ui basic center aligned segment no-horizontal-padding"]
+            div [class ""]
                 [span [class "current-time"]
                       [range.start |> Util.Time.formatSeconds |> text
                       ]
@@ -259,9 +259,7 @@ playtimeSegment model =
                      ,button [class "ui button", onClick (Run Next)]
                          [i [class "ui step forward icon"][]
                          ]
-                     ]
-                ,div [class "ui fluid buttons"]
-                     [button [classList [("ui toggle button", True)
+                     ,button [classList [("ui toggle button", True)
                                         ,("active", model.status.random)
                                         ]
                              ,onClick ToggleRandom

@@ -3,6 +3,13 @@
     width: 0px;
 }
 
+.default-layout .np-album-detail .segment {
+    padding: 0.5rem 0.5rem !important;
+}
+.default-layout .np-controls {
+    padding-top: 0 !important;
+}
+
 .default-layout .black-bg {
     background: #000 !important;
 }
@@ -40,6 +47,10 @@
 
 .default-layout .nodisplay {
     display: none !important;
+}
+
+.default-layout .no-padding {
+    padding: 0;
 }
 
 .default-layout .no-horizontal-padding {

@@ -14,6 +14,7 @@ type alias Messages =
     , remaining: String
     , forTag: Tag -> String
     , disc: String
+    , ends: String
     }
 
 messagesDE: Messages
@@ -31,6 +32,7 @@ messagesDE =
     , remaining = "Übrig"
     , forTag = lm.forTag
     , disc = lm.disc
+    , ends = "Endet"
     }
 
 messagesEN: Messages
@@ -48,6 +50,7 @@ messagesEN =
     , remaining = "Remaining"
     , forTag = lm.forTag
     , disc = lm.disc
+    , ends = "Ends"
     }
 
 getMessages: String -> Messages

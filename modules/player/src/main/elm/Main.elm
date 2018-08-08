@@ -14,16 +14,12 @@ import Pages.Index.Data
 import App.Data exposing (..)
 import App.Update
 import App.View
-
-type alias Flags =
-    { baseUrl: String
-    , mpdConns: List MpdConn
-    }
+import Data.Flags exposing (..)
 
 init: Flags -> Navigation.Location -> (Model, Cmd Msg)
 init flags loc =
     let
-        emptyModel = makeModel flags.baseUrl flags.mpdConns loc
+        emptyModel = makeModel flags loc
         (m1, c1) = App.Update.update (UrlChange loc) emptyModel
         infoCmd = Requests.info m1.baseUrl Pages.Index.Data.ReceiveInfo
         model = {m1|baseUrl = flags.baseUrl}

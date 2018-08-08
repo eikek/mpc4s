@@ -10,6 +10,7 @@ import Data.MpdCommand exposing (MpdCommand)
 import Data.Status exposing (Status)
 import Data.Settings exposing (Settings)
 import Data.MpdConn exposing (MpdConn)
+import Data.Flags exposing (Flags)
 import Pages.Index.Data
 import Pages.Library.Data
 import Pages.NowPlaying.Data
@@ -32,17 +33,17 @@ type alias Scroll =
     , top: Float
     }
 
-makeModel: String -> List MpdConn -> Navigation.Location -> Model
-makeModel baseurl conns location =
+makeModel: Flags -> Navigation.Location -> Model
+makeModel flags location =
     { location = location
     , page = IndexPage
-    , baseUrl = ""
+    , baseUrl = flags.baseUrl
     , deferredCmds = []
     , status = Data.Status.empty
     , indexModel = Pages.Index.Data.emptyModel
     , nowPlayingModel = Pages.NowPlaying.Data.emptyModel
     , libraryModel = Pages.Library.Data.emptyModel
-    , settingsModel = Pages.Settings.Data.makeModel baseurl conns
+    , settingsModel = Pages.Settings.Data.makeModel flags.baseUrl flags.mpdConns
     }
 
 getLanguage: Model -> String
