@@ -21,7 +21,7 @@ encode s =
     case s of
         Database -> "database"
         Update -> "update"
-        StoredPlaylist -> "storedplaylist"
+        StoredPlaylist -> "stored_playlist"
         Playlist -> "playlist"
         Mixer -> "mixer"
         Output -> "output"
@@ -37,7 +37,7 @@ decode str =
     case (String.toLower str) of
         "database" -> Just Database
         "update" -> Just Update
-        "storedplaylist" -> Just StoredPlaylist
+        "stored_playlist" -> Just StoredPlaylist
         "playlist" -> Just Playlist
         "mixer" -> Just Mixer
         "output" -> Just Output

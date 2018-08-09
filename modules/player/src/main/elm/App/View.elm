@@ -10,6 +10,7 @@ import Pages.Index.View
 import Pages.Library.View
 import Pages.NowPlaying.View
 import Pages.Settings.View
+import Pages.Playlists.View
 import App.Layout.Default exposing (render)
 
 view: Model -> Html Msg
@@ -36,4 +37,8 @@ view model =
 
         SettingsPage ->
             Html.map SettingsMsg (Pages.Settings.View.view model.settingsModel)
+                |> App.Layout.Default.render model
+
+        PlaylistsPage mname ->
+            Html.map PlaylistsMsg (Pages.Playlists.View.view covers lang model.playlistsModel)
                 |> App.Layout.Default.render model

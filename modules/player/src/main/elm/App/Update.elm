@@ -20,6 +20,8 @@ import Pages.Index.Update
 import Pages.Index.Data
 import Pages.Settings.Update
 import Pages.Settings.Data
+import Pages.Playlists.Update
+import Pages.Playlists.Data
 
 initPage: Route -> Model -> (Model, Cmd Msg)
 initPage page model =
@@ -59,6 +61,13 @@ initPage page model =
                     settingsInit = Pages.Settings.Update.initCommands model.settingsModel
                 in
                    model ! ((settingsInit |> send) :: globalInit)
+
+            PlaylistsPage mn ->
+                let
+                    (m_, mpd) = Pages.Playlists.Update.initCommands mn model.playlistsModel
+                in
+                    {model|playlistsModel = m_} ! ((mpd |> send) :: globalInit)
+
             _ ->
                 model ! globalInit
 
@@ -111,6 +120,9 @@ update msg model =
         SettingsMsg m ->
             settingsMsg m model
 
+        PlaylistsMsg m ->
+            playlistsMsg m model
+
         ProcessItemWS str ->
             case (Data.MpdResponse.decodeString str) of
                 Ok (Data.MpdResponse.Result ans) ->
@@ -125,7 +137,7 @@ update msg model =
 
                 Err err ->
                     let
-                        x = Debug.log "Decoding error: " err
+                        x = Debug.log "Decoding error: " (str ++ err)
                     in
                         model ! []
 
@@ -155,8 +167,9 @@ handleAnswerPages ans model =
         (m1, c1) = libraryPageMsg (Pages.Library.Data.HandleAnswer ans) model
         (m2, c2) = nowPlayingMsg (Pages.NowPlaying.Data.HandleAnswer ans) m1
         (m3, c3) = settingsMsg (Pages.Settings.Data.HandleAnswer ans) m2
+        (m4, c4) = playlistsMsg (Pages.Playlists.Data.HandleAnswer ans) m3
     in
-        m3 ! [c1, c2, c3]
+        m4 ! [c1, c2, c3, c4]
 
 handleAnswerGlobal: Answer -> Model -> (Model, Cmd Msg)
 handleAnswerGlobal ans model =
@@ -215,6 +228,16 @@ settingsMsg smsg model =
         (m2, c2) = sendMpd model_ mpd
     in
         m2 ! [Cmd.map SettingsMsg c, c2]
+
+playlistsMsg: Pages.Playlists.Data.Msg -> Model -> (Model, Cmd Msg)
+playlistsMsg pmsg model =
+    let
+        (m, c, mpd) = Pages.Playlists.Update.update pmsg model.playlistsModel
+        model_ = {model|playlistsModel = m}
+        (m2, c2) = sendMpd model_ mpd
+    in
+        m2 ! [Cmd.map PlaylistsMsg c, c2]
+
 
 sendMpd: Model -> List MpdCommand -> (Model, Cmd msg)
 sendMpd model cmds =

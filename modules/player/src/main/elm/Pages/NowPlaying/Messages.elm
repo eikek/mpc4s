@@ -15,6 +15,9 @@ type alias Messages =
     , forTag: Tag -> String
     , disc: String
     , ends: String
+    , add: String
+    , save: String
+    , time: String
     }
 
 messagesDE: Messages
@@ -33,6 +36,9 @@ messagesDE =
     , forTag = lm.forTag
     , disc = lm.disc
     , ends = "Endet"
+    , add = "Hinzufügen"
+    , save = "Speichern"
+    , time = "Zeit"
     }
 
 messagesEN: Messages
@@ -51,6 +57,9 @@ messagesEN =
     , forTag = lm.forTag
     , disc = lm.disc
     , ends = "Ends"
+    , add = "Add"
+    , save = "Save"
+    , time = "Time"
     }
 
 getMessages: String -> Messages

@@ -14,6 +14,7 @@ type Route
     | LibraryPage (Maybe String) Filter
     | NowPlayingPage
     | SettingsPage
+    | PlaylistsPage (Maybe String)
 
 
 findPage: Location -> Route
@@ -41,6 +42,9 @@ setPage page =
         SettingsPage ->
             newUrl "settings"
 
+        PlaylistsPage mname ->
+            newUrl ("playlists" ++ (Maybe.map Util.String.crazyEncode mname |> Maybe.map (\n -> "?name=" ++ n) |> Maybe.withDefault ""))
+
 
 routeParser: Parser (Route -> a) a
 routeParser =
@@ -48,7 +52,8 @@ routeParser =
         [ map IndexPage (oneOf [(s ""), (s "/")]),
           map NowPlayingPage (s "playing"),
           map LibraryPage (s "library" <?> albumParam "album" <?> filterParam "filter"),
-          map SettingsPage (s "settings")
+          map SettingsPage (s "settings"),
+          map PlaylistsPage (s "playlists" <?> albumParam "name")
         ]
 
 decodedString: Parser (String -> a) a

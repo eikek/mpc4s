@@ -38,6 +38,16 @@ type MpdCommand
     | Swap Int Int
     | Rescan
     | Update
+    | ListPlaylists
+    | ListPlaylistInfo String
+    | PlaylistDeleteSong String Int
+    | PlaylistDelete String
+    | SaveCurrentPlaylist String
+    | PlaylistLoad String
+    | PlaylistMove String Int Int
+    | PlaylistAdd String String
+    | PlaylistRename String String
+    | PlaylistClear String
 
 jsonEncode: MpdCommand -> Encode.Value
 jsonEncode cmd =
@@ -135,6 +145,37 @@ encode cmd =
 
         Swap p1 p2 ->
             "swap" %> (toString p1) %> (toString p2)
+
+        ListPlaylists ->
+            "listplaylists"
+
+        ListPlaylistInfo name ->
+            "listplaylistinfo" %> (Util.String.quote name)
+
+        PlaylistDeleteSong pl pos ->
+            "playlistdelete" %> (Util.String.quote pl) %> (toString pos)
+
+        PlaylistDelete name ->
+            "rm" %> (Util.String.quote name)
+
+        SaveCurrentPlaylist name ->
+            "save" %> (Util.String.quote name)
+
+        PlaylistLoad name ->
+            "load" %> (Util.String.quote name)
+
+        PlaylistMove name from to ->
+            "playlistmove" %> (Util.String.quote name) %> (toString from) %> (toString to)
+
+        PlaylistAdd name uri ->
+            "playlistadd" %> (Util.String.quote name) %> (Util.String.quote uri)
+
+        PlaylistRename from to ->
+            "rename" %> (Util.String.quote from) %> (Util.String.quote to)
+
+        PlaylistClear name ->
+            "playlistclear" %> (Util.String.quote name)
+
 
 encodeBool: Bool -> String
 encodeBool flag =

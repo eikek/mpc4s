@@ -125,6 +125,21 @@ update msg model =
             in
                 (model_, Cmd.none, cmd, Cmd.none)
 
+        ToggleSavePlaylist ->
+            ({model|savePlaylistVisible = model.savePlaylistVisible |> not}, Cmd.none, [], Cmd.none)
+
+        SavePlaylistChange str ->
+            ({model|saveAs = str}, Cmd.none, [], Cmd.none)
+
+        SavePlaylist ->
+            let
+                cmd = if model.saveAs == "" then []
+                      else [SaveCurrentPlaylist model.saveAs]
+                model_ = if cmd == [] then model
+                         else {model|saveAs = "", savePlaylistVisible = False}
+            in
+                (model_, Cmd.none, cmd, Cmd.none)
+
 
 initCommands: Model -> List MpdCommand
 initCommands model =

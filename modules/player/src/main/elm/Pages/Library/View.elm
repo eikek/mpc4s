@@ -17,6 +17,7 @@ import Pages.Library.AlbumInfo exposing (AlbumInfo, AlbumDisc, AlbumTrack)
 import Data.Tag exposing (Tag(..))
 import Data.TagValue exposing (TagValue)
 import Data.Filter
+import Data.PlaylistName exposing (PlaylistName)
 import Data.CoverUrls exposing (..)
 import Pages.Library.Messages exposing (..)
 
@@ -168,7 +169,8 @@ albumDetail covers msg model =
                           ,text msg.clearPlAndPlayAll
                           ]
                        ,a [class "item", onClick (AppendAll info.name)]
-                          [i [class "ui plus icon"][]
+                          [i [classList [("ui plus icon", True)
+                                        ,("blue", Util.Maybe.isDefined model.selectedPlaylist)]][]
                           ,text msg.appendAll
                           ]
                        ,a [class "item", onClick (InsertAll info.name)]
@@ -179,6 +181,13 @@ albumDetail covers msg model =
                           [i [class "ui download icon"][]
                           ,text "Download"
                           ]
+                       ,div [class "ui divider"][]
+                       ,div [class "ui selection dropdown item"]
+                            [Maybe.map .name model.selectedPlaylist |> Maybe.withDefault msg.currentPlaylist |> text
+                            ,i [class "dropdown icon"][]
+                            ,div [class "menu"]
+                                (makePlaylistList model |> List.map (selectPlaylistItem msg))
+                            ]
                        ]
                   ]
              ,div [class "sixteen wide tablet eleven wide computer column"]
@@ -190,6 +199,15 @@ albumDetail covers msg model =
                   ]
              ]
         ]
+
+makePlaylistList: Model -> List (Maybe PlaylistName)
+makePlaylistList model =
+    Nothing :: (List.map Just model.playlists)
+
+selectPlaylistItem: Messages -> Maybe PlaylistName -> Html Msg
+selectPlaylistItem msg mpn =
+    a [class "item", onClick (SelectPlaylist mpn)]
+      [Maybe.map .name mpn |> Maybe.withDefault msg.currentPlaylist |> text]
 
 albumDiscDetail: Messages -> AlbumInfo -> Model -> AlbumDisc -> Html Msg
 albumDiscDetail msg info model disc =
@@ -205,7 +223,8 @@ albumDiscDetail msg info model disc =
                                   [i [class "ui play icon"][]
                                   ]
                                ,a [class "item", onClick (AppendDisc info.name disc.disc)]
-                                  [i [class "ui plus icon"][]
+                                  [i [classList [("ui plus icon", True)
+                                                ,("blue", Util.Maybe.isDefined model.selectedPlaylist)]][]
                                   ]
                                ,a [class "item", onClick (InsertDisc info.name disc.disc)]
                                   [i [class "ui arrow right icon"][]
@@ -248,14 +267,14 @@ albumDiscDetail msg info model disc =
                            ]
                        ]
                   ,tbody []
-                      (List.map albumTrackDetail disc.tracks)
+                      (List.map (albumTrackDetail model) disc.tracks)
                   ]
              ]
         ]
 
 
-albumTrackDetail: AlbumTrack -> Html Msg
-albumTrackDetail track =
+albumTrackDetail: Model -> AlbumTrack -> Html Msg
+albumTrackDetail model track =
     tr []
        [td [class "collapsing"][text track.no]
        ,td [][text track.title]
@@ -267,7 +286,8 @@ albumTrackDetail track =
               [i [class "ui play icon"][]
               ]
            ,a [class "small basic ui icon button", onClick (AppendSong track.file)]
-              [i [class "ui plus icon"][]
+              [i [classList [("ui plus icon", True)
+                            ,("blue", Util.Maybe.isDefined model.selectedPlaylist)]][]
               ]
            ,a [class "small basic ui icon button", onClick (InsertSong track.file)]
               [i [class "ui arrow right icon"][]

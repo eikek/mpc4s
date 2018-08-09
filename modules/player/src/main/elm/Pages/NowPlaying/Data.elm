@@ -14,7 +14,9 @@ type alias Model =
     , status: Status
     , currentTime: Time
     , addUriVisible: Bool
+    , savePlaylistVisible: Bool
     , uri: String
+    , saveAs: String
     }
 
 emptyModel: Model
@@ -24,7 +26,9 @@ emptyModel =
     , status = Data.Status.empty
     , currentTime = 0
     , addUriVisible = False
+    , savePlaylistVisible = False
     , uri = ""
+    , saveAs = ""
     }
 
 type Msg
@@ -42,6 +46,9 @@ type Msg
     | ToggleAddUri
     | AddUriChange String
     | AddUri
+    | ToggleSavePlaylist
+    | SavePlaylistChange String
+    | SavePlaylist
 
 playlistLength: Model -> String
 playlistLength model =

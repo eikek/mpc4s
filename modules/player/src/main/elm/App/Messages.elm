@@ -7,6 +7,7 @@ type alias Messages =
     , libraryTitle: String
     , nowPlayingTitle: String
     , settingsTitle: String
+    , playlistsTitle: String
     }
 
 getMessages: String -> Messages
@@ -22,6 +23,7 @@ messagesDE =
     , libraryTitle = "Bibliothek"
     , nowPlayingTitle = "Gerade"
     , settingsTitle = "Einstellungen"
+    , playlistsTitle = "Playlists"
     }
 
 messagesEN: Messages
@@ -30,6 +32,7 @@ messagesEN =
     , libraryTitle = "Library"
     , nowPlayingTitle = "Now Playing"
     , settingsTitle = "Settings"
+    , playlistsTitle = "Playlists"
     }
 
 getTitle: String -> Route -> String
@@ -41,3 +44,4 @@ getTitle lang page =
         LibraryPage _ _ -> msg.libraryTitle
         NowPlayingPage -> msg.nowPlayingTitle
         SettingsPage -> msg.settingsTitle
+        PlaylistsPage _ -> msg.playlistsTitle

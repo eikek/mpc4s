@@ -53,14 +53,21 @@ update msg model =
                 (m, Cmd.none, [], Cmd.none)
 
         HandleAnswer (Songs sl) ->
-            ( {model|album = sl, albumInfo = Pages.Library.AlbumInfo.makeDetail sl, mode = AlbumDetail}
-            , Cmd.none
-            , []
-            , (Ports.scrollTo (Pos 0 0))
-            )
+            case model.currentCmd of
+                Just (Find [{tag, value}]) ->
+                    ( {model|album = sl, albumInfo = Pages.Library.AlbumInfo.makeDetail sl, mode = AlbumDetail, currentCmd = Nothing}
+                    , Cmd.none
+                    , []
+                    , (Ports.scrollTo (Pos 0 0))
+                    )
+                _ ->
+                    (model, Cmd.none, [], Cmd.none)
 
         HandleAnswer (StatusInfo status) ->
             ({model|status = status}, Cmd.none, [], Cmd.none)
+
+        HandleAnswer (PlaylistNameAnswer pl) ->
+            ({model|playlists = pl}, Cmd.none, [], Cmd.none)
 
         HandleAnswer _ ->
             (model, Cmd.none, [], Cmd.none)
@@ -101,7 +108,10 @@ update msg model =
                 (m, Route.setPage (LibraryPage Nothing []), [], Cmd.none)
 
         FindAlbum albumName ->
-            ({model|collapsedDiscs = []}, Ports.getScroll (), [Find [TagValue Album albumName]], Cmd.none)
+            let
+                cmd = Find [TagValue Album albumName]
+            in
+                ({model|collapsedDiscs = [], currentCmd = Just cmd}, Ports.getScroll (), [cmd], Cmd.none)
 
         SwitchMode mode ->
             ({model|mode = mode}, Cmd.none, [], Ports.scrollTo (Debug.log "Scroll to: " model.scroll))
@@ -116,13 +126,39 @@ update msg model =
             (model, Cmd.none, [Clear, FindAdd [TagValue File file], Play Nothing], Cmd.none)
 
         AppendAll name ->
-            (model, Cmd.none, [FindAdd [TagValue Album name]], Cmd.none)
+            case model.selectedPlaylist of
+                Just pn ->
+                    let
+                        cmd = List.map .file model.album
+                              |> List.map (\f -> PlaylistAdd pn.name f)
+                    in
+                        (model, Cmd.none, cmd, Cmd.none)
+
+                Nothing ->
+                    (model, Cmd.none, [FindAdd [TagValue Album name]], Cmd.none)
 
         AppendDisc name disc ->
-            (model, Cmd.none, [FindAdd [TagValue Album name, TagValue Disc disc]], Cmd.none)
+            case model.selectedPlaylist of
+                Just pn ->
+                    let
+                        cmd = Util.List.find (\d -> d.disc == disc) model.albumInfo.discs
+                              |> Maybe.map .tracks
+                              |> Maybe.withDefault []
+                              |> List.map .file
+                              |> List.map (\f -> PlaylistAdd pn.name f)
+                    in
+                        (model, Cmd.none, cmd, Cmd.none)
+
+                Nothing ->
+                    (model, Cmd.none, [FindAdd [TagValue Album name, TagValue Disc disc]], Cmd.none)
 
         AppendSong file ->
-            (model, Cmd.none, [FindAdd [TagValue File file]], Cmd.none)
+            case model.selectedPlaylist of
+                Just pn ->
+                    (model, Cmd.none, [PlaylistAdd pn.name file], Cmd.none)
+
+                Nothing ->
+                    (model, Cmd.none, [Add file], Cmd.none)
 
         CurrentScroll pos ->
             ({model|scroll = Debug.log "pos = " pos}, Cmd.none, [], Cmd.none)
@@ -196,6 +232,8 @@ update msg model =
                 , Cmd.none
                 )
 
+        SelectPlaylist pn ->
+            ({model|selectedPlaylist = pn}, Cmd.none, [], Cmd.none)
 
 updateSelection: Model -> Model
 updateSelection model =
@@ -204,7 +242,7 @@ updateSelection model =
 
 initCommands: Model -> List MpdCommand
 initCommands model =
-    (loadAlbums model) ++ (listFiltersInit model) ++ [Stats]
+    (loadAlbums model) ++ (listFiltersInit model) ++ [Stats, ListPlaylists]
 
 listGenre: Model -> MpdCommand
 listGenre model =

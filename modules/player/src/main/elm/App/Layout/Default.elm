@@ -30,6 +30,7 @@ headerMenu model =
                   ]
              ,(createLibraryLink model)
              ,(createNowPlayingLink model)
+             ,(createPlaylistsLink model)
              ,div [class "right menu"]
                  ((playControlMenu model) ++ (volumeControlMenu model) ++ [(settingsMenu model)])
              ]
@@ -56,6 +57,14 @@ createNowPlayingLink model =
     in
         a [class (activePage NowPlayingPage model), onClick (SwitchPage NowPlayingPage)]
             [getTitle lang NowPlayingPage |> text]
+
+createPlaylistsLink: Model -> Html Msg
+createPlaylistsLink model =
+    let
+        lang = getLanguage model
+    in
+        a [class (activePage2 isPlaylistsPage model), onClick (SwitchPage (PlaylistsPage Nothing))]
+            [getTitle lang (PlaylistsPage Nothing) |> text]
 
 
 playControlMenu: Model -> List (Html Msg)
@@ -112,4 +121,10 @@ isLibraryPage: Route -> Bool
 isLibraryPage route =
     case route of
         LibraryPage _ _ -> True
+        _ -> False
+
+isPlaylistsPage: Route -> Bool
+isPlaylistsPage route =
+    case route of
+        PlaylistsPage _ -> True
         _ -> False

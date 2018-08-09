@@ -9,6 +9,8 @@ import Data.Stats exposing (Stats)
 import Data.SongCount exposing (SongCount)
 import Data.Song exposing (Song)
 import Data.Status exposing (Status)
+import Data.MpdCommand exposing (MpdCommand)
+import Data.PlaylistName exposing (PlaylistName)
 import Pages.Library.AlbumInfo exposing (AlbumInfo)
 
 {- Note: The albums are in a dict to be accessed via index. I first
@@ -33,6 +35,9 @@ type alias Model =
     , mode: ViewMode
     , scroll: Pos
     , status: Status
+    , currentCmd: Maybe MpdCommand
+    , playlists: List PlaylistName
+    , selectedPlaylist: Maybe PlaylistName
     }
 
 emptyModel: Model
@@ -51,6 +56,9 @@ emptyModel =
     , mode = AlbumList
     , scroll = Pos 0 0
     , status = Data.Status.empty
+    , currentCmd = Nothing
+    , playlists = []
+    , selectedPlaylist = Nothing
     }
 
 type ViewMode
@@ -110,3 +118,4 @@ type Msg
     | InsertAll String
     | InsertSong String
     | InsertDisc String String
+    | SelectPlaylist (Maybe PlaylistName)

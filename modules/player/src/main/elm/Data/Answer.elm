@@ -8,6 +8,7 @@ import Data.SongCount exposing (SongCount)
 import Data.Stats exposing (Stats)
 import Data.Song exposing (Song)
 import Data.PlaylistSong exposing (PlaylistSong)
+import Data.PlaylistName exposing (PlaylistName)
 
 type Answer
     = Empty
@@ -21,6 +22,7 @@ type Answer
     | CurrentSongInfo PlaylistSong
     | AddIdAnswer String
     | JobIdAnswer String
+    | PlaylistNameAnswer (List PlaylistName)
 
 
 answerDecoder: String -> Decode.Decoder Answer
@@ -69,6 +71,10 @@ answerDecoder kind =
             Decode.at ["result", "jobId"] <|
                 Decode.map JobIdAnswer Decode.string
 
+        "PlaylistSummaryAnswer" ->
+            Decode.at ["result", "playlist" ] <|
+                Decode.map PlaylistNameAnswer decodePlaylistNames
+
         _ -> Decode.fail <|
                "No decoder for answer: " ++ kind
 
@@ -92,3 +98,7 @@ decodeSongs =
 decodePlaylist: Decode.Decoder (List PlaylistSong)
 decodePlaylist =
     Decode.list Data.PlaylistSong.jsonDecode
+
+decodePlaylistNames: Decode.Decoder (List PlaylistName)
+decodePlaylistNames =
+    Decode.list Data.PlaylistName.jsonDecode
