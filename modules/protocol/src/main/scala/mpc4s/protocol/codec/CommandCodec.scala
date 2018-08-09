@@ -70,6 +70,7 @@ object CommandCodec {
     Load.name -> Config[Load].apply,
     PlaylistAdd.name -> Config[PlaylistAdd].apply,
     PlaylistClear.name -> Config[PlaylistClear].apply,
+    PlaylistDelete.name -> Config[PlaylistDelete].apply,
     PlaylistMove.name -> Config[PlaylistMove].apply,
     Rename.name -> Config[Rename].apply,
     Rm.name -> Config[Rm].apply,

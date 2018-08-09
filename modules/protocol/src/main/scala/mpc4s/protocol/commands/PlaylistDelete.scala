@@ -10,7 +10,7 @@ case class PlaylistDelete(playlist: String, pos: Int) extends Command {
 }
 
 object PlaylistDelete {
-  val name = CommandName("playlistclear")
+  val name = CommandName("playlistdelete")
 
   implicit val codec: LineCodec[PlaylistDelete] =
     (cs.commandName(name, ()) :<>: cs.quotedString :<>: cs.int).dropUnits.as[PlaylistDelete]
