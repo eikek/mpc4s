@@ -1,7 +1,7 @@
 /* custom css */
-::-webkit-scrollbar {
-    width: 0px;
-}
+/* ::-webkit-scrollbar { */
+/*     width: 0px; */
+/* } */
 
 .default-layout .np-album-detail .segment {
     padding: 0.5rem 0.5rem !important;
@@ -50,7 +50,7 @@
 }
 
 .default-layout .no-padding {
-    padding: 0;
+    padding: 0 !important;
 }
 
 .default-layout .no-horizontal-padding {
