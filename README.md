@@ -252,6 +252,13 @@ endpoints:
 are the same.
 
 
+### Custom data
+
+If you like to serve some static content, it is possible by
+configuring a custom endpoint. Simply specify a directory and
+everything below that is served at the `/custom/` endpoint.
+
+
 ### Dependencies
 
 - `mpc4s-client`
@@ -307,7 +314,7 @@ Please see the
 the config file format; or simply copy the `reference.conf` file and
 adjust as needed. You only need to specify stuff that is different.
 
-Other maybe useful bit is this setting: `mpc4s.http.customcontent`. It
+Other maybe useful bit is this setting: `mpc4s.http.custom-content`. It
 allows to specify a directory where the server can serve files
 from. For example, this can be used to serve a custom browser-based
 application interacting with MPD.
