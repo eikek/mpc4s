@@ -99,13 +99,30 @@ lazy val http = project.in(file("modules/http")).
   ).
   dependsOn(client)
 
+lazy val debianSettings = Seq(
+    maintainer := "Eike Kettner <eike.kettner@posteo.de>",
+    packageSummary := description.value,
+    packageDescription := description.value,
+    //debianPackageDependencies ++= Seq("openjdk-8-jre-headless"),
+    mappings in Universal += {
+      val conf = (resourceDirectory in (http, Compile)).value / "reference.conf"
+      conf -> "conf/mpc4s.conf"
+    },
+    bashScriptExtraDefines += """addJava "-Dconfig.file=${app_home}/../conf/mpc4s.conf""""
+)
+
 lazy val player = project.in(file("modules/player")).
-  enablePlugins(ElmPlugin, WebjarPlugin, JavaServerAppPackaging).
+  enablePlugins(ElmPlugin
+    , WebjarPlugin
+    , JavaServerAppPackaging
+    , DebianPlugin
+    , SystemdPlugin).
   settings(sharedSettings).
   settings(runSettings).
+  settings(debianSettings).
   settings(
     name := "mpc4s-player",
-    description := "A webapp providing a simple MPD client",
+    description := "A web-based MPD client",
     libraryDependencies ++= Seq(
       `semantic-ui`, jquery
     ),
