@@ -102,7 +102,9 @@ object MpdIdle {
               flatMap({
                 case r@ Response.MpdResult(IdleAnswer(events)) =>
                   val res: Response[Answer] = r
-                  if (events.nonEmpty) Stream.eval(idleState.set(false).flatMap(_ => setIdle.map(_ => res)))
+                  if (events.nonEmpty) Stream.bracket(permit.decrement)(
+                    _ => Stream.eval(setIdle.map(_ => res)),
+                    _ => permit.increment)
                   else Stream.empty
                 case r => Stream.emit(r)
               })
