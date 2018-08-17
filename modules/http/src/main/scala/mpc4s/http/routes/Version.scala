@@ -10,12 +10,12 @@ import mpc4s.http.util.all._
 
 object Version {
 
-  def apply[F[_]](conn: MpdConfig): Route[F] =
+  def apply[F[_]](conn: MpdConfigs): Route[F] =
     Get map { _ =>
       Stream(Ok.body[F, VersionInfo](VersionInfo(conn))).covary[F]
     }
 
-  case class VersionInfo(mpdConfig: MpdConfig
+  case class VersionInfo(mpdConnections: List[VersionInfo.MpdConnection]
     , name: String = "mpc4s"
     , version: String = BuildInfo.version
     , gitCommit: String = BuildInfo.gitHeadCommit.getOrElse("")
@@ -27,8 +27,21 @@ object Version {
 
   object VersionInfo {
 
+    def apply(cfgs: MpdConfigs): VersionInfo = {
+      val conns = cfgs.configs.map({ case (id, mpdconf) =>
+        MpdConnection(id, mpdconf.host, mpdconf.port, mpdconf.title)
+      })
+      VersionInfo(conns.toList)
+    }
+
     implicit def encoder: Encoder[VersionInfo] =
       deriveEncoder[VersionInfo]
+
+    case class MpdConnection(id: String, host: String, port: Int, title: String)
+    object MpdConnection {
+      implicit def encoder: Encoder[MpdConnection] =
+        deriveEncoder[MpdConnection]
+    }
   }
 
   implicit val mpdEncoder: Encoder[MpdConfig] =

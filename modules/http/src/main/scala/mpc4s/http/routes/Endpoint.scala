@@ -18,13 +18,12 @@ object Endpoint {
     (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler): Route[F] = {
 
     val pcfg = cfg.protocolConfig
-    val mcfg = cfg.app.mpd.default
 
     choice(
       "mpd"/createMpdRoutes(pcfg, mpds),
       "mpdspecial"/createSpecialRoutes(pcfg, mpds),
       "cover"/createCoverRoutes(pcfg, mpds, cfg.app, cache),
-      "info"/cut(Version(mcfg))
+      "info"/cut(Version(cfg.app.mpd))
     )
   }
 
