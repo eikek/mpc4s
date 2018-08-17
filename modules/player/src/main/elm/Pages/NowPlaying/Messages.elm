@@ -18,6 +18,7 @@ type alias Messages =
     , add: String
     , save: String
     , time: String
+    , playSomewhereElse: String
     }
 
 messagesDE: Messages
@@ -39,6 +40,7 @@ messagesDE =
     , add = "Hinzufügen"
     , save = "Speichern"
     , time = "Zeit"
+    , playSomewhereElse = "Woanders abspielen"
     }
 
 messagesEN: Messages
@@ -60,6 +62,7 @@ messagesEN =
     , add = "Add"
     , save = "Save"
     , time = "Time"
+    , playSomewhereElse = "Play elsewhere"
     }
 
 getMessages: String -> Messages

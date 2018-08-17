@@ -53,3 +53,6 @@ type Msg
     | VolumeStepInc
     | VolumeStepDec
     | SetMpdConn MpdConn
+    | TogglePlayElsewhere
+    | PlayElsewhereOffsetInc
+    | PlayElsewhereOffsetDec

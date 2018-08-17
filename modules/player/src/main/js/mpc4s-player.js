@@ -52,6 +52,7 @@ elmApp.ports.scrollTo.subscribe(function(scroll) {
 elmApp.ports.storeSettings.subscribe(function(settings) {
     settings.version = currentSettingsVersion;
     localStorage.setItem('settings', JSON.stringify(settings));
+    elmApp.ports.receiveSettings.send(settings);
 });
 
 elmApp.ports.loadSettings.subscribe(function() {

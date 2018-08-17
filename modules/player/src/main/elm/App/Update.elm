@@ -1,27 +1,27 @@
 module App.Update exposing (update)
 
-import Time
+import App.Data exposing (..)
+import App.Messages exposing (getTitle)
+import Data.Answer exposing (Answer(..))
+import Data.MpdCommand exposing (MpdCommand)
 import Data.MpdResponse exposing (..)
+import Data.Subsystem
 import Navigation
+import Pages.Index.Data
+import Pages.Index.Update
+import Pages.Library.Data
+import Pages.Library.Update
+import Pages.NowPlaying.Data
+import Pages.NowPlaying.Update
+import Pages.Playlists.Data
+import Pages.Playlists.Update
+import Pages.Settings.Data
+import Pages.Settings.Update
 import Ports
 import Requests
 import Route exposing (Route(..), findPage, setPage)
+import Time
 import Util.List
-import Data.Answer exposing (Answer(..))
-import Data.MpdCommand exposing (MpdCommand)
-import Data.Subsystem
-import App.Data exposing (..)
-import App.Messages exposing (getTitle)
-import Pages.Library.Update
-import Pages.Library.Data
-import Pages.NowPlaying.Update
-import Pages.NowPlaying.Data
-import Pages.Index.Update
-import Pages.Index.Data
-import Pages.Settings.Update
-import Pages.Settings.Data
-import Pages.Playlists.Update
-import Pages.Playlists.Data
 
 initPage: Route -> Model -> (Model, Cmd Msg)
 initPage page model =
@@ -50,11 +50,12 @@ initPage page model =
 
             NowPlayingPage ->
                 let
-                    nowPlayingInit = Pages.NowPlaying.Update.initCommands model.nowPlayingModel
+                    (m1, c1) = nowPlayingMsg (Pages.NowPlaying.Data.RequestMpdConns) model
+                    nowPlayingInit = Pages.NowPlaying.Update.initCommands m1.nowPlayingModel
                     progress = Cmd.map NowPlayingMsg
-                                 <| (Pages.NowPlaying.Update.initProgress model.nowPlayingModel)
+                                 <| (Pages.NowPlaying.Update.initProgress m1.nowPlayingModel)
                 in
-                    {model|deferredCmds = progress :: model.deferredCmds} ! ((nowPlayingInit |> send) :: globalInit)
+                    {m1|deferredCmds = progress :: model.deferredCmds} ! ((nowPlayingInit |> send) :: c1 :: globalInit)
 
             SettingsPage ->
                 let
@@ -160,7 +161,11 @@ update msg model =
             nowPlayingMsg (Pages.NowPlaying.Data.Seek perc) model
 
         SettingsLoad settings ->
-            settingsMsg (Pages.Settings.Data.ReceiveSettings settings) model
+            let
+                (m1, c1) = settingsMsg (Pages.Settings.Data.ReceiveSettings settings) model
+                (m2, c2) = nowPlayingMsg (Pages.NowPlaying.Data.ReceiveSettings settings) m1
+            in
+                (m2, Cmd.batch [c1, c2])
 
 handleAnswerPages: Answer -> Model -> (Model, Cmd Msg)
 handleAnswerPages ans model =
@@ -215,7 +220,7 @@ libraryPageMsg lmsg model =
 nowPlayingMsg: Pages.NowPlaying.Data.Msg -> Model -> (Model, Cmd Msg)
 nowPlayingMsg nmsg model =
     let
-        (nm, nc, mpd2, def2) = Pages.NowPlaying.Update.update nmsg model.nowPlayingModel
+        (nm, nc, mpd2, def2) = Pages.NowPlaying.Update.update model.settingsModel.settings nmsg model.nowPlayingModel
         model_ = {model|nowPlayingModel = nm, deferredCmds = (Cmd.map NowPlayingMsg def2) :: model.deferredCmds}
         (model2, cmd2) = sendMpd model_ mpd2
     in

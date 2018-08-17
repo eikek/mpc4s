@@ -9,6 +9,9 @@ type alias Messages =
     , dbUpdating: String
     , volumeStep: String
     , mpdConnections: String
+    , playElsewhere: String
+    , enabled: String
+    , timeOffset: String
     }
 
 messagesDE: Messages
@@ -21,6 +24,9 @@ messagesDE =
     , dbUpdating = "MPD's media Datenbank wird momentan aktualisiert."
     , volumeStep = "Lautstärke Schritte"
     , mpdConnections = "MPD Verbindungen"
+    , playElsewhere = "Woanders abspielen"
+    , enabled = "Aktiviert"
+    , timeOffset = "Sekunden Offset"
     }
 
 messagesEN: Messages
@@ -33,6 +39,9 @@ messagesEN =
     , dbUpdating = "MPD's media database is currently updating."
     , volumeStep = "Volume step"
     , mpdConnections = "MPD connections"
+    , playElsewhere = "Play elsewhere"
+    , enabled = "Enabled"
+    , timeOffset = "Seconds offset"
     }
 
 getMessages: String -> Messages

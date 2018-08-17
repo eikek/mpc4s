@@ -26,6 +26,7 @@ view model =
                  ,(volumeStepRow msg model)
                  ,(mpdDatabaseRow msg model)
                  ,(coverRow msg model)
+                 ,(playElsewhereRow msg model)
                  ]
              ]
         ]
@@ -162,3 +163,32 @@ makeMpdItem: MpdConn -> Html Msg
 makeMpdItem conn =
     a [class "item", onClick (SetMpdConn conn)]
         [text conn.title]
+
+playElsewhereRow: Messages -> Model -> Html Msg
+playElsewhereRow msg model =
+    div [class "row"]
+        [div [class "four wide column"]
+             [text msg.playElsewhere
+             ]
+        ,div [class "three wide column"]
+             [div [classList [("ui toggle checkbox", True)
+                             ,("checked", model.settings.playElsewhereEnabled)
+                             ]]
+                  [label [][text msg.enabled]
+                  ,input [type_ "checkbox"
+                         ,onCheck (\_ -> TogglePlayElsewhere)
+                         ,checked model.settings.playElsewhereEnabled
+                         ][]
+                  ]
+             ]
+        ,div [class "nine wide column"]
+             [div [class "ui labeled action input"]
+                  [div [class "ui label"][text msg.timeOffset]
+                  ,input [type_ "text"
+                         ,model.settings.playElsewhereOffset |> toString |> value
+                         ][]
+                  ,button [class "ui button", onClick PlayElsewhereOffsetInc][text "+"]
+                  ,button [class "ui button", onClick PlayElsewhereOffsetDec][text "-"]
+                  ]
+             ]
+        ]

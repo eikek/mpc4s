@@ -76,6 +76,28 @@ update msg model =
                 in
                     ({model|settings = sett_}, Ports.storeSettings sett_, [])
 
+            TogglePlayElsewhere ->
+                let
+                    settings_ = {settings|playElsewhereEnabled = not settings.playElsewhereEnabled}
+                in
+                    ({model|settings = settings_}, Ports.storeSettings settings_, [])
+
+            PlayElsewhereOffsetDec ->
+                let
+                    cur = settings.playElsewhereOffset
+                    new = if cur > 0 then cur - 1 else 0
+                    sett_ = {settings|playElsewhereOffset = new}
+                in
+                    ({model|settings = sett_}, Ports.storeSettings sett_, [])
+
+            PlayElsewhereOffsetInc ->
+                let
+                    cur = settings.playElsewhereOffset
+                    new = if cur < 60 then cur + 1 else 60
+                    sett_ = {settings|playElsewhereOffset = new}
+                in
+                    ({model|settings = sett_}, Ports.storeSettings sett_, [])
+
 initCommands: Model -> List MpdCommand
 initCommands model =
     [Status]

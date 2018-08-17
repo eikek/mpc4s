@@ -1,5 +1,6 @@
 module Pages.NowPlaying.Data exposing (..)
 
+import Http
 import Time exposing (Time)
 import Util.Time
 import Util.List
@@ -7,6 +8,9 @@ import Data.Answer exposing (Answer)
 import Data.PlaylistSong exposing (PlaylistSong)
 import Data.Status exposing (Status)
 import Data.MpdCommand exposing (MpdCommand)
+import Data.MpdConn exposing (MpdConn)
+import Data.Settings exposing (Settings)
+import Data.Info exposing (Info)
 
 type alias Model =
     { playlist: List PlaylistSong
@@ -17,10 +21,13 @@ type alias Model =
     , savePlaylistVisible: Bool
     , uri: String
     , saveAs: String
+    , mpdConns: List MpdConn
+    , settings: Settings
+    , baseurl: String
     }
 
-emptyModel: Model
-emptyModel =
+makeModel: String -> Model
+makeModel baseurl =
     { playlist = []
     , current = Nothing
     , status = Data.Status.empty
@@ -29,6 +36,9 @@ emptyModel =
     , savePlaylistVisible = False
     , uri = ""
     , saveAs = ""
+    , mpdConns = []
+    , settings = Data.Settings.empty
+    , baseurl = baseurl
     }
 
 type Msg
@@ -49,6 +59,10 @@ type Msg
     | ToggleSavePlaylist
     | SavePlaylistChange String
     | SavePlaylist
+    | RequestMpdConns
+    | ReceiveMpdConns (Result Http.Error Info)
+    | ReceiveSettings Settings
+    | PlayCurrentAt MpdConn
 
 playlistLength: Model -> String
 playlistLength model =
@@ -107,3 +121,10 @@ playlistEndsAt model =
         remain = (playlistRemainSum model |> toFloat) * Time.second
     in
         model.currentTime + remain |> Util.Time.formatTime
+
+otherMpdConnections: Model -> List MpdConn
+otherMpdConnections model =
+    let
+        curr = model.settings.mpdConn.id
+    in
+        List.filter (\item -> item.id /= curr) model.mpdConns

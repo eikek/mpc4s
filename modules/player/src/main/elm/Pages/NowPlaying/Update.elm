@@ -6,6 +6,7 @@ module Pages.NowPlaying.Update exposing (update
 import Time
 import Ports
 import Route exposing (Route(..))
+import Requests
 import Pages.NowPlaying.Data exposing (..)
 import Data.Answer exposing (Answer(..))
 import Data.MpdCommand exposing (MpdCommand(..))
@@ -15,9 +16,10 @@ import Data.PlayState
 import Data.SingleState
 import Data.Tag exposing (Tag(..))
 import Data.TagValue exposing (TagValue)
+import Data.Settings exposing (Settings)
 
-update: Msg -> Model -> (Model, Cmd Msg, List MpdCommand, Cmd Msg)
-update msg model =
+update: Settings -> Msg -> Model -> (Model, Cmd Msg, List MpdCommand, Cmd Msg)
+update settings msg model =
     case msg of
         HandleAnswer (CurrentSongInfo s) ->
             ({model| current = Just s}, Cmd.none, [], Ports.initElements())
@@ -140,6 +142,37 @@ update msg model =
             in
                 (model_, Cmd.none, cmd, Cmd.none)
 
+        RequestMpdConns ->
+            (model, Requests.info model.baseurl ReceiveMpdConns, [], Cmd.none)
+
+        ReceiveMpdConns (Ok info) ->
+            ({model|mpdConns = info.mpd}, Cmd.none, [], Cmd.none)
+
+        ReceiveMpdConns (Err err) ->
+            let
+                x = Debug.log "Error receiving mpd connections:" err
+            in
+                (model, Cmd.none, [], Cmd.none)
+
+        ReceiveSettings settings ->
+            ({model|settings = settings}, Cmd.none, [], Cmd.none)
+
+        PlayCurrentAt conn ->
+            let
+                adds = List.map .song model.playlist
+                       |> List.map .file
+                       |> List.map Add
+                play = [Play Nothing]
+                seek = model.status.time
+                       |> Maybe.map .start
+                       |> Maybe.map (\pos -> max (pos - settings.playElsewhereOffset) 0)
+                       |> Maybe.map (SeekPos (model.status.song |> Maybe.withDefault 0))
+                       |> Maybe.map List.singleton
+                       |> Maybe.withDefault []
+                mpd = List.concat [Clear :: adds, seek, play]
+                cmd = Requests.sendAll conn model.baseurl mpd
+            in
+                (model, cmd, [], Cmd.none)
 
 initCommands: Model -> List MpdCommand
 initCommands model =

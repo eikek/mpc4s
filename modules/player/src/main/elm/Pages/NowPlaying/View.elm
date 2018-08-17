@@ -16,11 +16,13 @@ import Data.Tag exposing (Tag(..))
 import Data.MpdCommand exposing (MpdCommand(..))
 import Data.SingleState
 import Data.CoverUrls exposing (..)
+import Data.MpdConn exposing (MpdConn)
+import Data.Settings exposing (Settings)
 import Util.Html
 import Util.Time
 
-view: CoverUrls -> String -> Model -> Html Msg
-view covers lang model =
+view: CoverUrls -> Settings -> String -> Model -> Html Msg
+view covers settings lang model =
     let
         msg = getMessages lang
     in
@@ -39,7 +41,7 @@ view covers lang model =
                  ]
             ]
        ,div [class "ui container"]
-            [playlist covers msg model
+            [playlist covers settings msg model
             ]
        ]
 
@@ -97,8 +99,8 @@ currentControls msg model =
         Nothing ->
             div [][]
 
-playlist: CoverUrls -> Messages -> Model -> Html Msg
-playlist covers msg model =
+playlist: CoverUrls -> Settings -> Messages -> Model -> Html Msg
+playlist covers settings msg model =
     let
         activePos =
             Maybe.withDefault -1 model.status.song
@@ -136,6 +138,15 @@ playlist covers msg model =
                               ,a [class "item", onClick ToggleAddUri]
                                  [i [class "ui plus icon"][]
                                  ]
+                              ,div [classList [("ui right aligned dropdown item", True)
+                                              ,("nodisplay", (List.length model.mpdConns) <= 0 || (not settings.playElsewhereEnabled))
+                                              ]
+                                   ]
+                                   [text msg.playSomewhereElse
+                                   ,i [class "dropdown icon"][]
+                                   ,div [class "menu"]
+                                       (List.map mpdConnectionItem (otherMpdConnections model))
+                                   ]
                               ]
                          ]
                      ]
@@ -374,3 +385,9 @@ trackName msg ps =
     Data.Song.findTag Track ps.song
         |> Maybe.map (String.append ((msg.forTag Track) ++ " "))
         |> Maybe.withDefault ""
+
+mpdConnectionItem: MpdConn -> Html Msg
+mpdConnectionItem conn =
+    a [class "item", onClick (PlayCurrentAt conn)]
+      [text conn.title
+      ]

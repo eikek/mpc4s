@@ -32,7 +32,7 @@ view model =
                 |> App.Layout.Default.render model
 
         NowPlayingPage ->
-            Html.map NowPlayingMsg (Pages.NowPlaying.View.view covers lang model.nowPlayingModel)
+            Html.map NowPlayingMsg (Pages.NowPlaying.View.view covers model.settingsModel.settings lang model.nowPlayingModel)
                 |> App.Layout.Default.render model
 
         SettingsPage ->

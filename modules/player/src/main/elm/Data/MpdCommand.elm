@@ -33,6 +33,7 @@ type MpdCommand
     | DeleteRange Range
     | Shuffle
     | SeekCur Int
+    | SeekPos Int Int
     | AddId String (Maybe Int)
     | Add String
     | Swap Int Int
@@ -133,6 +134,9 @@ encode cmd =
 
         SeekCur secs ->
             "seekcur" %> (toString secs)
+
+        SeekPos pos secs ->
+            "seek" %> (toString pos) %> (toString secs)
 
         DeleteRange range ->
             "delete" %> (Data.Range.encode range)
