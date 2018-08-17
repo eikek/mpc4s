@@ -14,5 +14,5 @@ empty =
     { lang = "en"
     , showVolume = True
     , volumeStep = 5
-    , mpdConn = MpdConn "default" "Default"
+    , mpdConn = MpdConn "default" "Default" "" 0
     }

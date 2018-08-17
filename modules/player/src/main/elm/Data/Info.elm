@@ -1,18 +1,14 @@
 module Data.Info exposing (..)
 
 import Json.Decode as Decode exposing (field)
+import Data.MpdConn exposing (MpdConn)
 
 type alias Info =
     { name: String
     , version: String
     , gitCommit: String
     , builtAtMillis: Float
-    , mpd: MpdConfig
-    }
-
-type alias MpdConfig =
-    { host: String
-    , port_: Int
+    , mpd: List MpdConn
     }
 
 jsonDecode: Decode.Decoder Info
@@ -22,6 +18,5 @@ jsonDecode =
         (field "version" Decode.string)
         (field "gitCommit" Decode.string)
         (field "builtAtMillis" Decode.float)
-        (field "mpdConfig" (Decode.map2 MpdConfig
-             (field "host" Decode.string)
-             (field "port" Decode.int)))
+        (field "mpdConnections"
+             (Decode.list (Data.MpdConn.jsonDecode)))

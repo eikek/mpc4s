@@ -67,16 +67,10 @@ object Index {
   }).flatMap(identity)
 
 
-  case class Flags(baseUrl: String, mpdConns: List[MpdConnections])
+  case class Flags(baseUrl: String)
 
   object Flags {
     implicit def encoder: Encoder[Flags] =
       deriveEncoder[Flags]
-  }
-
-  case class MpdConnections(id: String, title: String)
-  object MpdConnections {
-    implicit def encoder: Encoder[MpdConnections] =
-      deriveEncoder[MpdConnections]
   }
 }

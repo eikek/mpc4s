@@ -14,8 +14,7 @@ object Endpoint {
 
   def apply[F[_]: Sync](cfg: AppConfig): Route[F] = {
     val toc = Toc.readToc
-    val mpdConns = cfg.mpd.map((id, c) => Index.MpdConnections(id, c.title))
-    choice(assets(toc), index(toc, Index.Flags(cfg.baseurl, mpdConns)))
+    choice(assets(toc), index(toc, Index.Flags(cfg.baseurl)))
   }
 
   def assets[F[_]](toc: F[Webjars.Toc])(implicit F: Sync[F]): Route[F] = {

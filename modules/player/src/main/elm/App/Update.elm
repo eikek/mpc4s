@@ -58,9 +58,10 @@ initPage page model =
 
             SettingsPage ->
                 let
-                    settingsInit = Pages.Settings.Update.initCommands model.settingsModel
+                    (m1, c1) = settingsMsg Pages.Settings.Data.RequestMpdConnections model
+                    settingsInit = Pages.Settings.Update.initCommands m1.settingsModel
                 in
-                   model ! ((settingsInit |> send) :: globalInit)
+                   m1 ! ((settingsInit |> send) :: c1 :: globalInit)
 
             PlaylistsPage mn ->
                 let

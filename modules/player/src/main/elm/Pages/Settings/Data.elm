@@ -6,6 +6,7 @@ import Data.Status exposing (Status)
 import Data.MpdCommand exposing (MpdCommand)
 import Data.Answer exposing (Answer)
 import Data.MpdConn exposing (MpdConn)
+import Data.Info exposing (Info)
 
 type alias Model =
     { settings: Settings
@@ -22,9 +23,9 @@ empty =
     , mpdConns = []
     }
 
-makeModel: String -> List MpdConn -> Model
-makeModel baseurl conns =
-    {empty|baseurl = baseurl, mpdConns = conns}
+makeModel: String -> Model
+makeModel baseurl =
+    {empty|baseurl = baseurl}
 
 allLanguages: List String
 allLanguages = ["de", "en"]
@@ -42,6 +43,8 @@ otherLanguages model =
 type Msg
     = SetLanguage String
     | ToggleShowVol
+    | RequestMpdConnections
+    | ReceiveMpdConnections (Result Http.Error Info)
     | ReceiveSettings Settings
     | HandleAnswer Answer
     | RunCmd (List MpdCommand)

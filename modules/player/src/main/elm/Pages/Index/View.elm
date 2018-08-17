@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Pages.Index.Data exposing (..)
 import Util.Time
 import Data.Info exposing (Info)
+import Data.MpdConn exposing (MpdConn)
 import Pages.Index.Messages exposing (..)
 
 view: String -> Model -> Html Msg
@@ -55,8 +56,14 @@ makeInfoLabel info =
         ,text " • "
         ,built |> text
         ,text " • MPD "
-        ,info.mpd.host ++ ":" ++ (toString info.mpd.port_) |> text
+        ,makeMpdInfo info.mpd |> text
         ]
+
+makeMpdInfo: List MpdConn -> String
+makeMpdInfo conns =
+    List.map (\a -> a.host ++ ":" ++ (toString a.port_)) conns
+        |> List.intersperse ", "
+        |> List.foldr String.append ""
 
 unsplashAuthors: List String
 unsplashAuthors =

@@ -45,7 +45,7 @@ makeModel flags location =
     , indexModel = Pages.Index.Data.emptyModel
     , nowPlayingModel = Pages.NowPlaying.Data.emptyModel
     , libraryModel = Pages.Library.Data.emptyModel
-    , settingsModel = Pages.Settings.Data.makeModel flags.baseUrl flags.mpdConns
+    , settingsModel = Pages.Settings.Data.makeModel flags.baseUrl
     , playlistsModel = Pages.Playlists.Data.empty
     }
 
