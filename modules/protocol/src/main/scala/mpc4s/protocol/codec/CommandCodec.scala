@@ -139,9 +139,10 @@ object CommandCodec {
 
   val defaultCodec: LineCodec[Command] = createCodec(defaultConfig)
 
-  def createCodec(config: ProtocolConfig): LineCodec[Command] =
+  def createCodec(config: ProtocolConfig): LineCodec[Command] = {
+    val nameFind = CommandName.find(config.keySet)
     LineCodec(
-      str => CommandName.find(config.keySet, str).flatMap(config.get) match {
+      str => nameFind(str).flatMap(config.get) match {
         case Some(cfg) =>
           cfg.commandCodec.parseFull(str).asInstanceOf[Result[ParseResult[Command]]]
         case None =>
@@ -154,4 +155,5 @@ object CommandCodec {
           Result.failure(ErrorMessage(s"No codec for command ${cmd.name.path}"))
       }
     )
+  }
 }

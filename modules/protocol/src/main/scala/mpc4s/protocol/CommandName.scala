@@ -1,6 +1,7 @@
 package mpc4s.protocol
 
 import mpc4s.protocol.codec._
+import mpc4s.protocol.internal._
 
 sealed trait CommandName {
   def name: String
@@ -53,21 +54,10 @@ object CommandName {
     (name :: more.toList).foldLeft(Root: CommandName)(_ / _)
 
 
-  def find(names: Set[CommandName], str: String): Option[CommandName] = {
-    @annotation.tailrec
-    def loop(ns: Set[CommandName], words: List[String], element: Int): Option[CommandName] = 
-      words match {
-        case Nil =>
-          val set = ns.filter(_.path.size == element)
-          if (set.isEmpty || set.size == 1) set.headOption
-          else None
-        case word :: ws =>
-          val set = ns.filter(_.path.lift(element) == Option(word))
-          if (set.isEmpty || set.size == 1) set.headOption
-          else loop(set, ws, element + 1)
-      }
-
-    loop(names, str.split("\\s+").toList, 0)
+  def find(names: Set[CommandName]): String => Option[CommandName] = {
+    val ptree = PrefixTree(names.map(c => c.path.mkString(" ") -> c).toList)
+    val const = names.map(_.name)
+    in => PrefixTree.parse(in, ptree, const).map(_.value).toOption
   }
 
 }

@@ -4,6 +4,7 @@ import fs2.{text, Stream}
 import cats.effect.IO
 import org.openjdk.jmh.annotations._
 import mpc4s.protocol._
+import mpc4s.protocol.codec._
 import mpc4s.protocol.codec.codecs._
 import mpc4s.protocol.answer._
 import mpc4s.client._
@@ -23,6 +24,10 @@ class Mpc4sBenchmark {
   val album =
     makeString(albumStream)
 
+  val oneCmd = "add file/test/testa"
+  val cmdList = "command_list_ok_begin\n" +
+    (for (i <- 1 to 20) yield oneCmd + i).mkString("\n") +
+    "\ncommand_list_end"
 
   @Benchmark
   def songlistResponseParse(): Unit = {
@@ -51,6 +56,13 @@ class Mpc4sBenchmark {
   def splitCodec(): Unit = {
     val codec = SplitLineCodec.splitSongs
     codec.parseFull(songlist)
+    ()
+  }
+
+  @Benchmark
+  def commandCodec(): Unit = {
+    val codec = CommandCodec.commandOrListCodec(Command.defaultCodec)
+    codec.parseValue(cmdList)
     ()
   }
 
