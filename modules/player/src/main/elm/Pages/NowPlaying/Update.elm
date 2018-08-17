@@ -170,7 +170,7 @@ update settings msg model =
                        |> Maybe.map List.singleton
                        |> Maybe.withDefault []
                 mpd = List.concat [Clear :: adds, seek, play]
-                cmd = Requests.sendAll conn model.baseurl mpd
+                cmd = Requests.sendList conn model.baseurl mpd
             in
                 (model, cmd, [], Cmd.none)
 

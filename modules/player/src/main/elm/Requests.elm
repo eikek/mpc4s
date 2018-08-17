@@ -23,6 +23,14 @@ sendAll conn baseUrl cmds =
     Cmd.batch <|
         (List.map (send conn baseUrl) cmds |> List.reverse)
 
+sendList: MpdConn -> String -> List MpdCommand -> Cmd msg
+sendList conn baseUrl cmds =
+    let
+        jsonCmd = Data.MpdCommand.jsonEncodeList cmds |> Encode.encode 0
+        wsurl = baseUrlToWs conn baseUrl
+    in
+        WebSocket.send wsurl jsonCmd
+
 info: String -> ((Result Http.Error Info) -> msg) -> Cmd msg
 info baseurl receive =
     Http.get (baseurl ++ "/api/v1/info") Data.Info.jsonDecode

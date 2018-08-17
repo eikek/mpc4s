@@ -56,6 +56,21 @@ jsonEncode cmd =
     [ ("command", Encode.string (encode cmd))
     ]
 
+jsonEncodeList: List MpdCommand -> Encode.Value
+jsonEncodeList cmds =
+    Encode.object
+        [ ("command", Encode.string (encodeList cmds))
+        ]
+
+encodeList: List MpdCommand -> String
+encodeList cmds =
+    let
+        ec = List.map encode cmds
+             |> List.intersperse "\n"
+             |> List.foldr String.append ""
+    in
+        "command_list_begin\n" ++ ec ++ "\ncommand_list_end\n"
+
 encode: MpdCommand -> String
 encode cmd =
     case cmd of
