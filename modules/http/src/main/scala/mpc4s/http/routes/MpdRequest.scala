@@ -38,7 +38,8 @@ object MpdRequest {
   def idle[F[_]: Effect](cfg: ProtocolConfig, mpd: Mpd[F])
     (implicit ACG: AsynchronousChannelGroup, S: Scheduler, EC: ExecutionContext): Route[F] = {
 
-    val codec = CommandCodec.createCodec(cfg)
+    val cc = CommandCodec.createCodec(cfg)
+    val codec = CommandCodec.commandOrListCodec(cc)
     implicit val cmdDec: Decoder[JsonCommand] = commandFrameDecoder
     implicit val ansEnc: Encoder[Response[Answer]] = answerFrameEncoder
 
@@ -53,7 +54,7 @@ object MpdRequest {
 
           val read: Stream[F, Frame[Response[Answer]]] = idle.read.map(Frame.Text.apply)
 
-          write.drain.merge(read).onFinalize(idle.write(commands.Close))
+          write.drain.merge(read).onFinalize(idle.write(CommandOrList(commands.Close)))
         }))
     }
   }

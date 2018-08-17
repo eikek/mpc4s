@@ -16,33 +16,32 @@ object MpdIdleSpec extends MaybeTestSuite {
 
   val timeout = 5.seconds
 
-  if (false) {
-    test("idle") {
-      val connect = Connect("127.0.0.1", 6700)
 
-      val read = MpdClient[IO](connect).idle.
-        flatMap { m =>
-          val actions = everySecond[IO].
-            take(6).
-            evalMap({
-              case 0 => m.write(Status)
-              case 1 => m.write(Clear)
-              case 2 => m.write(Stats)
-              case 3 => m.write(ListNeighbors)
-              case 4 => m.write(TagTypes)
-              // case 5 => m.write(Ping)
-              // case 6 => m.write(Ping)
-              case _ => IO(())
-            })
+  test("idle") {
+    val connect = Connect("127.0.0.1", 6700)
 
-          actions.concurrently(m.read.to(print))
-        }
+    val read = MpdClient[IO](connect).idle.
+      flatMap { m =>
+        val actions = everySecond[IO].
+          take(6).
+          evalMap({
+            case 0 => m.write(CommandOrList(Status))
+            case 1 => m.write(CommandOrList(Clear))
+            case 2 => m.write(CommandOrList(Stats))
+            case 3 => m.write(CommandOrList(ListNeighbors))
+            case 4 => m.write(CommandOrList(TagTypes))
+            // case 5 => m.write(CommandOrList(Ping))
+            // case 6 => m.write(CommandOrList(Ping))
+            case _ => IO(())
+          })
 
-      // async.start(read.compile.drain).unsafeRunSync
-      // Thread.sleep(10000)
+        actions.concurrently(m.read.to(print))
+      }
 
-      read.compile.drain.unsafeRunSync
-    }
+    // async.start(read.compile.drain).unsafeRunSync
+    // Thread.sleep(10000)
+
+    read.compile.drain.unsafeRunSync
   }
 
   def everySecond[F[_]: Effect]: Stream[F, Long] = {

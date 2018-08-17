@@ -31,6 +31,10 @@ trait MpdConnection[F[_]] {
   /** Send the command to mpd  */
   def send(req: Command, timeout: Duration): F[Unit]
 
+  /** Send a list of commands to mpd using mpds `command_list` feature.
+    */
+  def sendList(req: CommandList, timeout: Duration): F[Unit]
+
   /** Sends the command to mpd and returns the response that is read
     * immediatly after the command has been submitted. */
   def request(req: Command, timeout: Duration): F[String]
@@ -80,6 +84,7 @@ object MpdConnection {
               logger.debug(s"$connect: ${initialLine.headOption.map(_.trim)}")
 
               val commandCodec = CommandCodec.createCodec(config)
+              val commandListCodec = CommandList.codec(commandCodec)
               def protocolVersion = initialLine.headOption.map(_.trim).getOrElse("")
 
               def reads(timeout: Duration): Stream[F, String] =
@@ -106,6 +111,13 @@ object MpdConnection {
                   to(socketWrite(socket, timeout)).
                   last.
                   evalMap(_ => F.delay(logger.trace(s"Sent command $cmd"))).
+                  compile.drain
+
+              def sendList(req: CommandList, timeout: Duration): F[Unit] =
+                requestListStream[F](req, commandListCodec).
+                  to(socketWrite(socket, timeout)).
+                  last.
+                  evalMap(_ => F.delay(logger.trace(s"Sent command list $req"))).
                   compile.drain
 
               def request(req: Command, timeout: Duration): F[String] =
@@ -154,6 +166,12 @@ object MpdConnection {
   }
 
   private def requestStream[F[_]](req: Command, codec: LineCodec[Command]): Stream[F, Byte] =
+    Stream(codec.write(req)).
+      map(_.left.map(err => new Exception(err.message))).
+      rethrow.
+      through(text.utf8Encode) ++ Stream.emit('\n'.toByte)
+
+  private def requestListStream[F[_]](req: CommandList, codec: LineCodec[CommandList]): Stream[F, Byte] =
     Stream(codec.write(req)).
       map(_.left.map(err => new Exception(err.message))).
       rethrow.

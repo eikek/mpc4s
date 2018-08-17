@@ -37,19 +37,27 @@ trait MpdIdle[F[_]] {
   /** Sends this command using the current connection. First the noidle
     * command is issued, then the given command. At last the
     * connection goes back to idle.
+    *
+    * Note: when using a `CommandList`, only the last command may
+    * return a non-empty response. All previous commands must be
+    * commands that expect an empty response from mpd.
     */
-  def write(cmd: Command): F[Unit]
+  def write(cmd: CommandOrList): F[Unit]
 
   /** Sends every command from input stream to MPD.
+    *
+    * Note: when using a `CommandList`, only the last command may
+    * return a non-empty response. All previous commands must be
+    * commands that expect an empty response from mpd.
     */
-  def writeSink: Sink[F, Command]
+  def writeSink: Sink[F, CommandOrList]
 }
 
 object MpdIdle {
   private[this] val logger = getLogger
 
   private def debug[F[_]: Sync](msg: => String): F[Unit] =
-    Sync[F].delay(logger.debug(msg))
+    Sync[F].delay(logger.trace(msg))
 
   private[client] def apply[F[_]: Effect](conn: MpdConnection[F], cfg: ProtocolConfig, idle: Idle)
     (implicit EC: ExecutionContext): F[MpdIdle[F]] = {
@@ -67,8 +75,12 @@ object MpdIdle {
 
       // send command and memorize its name to be able to get the
       // correct codec for the answer
-      def send(cmd: Command): F[Unit] = {
-        conn.send(cmd, timeout) >> nameQ.enqueue1(cmd.name)
+      def send(cmd: CommandOrList): F[Unit] = cmd match {
+        case CommandOrList.Cmd(cmd) =>
+          conn.send(cmd, timeout) >> nameQ.enqueue1(cmd.name)
+        case CommandOrList.List(cmds) =>
+          if (cmds.isEmpty) Effect[F].pure(())
+          else conn.sendList(cmds, timeout) >> nameQ.enqueue1(cmds.names.last)
       }
 
       def setIdle: F[Unit] =
@@ -76,7 +88,7 @@ object MpdIdle {
           flatMap {
             case true => Effect[F].pure(())
             case false =>
-              send(idle) >> idleState.set(true)
+              send(CommandOrList(idle)) >> idleState.set(true)
           }
 
       // uses the response codec from previous idle command; so do not
@@ -94,10 +106,11 @@ object MpdIdle {
           def read: Stream[F, Response[Answer]] =
             conn.reads(Duration.Inf).
               zip(nameQ.dequeue).
-              map(t => findCodec(t._2).parseValue(t._1)).
-              flatMap({
-                case Right(res) => Stream(res.asInstanceOf[Response[Answer]])
-                case Left(err) => Stream.raiseError(new Exception(err.message))
+              flatMap({ case (value, cname) =>
+                findCodec(cname).parseValue(value) match {
+                  case Right(res) => Stream(res.asInstanceOf[Response[Answer]])
+                  case Left(err) => Stream.raiseError(new Exception(s"${err.message}. Command: $cname"))
+                }
               }).
               flatMap({
                 case r@ Response.MpdResult(IdleAnswer(events)) =>
@@ -109,14 +122,14 @@ object MpdIdle {
                 case r => Stream.emit(r)
               })
 
-          def write(cmd: Command): F[Unit] = {
+          def write(cmd: CommandOrList): F[Unit] = {
             Stream.bracket(permit.decrement)(
               _ => Stream.eval(debug(s"Send command $cmd") >> breakIdle >> send(cmd) >> setIdle),
               _ => permit.increment).
               compile.drain
           }
 
-          def writeSink: Sink[F, Command] =
+          def writeSink: Sink[F, CommandOrList] =
             _.evalMap(write)
         }
       }

@@ -426,4 +426,13 @@ object ProtocolCodecSpec extends SimpleTestSuite {
     assertEquals(c.parseValue("uptime: 32485\nplaytime: 49\nartists: 217\nalbums: 183\nsongs: 2869\ndb_playtime: 809117\ndb_update: 1533479221\n")
       , Result.successful(StatsAnswer(217, 183, 2869, Seconds(32485), 809117, 1533479221, 49)))
   }
+
+  test("command list") {
+    val c = CommandList.codec(Command.defaultCodec)
+
+    assertEquals(c.write(CommandList(Clear, Status, CurrentSong))
+      , Result.successful("command_list_begin\nclear\nstatus\ncurrentsong\ncommand_list_end\n"))
+    assertEquals(c.parseValue("command_list_begin\nclear\ncurrentsong\ncommand_list_end\n")
+      , Result.successful(CommandList(Clear, CurrentSong)))
+  }
 }

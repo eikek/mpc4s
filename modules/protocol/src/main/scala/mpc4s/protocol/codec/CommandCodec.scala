@@ -144,7 +144,7 @@ object CommandCodec {
     LineCodec(
       str => nameFind(str).flatMap(config.get) match {
         case Some(cfg) =>
-          cfg.commandCodec.parseFull(str).asInstanceOf[Result[ParseResult[Command]]]
+          cfg.commandCodec.parse(str).asInstanceOf[Result[ParseResult[Command]]]
         case None =>
           Result.failure(ErrorMessage(s"No codec for command: $str"))
       },
@@ -155,5 +155,9 @@ object CommandCodec {
           Result.failure(ErrorMessage(s"No codec for command ${cmd.name.path}"))
       }
     )
+  }
+
+  def commandOrListCodec(cc: LineCodec[Command]): LineCodec[CommandOrList] = {
+    CommandOrList.codec(cc)
   }
 }
