@@ -21,10 +21,10 @@ init flags loc =
     let
         emptyModel = makeModel flags loc
         (m1, c1) = App.Update.update (UrlChange loc) emptyModel
-        infoCmd = Requests.info m1.baseUrl Pages.Index.Data.ReceiveInfo
+        infoCmd = Requests.info m1.baseUrl InfoLoad
         model = {m1|baseUrl = flags.baseUrl}
     in
-        model ! [c1, Cmd.map IndexMsg infoCmd, Ports.loadSettings ()]
+        model ! [c1, infoCmd, Ports.loadSettings ()]
 
 
 subscriptions: Model -> Sub Msg

@@ -11,6 +11,7 @@ import Data.Status exposing (Status)
 import Data.Settings exposing (Settings)
 import Data.MpdConn exposing (MpdConn)
 import Data.Flags exposing (Flags)
+import Data.Info exposing (Info)
 import Pages.Index.Data
 import Pages.Library.Data
 import Pages.NowPlaying.Data
@@ -68,3 +69,4 @@ type Msg
     | Tick Time
     | SeekClick Float
     | SettingsLoad Settings
+    | InfoLoad (Result Http.Error Info)

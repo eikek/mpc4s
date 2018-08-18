@@ -5,8 +5,5 @@ import Pages.Index.Data exposing (..)
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        ReceiveInfo (Ok info) ->
+        ReceiveInfo info ->
             {model|info = Just info} ! []
-
-        ReceiveInfo (Err _) ->
-            model ! []

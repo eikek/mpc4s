@@ -1,6 +1,5 @@
 module Pages.Index.Data exposing (..)
 
-import Http
 import Data.Info exposing (..)
 
 type alias Model =
@@ -13,4 +12,4 @@ emptyModel =
     }
 
 type Msg =
-    ReceiveInfo (Result Http.Error Info)
+    ReceiveInfo Info

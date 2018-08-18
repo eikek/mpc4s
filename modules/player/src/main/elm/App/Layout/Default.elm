@@ -21,12 +21,20 @@ render model inner =
 
 headerMenu: Model -> Html Msg
 headerMenu model =
+    let
+        currMpd = model.settingsModel.settings.mpdConn
+        nums = List.length model.settingsModel.mpdConns
+    in
     div [class "ui fixed top sticky attached inverted huge menu black-bg"]
         [div [class "ui fluid container"]
              [a [class "header item", onClick (SwitchPage IndexPage)]
                   [i [classList [("large music icon", True)
                                 ]]
                      []
+                  ,span [classList [("ui small red label", True)
+                                   ,("nodisplay", nums <= 1)]
+                        ]
+                        [text currMpd.title]
                   ]
              ,(createLibraryLink model)
              ,(createNowPlayingLink model)

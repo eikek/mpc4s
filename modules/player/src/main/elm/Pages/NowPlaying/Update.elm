@@ -142,17 +142,8 @@ update settings msg model =
             in
                 (model_, Cmd.none, cmd, Cmd.none)
 
-        RequestMpdConns ->
-            (model, Requests.info model.baseurl ReceiveMpdConns, [], Cmd.none)
-
-        ReceiveMpdConns (Ok info) ->
+        ReceiveInfo info ->
             ({model|mpdConns = info.mpd}, Cmd.none, [], Cmd.none)
-
-        ReceiveMpdConns (Err err) ->
-            let
-                x = Debug.log "Error receiving mpd connections:" err
-            in
-                (model, Cmd.none, [], Cmd.none)
 
         ReceiveSettings settings ->
             ({model|settings = settings}, Cmd.none, [], Cmd.none)

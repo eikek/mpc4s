@@ -27,7 +27,7 @@ initPage: Route -> Model -> (Model, Cmd Msg)
 initPage page model =
     let
         conn = model.settingsModel.settings.mpdConn
-        globalInit = [Requests.send conn model.baseUrl Data.MpdCommand.Status]
+        globalInit = [Requests.send conn model.baseUrl Data.MpdCommand.Status, Requests.info model.baseUrl InfoLoad]
         send = Requests.sendAll conn model.baseUrl
     in
         case (Debug.log "Page is " page) of
@@ -50,19 +50,17 @@ initPage page model =
 
             NowPlayingPage ->
                 let
-                    (m1, c1) = nowPlayingMsg (Pages.NowPlaying.Data.RequestMpdConns) model
-                    nowPlayingInit = Pages.NowPlaying.Update.initCommands m1.nowPlayingModel
+                    nowPlayingInit = Pages.NowPlaying.Update.initCommands model.nowPlayingModel
                     progress = Cmd.map NowPlayingMsg
-                                 <| (Pages.NowPlaying.Update.initProgress m1.nowPlayingModel)
+                                 <| (Pages.NowPlaying.Update.initProgress model.nowPlayingModel)
                 in
-                    {m1|deferredCmds = progress :: model.deferredCmds} ! ((nowPlayingInit |> send) :: c1 :: globalInit)
+                    {model|deferredCmds = progress :: model.deferredCmds} ! ((nowPlayingInit |> send) :: globalInit)
 
             SettingsPage ->
                 let
-                    (m1, c1) = settingsMsg Pages.Settings.Data.RequestMpdConnections model
-                    settingsInit = Pages.Settings.Update.initCommands m1.settingsModel
+                    settingsInit = Pages.Settings.Update.initCommands model.settingsModel
                 in
-                   m1 ! ((settingsInit |> send) :: c1 :: globalInit)
+                   model ! ((settingsInit |> send) :: globalInit)
 
             PlaylistsPage mn ->
                 let
@@ -108,10 +106,7 @@ update msg model =
             sendMpd model [cmd]
 
         IndexMsg m ->
-            let
-                (lm, cm) = Pages.Index.Update.update m model.indexModel
-            in
-                {model|indexModel = lm} ! [Cmd.map IndexMsg cm]
+            indexMsg m model
 
         LibraryMsg m ->
             libraryPageMsg m model
@@ -166,6 +161,20 @@ update msg model =
                 (m2, c2) = nowPlayingMsg (Pages.NowPlaying.Data.ReceiveSettings settings) m1
             in
                 (m2, Cmd.batch [c1, c2])
+
+        InfoLoad (Ok info) ->
+            let
+                (m1, c1) = settingsMsg (Pages.Settings.Data.ReceiveInfo info) model
+                (m2, c2) = indexMsg (Pages.Index.Data.ReceiveInfo info) m1
+                (m3, c3) = nowPlayingMsg (Pages.NowPlaying.Data.ReceiveInfo info) m2
+            in
+                m3 ! [c1, c2, c3]
+
+        InfoLoad (Err err) ->
+            let
+                x = Debug.log "Error receiving info:" err
+            in
+                model ! []
 
 handleAnswerPages: Answer -> Model -> (Model, Cmd Msg)
 handleAnswerPages ans model =
@@ -244,6 +253,12 @@ playlistsMsg pmsg model =
     in
         m2 ! [Cmd.map PlaylistsMsg c, c2]
 
+indexMsg: Pages.Index.Data.Msg -> Model -> (Model, Cmd Msg)
+indexMsg msg model =
+    let
+        (m1, c1) = Pages.Index.Update.update msg model.indexModel
+    in
+        {model|indexModel = m1} ! [Cmd.map IndexMsg c1]
 
 sendMpd: Model -> List MpdCommand -> (Model, Cmd msg)
 sendMpd model cmds =

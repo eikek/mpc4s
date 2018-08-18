@@ -43,8 +43,7 @@ otherLanguages model =
 type Msg
     = SetLanguage String
     | ToggleShowVol
-    | RequestMpdConnections
-    | ReceiveMpdConnections (Result Http.Error Info)
+    | ReceiveInfo Info
     | ReceiveSettings Settings
     | HandleAnswer Answer
     | RunCmd (List MpdCommand)

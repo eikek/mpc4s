@@ -1,6 +1,5 @@
 module Pages.NowPlaying.Data exposing (..)
 
-import Http
 import Time exposing (Time)
 import Util.Time
 import Util.List
@@ -59,8 +58,7 @@ type Msg
     | ToggleSavePlaylist
     | SavePlaylistChange String
     | SavePlaylist
-    | RequestMpdConns
-    | ReceiveMpdConns (Result Http.Error Info)
+    | ReceiveInfo Info
     | ReceiveSettings Settings
     | PlayCurrentAt MpdConn
 

@@ -27,17 +27,8 @@ update msg model =
             ReceiveSettings set ->
                 ({model|settings = set}, Cmd.none, [])
 
-            ReceiveMpdConnections (Ok info) ->
+            ReceiveInfo info ->
                 ({model|mpdConns = info.mpd}, Cmd.none, [])
-
-            ReceiveMpdConnections (Err err) ->
-                let
-                    x = Debug.log "Error receiving settings:" err
-                in
-                    (model, Cmd.none, [])
-
-            RequestMpdConnections ->
-                (model, Requests.info model.baseurl ReceiveMpdConnections, [])
 
             HandleAnswer (StatusInfo status) ->
                 ({model|status = status}, Cmd.none, [])
