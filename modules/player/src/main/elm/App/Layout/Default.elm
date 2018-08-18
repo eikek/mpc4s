@@ -25,7 +25,7 @@ headerMenu model =
         currMpd = model.settingsModel.settings.mpdConn
         nums = List.length model.settingsModel.mpdConns
     in
-    div [class "ui fixed top sticky attached inverted huge menu black-bg"]
+    div [class "ui fixed top sticky attached inverted large menu black-bg"]
         [div [class "ui fluid container"]
              [a [class "header item", onClick (SwitchPage IndexPage)]
                   [i [classList [("large music icon", True)
