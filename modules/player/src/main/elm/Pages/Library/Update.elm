@@ -1,6 +1,7 @@
 module Pages.Library.Update exposing (update, initCommands)
 
 import Json.Decode as Decode exposing (field)
+import Ports
 import Pages.Library.Data exposing (..)
 import Pages.Library.AlbumInfo exposing (AlbumInfo, AlbumDisc, AlbumTrack)
 import Route exposing (Route(..))
@@ -13,9 +14,10 @@ import Data.Tag exposing (Tag(..))
 import Data.TagValue exposing (TagValue)
 import Data.Filter
 import Data.Answer exposing (Answer(..))
+import Data.Settings exposing (Settings)
 
-update: Msg -> Model -> (Model, Cmd Msg, List MpdCommand, Cmd Msg)
-update msg model =
+update: Msg -> Settings -> Model -> (Model, Cmd Msg, List MpdCommand, Cmd Msg)
+update msg settings model =
     case msg of
         LoadAlbums ->
            (model, Cmd.none, loadAlbums model, Cmd.none)
@@ -234,6 +236,13 @@ update msg model =
 
         SelectPlaylist pn ->
             ({model|selectedPlaylist = pn}, Cmd.none, [], Cmd.none)
+
+        ToggleLibraryIcons ->
+            let
+                next = if settings.libraryIcons == "medium" then "small" else "medium"
+                sett = {settings|libraryIcons = next}
+            in
+            (model, Ports.storeSettings sett, [], Cmd.none)
 
 updateSelection: Model -> Model
 updateSelection model =

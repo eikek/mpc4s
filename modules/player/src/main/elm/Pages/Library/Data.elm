@@ -119,3 +119,4 @@ type Msg
     | InsertSong String
     | InsertDisc String String
     | SelectPlaylist (Maybe PlaylistName)
+    | ToggleLibraryIcons

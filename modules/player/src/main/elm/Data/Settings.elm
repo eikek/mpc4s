@@ -11,6 +11,7 @@ type alias Settings =
     , mpdConn: MpdConn
     , playElsewhereEnabled: Bool
     , playElsewhereOffset: Int
+    , libraryIcons: String
     }
 
 empty: Settings
@@ -21,4 +22,5 @@ empty =
     , mpdConn = MpdConn "default" "Default" "" 0
     , playElsewhereEnabled = True
     , playElsewhereOffset = 5
+    , libraryIcons = "medium"
     }

@@ -220,7 +220,7 @@ handleMpdError ack model =
 libraryPageMsg: Pages.Library.Data.Msg -> Model -> (Model, Cmd Msg)
 libraryPageMsg lmsg model =
     let
-        (lm, lc, mpd1, def1) = Pages.Library.Update.update lmsg model.libraryModel
+        (lm, lc, mpd1, def1) = Pages.Library.Update.update lmsg model.settingsModel.settings model.libraryModel
         model_ = {model|libraryModel = lm, deferredCmds = (Cmd.map LibraryMsg def1) :: model.deferredCmds}
         (model2, cmd2) = sendMpd model_ mpd1
     in

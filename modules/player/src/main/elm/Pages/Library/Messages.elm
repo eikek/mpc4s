@@ -18,6 +18,7 @@ type alias Messages =
     , insertAll: String
     , time: String
     , currentPlaylist: String
+    , smallCovers: String
     }
 
 messagesDE: Messages
@@ -36,6 +37,7 @@ messagesDE =
     , insertAll = "Alle Titel einfügen"
     , time = "Zeit"
     , currentPlaylist = "Aktuelle Playlist"
+    , smallCovers = "Kleine Bilder"
     }
 
 messagesEN: Messages
@@ -54,6 +56,7 @@ messagesEN =
     , insertAll = "Insert all tracks"
     , time = "Time"
     , currentPlaylist = "Current Playlist"
+    , smallCovers = "Small Covers"
     }
 
 getMessages: String -> Messages

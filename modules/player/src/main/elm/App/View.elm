@@ -18,6 +18,7 @@ view model =
     let
         conn = model.settingsModel.settings.mpdConn
         lang = getLanguage model
+        settings = model.settingsModel.settings
         covers = CoverUrls
                    (Requests.albumCoverUrl conn model.baseUrl)
                    (Requests.fileCoverUrl conn model.baseUrl)
@@ -28,11 +29,11 @@ view model =
                 |> App.Layout.Default.render model
 
         LibraryPage ma mf ->
-            Html.map LibraryMsg (Pages.Library.View.view covers lang model.libraryModel)
+            Html.map LibraryMsg (Pages.Library.View.view covers settings lang model.libraryModel)
                 |> App.Layout.Default.render model
 
         NowPlayingPage ->
-            Html.map NowPlayingMsg (Pages.NowPlaying.View.view covers model.settingsModel.settings lang model.nowPlayingModel)
+            Html.map NowPlayingMsg (Pages.NowPlaying.View.view covers settings lang model.nowPlayingModel)
                 |> App.Layout.Default.render model
 
         SettingsPage ->

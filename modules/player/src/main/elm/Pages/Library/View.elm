@@ -4,7 +4,7 @@ import Http
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onCheck)
 
 import Util.Html
 import Util.Maybe
@@ -19,26 +19,27 @@ import Data.TagValue exposing (TagValue)
 import Data.Filter
 import Data.PlaylistName exposing (PlaylistName)
 import Data.CoverUrls exposing (..)
+import Data.Settings exposing (Settings)
 import Pages.Library.Messages exposing (..)
 
-view: CoverUrls -> String -> Model -> Html Msg
-view covers lang model =
+view: CoverUrls -> Settings -> String -> Model -> Html Msg
+view covers settings lang model =
     let
         msg = getMessages lang
     in
     div [class "main-content"]
-        [(albumView covers model)
+        [(albumView covers settings model)
         ,(albumDetail covers msg model)
         ,(filterSelect msg model)
-        ,(bottomMenu lang model)
+        ,(bottomMenu settings lang model)
         ]
 
-bottomMenu: String -> Model -> Html Msg
-bottomMenu lang model =
+bottomMenu: Settings -> String -> Model -> Html Msg
+bottomMenu settings lang model =
     let
         msg = getMessages lang
         si = model.selection
-        label = (toString si.songs) ++ " " ++ msg.songs ++ ", " ++
+        infoLabel = (toString si.songs) ++ " " ++ msg.songs ++ ", " ++
                 (toString si.albums) ++ " " ++ msg.albums ++
                 ", " ++ (Util.Time.formatSeconds si.playtime)
     in
@@ -63,7 +64,17 @@ bottomMenu lang model =
                             ]
                          ,div [class "right menu"]
                               [div [class "item"]
-                                   [text label
+                                   [div [classList [("ui toggle checkbox", True)
+                                                   ,("checked", settings.libraryIcons == "small")
+                                                   ]]
+                                        [input [type_ "checkbox"
+                                               ,onCheck (\_ -> ToggleLibraryIcons)
+                                               ,checked (settings.libraryIcons == "small")][]
+                                        ,label [][text msg.smallCovers]
+                                        ]
+                                   ]
+                              ,div [class "item"]
+                                   [text infoLabel
                                    ]
                               ]
                          ]
@@ -118,12 +129,12 @@ filterSelectItem msg model tag name =
       [text (if (name == "") then msg.noName else name)
       ]
 
-albumView: CoverUrls -> Model -> Html Msg
-albumView covers model =
+albumView: CoverUrls -> Settings -> Model -> Html Msg
+albumView covers settings model =
     div [classList [("ui album-list", True)
                    ,("nodisplay", model.mode /= AlbumList)]
              ]
-             [ div [class "ui medium images"]
+             [ div [class ("ui " ++ settings.libraryIcons ++ " images")]
                    (List.map (albumItem covers) model.albums)
              ]
 
