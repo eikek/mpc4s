@@ -91,6 +91,7 @@ lazy val client = project.in(file("modules/client")).
 lazy val http = project.in(file("modules/http")).
   enablePlugins(JavaServerAppPackaging).
   settings(sharedSettings).
+  settings(publishSettings).
   settings(runSettings).
   settings(
     name := "mpc4s-http",
