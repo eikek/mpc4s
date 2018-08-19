@@ -8,6 +8,7 @@ import Route exposing (Route(..))
 import Data.MpdCommand exposing (MpdCommand(..))
 import Data.PlayState
 import Data.Status
+import Data.MpdConn exposing (MpdConn)
 import App.Data exposing (..)
 import App.Messages exposing (getTitle)
 
@@ -27,14 +28,22 @@ headerMenu model =
     in
     div [class "ui fixed top sticky attached inverted large menu black-bg"]
         [div [class "ui fluid container"]
-             [a [class "header item", onClick (SwitchPage IndexPage)]
-                  [i [classList [("large music icon", True)
-                                ]]
-                     []
-                  ,span [classList [("ui small red label", True)
+             [a [class "header item narrow-item", onClick (SwitchPage IndexPage)]
+                [i [classList [("large music icon", True)
+                              ]]
+                   []
+                ]
+             ,div [classList [("ui dropdown item mpd-menu narrow-item", True)
+                             ,("nodisplay", nums <= 1)
+                             ]
+                  ]
+                  [div [classList [("ui small red label", True)
                                    ,("nodisplay", nums <= 1)]
                         ]
                         [text currMpd.title]
+                  ,div [class "menu"]
+                       (List.filter (.id >> ((/=) currMpd.id)) model.settingsModel.mpdConns
+                            |> List.map selectMpdItem)
                   ]
              ,(createLibraryLink model)
              ,(createNowPlayingLink model)
@@ -43,6 +52,11 @@ headerMenu model =
                  ((playControlMenu model) ++ (volumeControlMenu model) ++ [(settingsMenu model)])
              ]
         ]
+
+selectMpdItem: MpdConn -> Html Msg
+selectMpdItem conn =
+    a [class "item", onClick (SetMpdConn conn)]
+      [text conn.title]
 
 settingsMenu: Model -> Html Msg
 settingsMenu model =

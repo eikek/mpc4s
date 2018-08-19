@@ -3,6 +3,17 @@
 /*     width: 0px; */
 /* } */
 
+
+.default-layout .narrow-item {
+    padding-left: 0.5em !important;
+    padding-right: 0.5em !important;
+}
+
+.default-layout .mpd-menu .label {
+    margin: 0 !important;
+    z-index: -50;
+}
+
 .default-layout .np-album-detail .segment {
     padding: 0.5rem 0.5rem !important;
 }

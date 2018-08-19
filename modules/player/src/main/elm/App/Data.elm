@@ -70,3 +70,4 @@ type Msg
     | SeekClick Float
     | SettingsLoad Settings
     | InfoLoad (Result Http.Error Info)
+    | SetMpdConn MpdConn

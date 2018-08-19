@@ -176,6 +176,12 @@ update msg model =
             in
                 model ! []
 
+        SetMpdConn conn ->
+            let
+                (m1, c1) = settingsMsg (Pages.Settings.Data.SetMpdConn conn) model
+            in
+                initPage m1.page m1
+
 handleAnswerPages: Answer -> Model -> (Model, Cmd Msg)
 handleAnswerPages ans model =
     let
