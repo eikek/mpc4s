@@ -179,8 +179,9 @@ update msg model =
         SetMpdConn conn ->
             let
                 (m1, c1) = settingsMsg (Pages.Settings.Data.SetMpdConn conn) model
+                (m2, c2) = initPage m1.page m1
             in
-                initPage m1.page m1
+                m2 ! [c1, c2]
 
 handleAnswerPages: Answer -> Model -> (Model, Cmd Msg)
 handleAnswerPages ans model =
