@@ -139,10 +139,10 @@ playlist covers settings msg model =
                                  [i [class "ui plus icon"][]
                                  ]
                               ,div [classList [("ui right aligned dropdown item", True)
-                                              ,("nodisplay", (List.length model.mpdConns) <= 0 || (not settings.playElsewhereEnabled))
+                                              ,("nodisplay", (List.length model.mpdConns) <= 1 || (not settings.playElsewhereEnabled))
                                               ]
                                    ]
-                                   [text msg.playSomewhereElse
+                                   [text msg.playElsewhere
                                    ,i [class "dropdown icon"][]
                                    ,div [class "menu"]
                                        (List.map mpdConnectionItem (otherMpdConnections model))
