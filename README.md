@@ -19,6 +19,8 @@ other 2 applications build on top.
 
 ## mpc4s-player
 
+![Screenshot (probably outdated)](./screenshot-early.jpg)
+
 A web application written in Elm that provides a simple frontend to
 MPD. It uses the `mpc4s-http` module and communicates to MPD via
 Websockets. It runs completely in the browser and only relies on MPD
@@ -35,7 +37,7 @@ Why? The main motivation was to have the following features:
 This is just to scratch my own itch: I tend to first choose an album
 to listen to (in contrast to randomly playing from a huge playlist); I
 have many multi-disc albums, mainly listening to classical music and
-use multiple mds (on raspberry pis) with the same music collection… I
+use multiple MPDs (on raspberry pis) with the same music collection… I
 found many nice frontends, but I wanted something different :-). In
 this respect it is a rather opinionated frontend.
 
@@ -81,9 +83,7 @@ The app is by default available at `http://localhost:9600/player/` –
 the trailing slash is important (for now). Multiple mpd connections
 are supported and they can be changed in the settings page.
 
-### Screenshot
-
-![Screenshot (probably outdated)](./screenshot-early.jpg)
+### Credits
 
 Big thanks to [Semantic-UI](https://semantic-ui.com/) and
 [Elm](http://elm-lang.org/). Pictures (e.g. not-found images) are
@@ -94,13 +94,12 @@ taken from [Unsplash](http://unsplash.com). Photographers include:
 
 ## mpc4s-http
 
-This module buidls on `mpc4s-client` to create a http bridge to
-MPD. It is the server part for the `mpc4s-player` application.  There
+This module buidls on `mpc4s-client` to create a http interface to
+MPD. It is the server part to the `mpc4s-player` application. There
 are two modes: 1) simple rest-like endpoints to issue commands to mpd
-and 2) a websocket connection as an http interface to MPDs idle
-concept. Responses from MPD are returned as JSON. The commands are
-provided as standard MPD commands (just wrapped in a basic JSON
-structure).
+and 2) a websocket connection to MPDs idle concept. Responses from MPD
+are returned as JSON. The commands are standard MPD commands just
+wrapped in a basic JSON structure.
 
 It also deals with cover images from the file system. This requires
 that `mpc4s-http` can access the same music directory as MPD.
@@ -119,8 +118,8 @@ tha answer of MPD converted to JSON. For a list of commands, see [mpds
 protocol
 specification](https://musicpd.org/doc/protocol/command_reference.html).
 
-The idea is that clients use this endpoint to run mpd commands. But
-for convenience, there are special endpoints for some.
+For convenience, there are special endpoints for some commands (see
+below).
 
 Responses from MPD are encoded in JSON wrapped in an outer
 object. Here is an example for an idle answer:
@@ -150,8 +149,8 @@ Using the endpoint `/api/v1/mpd` with a GET request allows to create a
 websocket connection. This can be used to get notified about MPD
 events and also to send commands (same json as above) to MPD using the
 same connection. The websocket connection is directly connected to
-MPD; that is the http server also uses only one connection to MPD for
-the websocket.
+MPD; the http server also uses only one connection to MPD for the
+websocket.
 
 When the websocket is opened, it responds with `IdleAnswer` events or
 with answers as results to sending some commands through the
