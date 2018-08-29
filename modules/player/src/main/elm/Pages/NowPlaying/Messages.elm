@@ -19,6 +19,7 @@ type alias Messages =
     , save: String
     , time: String
     , playElsewhere: String
+    , addToPlaylist: String
     }
 
 messagesDE: Messages
@@ -41,6 +42,7 @@ messagesDE =
     , save = "Speichern"
     , time = "Zeit"
     , playElsewhere = "Woanders abspielen"
+    , addToPlaylist = "Zur Playlist hinzufügen"
     }
 
 messagesEN: Messages
@@ -63,6 +65,7 @@ messagesEN =
     , save = "Save"
     , time = "Time"
     , playElsewhere = "Play elsewhere"
+    , addToPlaylist = "Add to playlist"
     }
 
 getMessages: String -> Messages

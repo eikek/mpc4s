@@ -10,6 +10,7 @@ import Data.MpdCommand exposing (MpdCommand)
 import Data.MpdConn exposing (MpdConn)
 import Data.Settings exposing (Settings)
 import Data.Info exposing (Info)
+import Data.PlaylistName exposing (PlaylistName)
 
 type alias Model =
     { playlist: List PlaylistSong
@@ -23,6 +24,7 @@ type alias Model =
     , mpdConns: List MpdConn
     , settings: Settings
     , baseurl: String
+    , playlists: List PlaylistName
     }
 
 makeModel: String -> Model
@@ -38,6 +40,7 @@ makeModel baseurl =
     , mpdConns = []
     , settings = Data.Settings.empty
     , baseurl = baseurl
+    , playlists = []
     }
 
 type Msg
@@ -61,6 +64,7 @@ type Msg
     | ReceiveInfo Info
     | ReceiveSettings Settings
     | PlayCurrentAt MpdConn
+    | AddToPlaylist PlaylistName PlaylistSong
 
 playlistLength: Model -> String
 playlistLength model =

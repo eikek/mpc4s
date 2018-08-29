@@ -35,6 +35,9 @@ update settings msg model =
             in
                 ({model|status = status, currentTime = time}, Cmd.none, [], Ports.initElements())
 
+        HandleAnswer (PlaylistNameAnswer pl) ->
+            ({model|playlists = pl}, Cmd.none, [], Cmd.none)
+
         HandleAnswer _ ->
             (model, Cmd.none, [], Cmd.none)
 
@@ -165,13 +168,15 @@ update settings msg model =
             in
                 (model, cmd, [], Cmd.none)
 
+        AddToPlaylist name song ->
+            (model, Cmd.none, [PlaylistAdd name.name song.song.file], Cmd.none)
+
 initCommands: Model -> List MpdCommand
 initCommands model =
     let
-        pl = if model.playlist == [] then [PlaylistInfo] else []
         st = if Data.Status.isEmpty model.status then [Status] else []
     in
-       [CurrentSong, PlaylistInfo] ++ st
+       [CurrentSong, PlaylistInfo, ListPlaylists] ++ st
 
 initProgress: Model -> Cmd Msg
 initProgress model =

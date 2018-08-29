@@ -3,6 +3,11 @@
 /*     width: 0px; */
 /* } */
 
+.default-layout .bottom-right {
+    position: absolute;
+    bottom: 0;
+    right: 1.5rem;
+}
 
 .default-layout .narrow-item {
     padding-left: 0.5em !important;

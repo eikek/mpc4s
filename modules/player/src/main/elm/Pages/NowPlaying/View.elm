@@ -18,6 +18,7 @@ import Data.SingleState
 import Data.CoverUrls exposing (..)
 import Data.MpdConn exposing (MpdConn)
 import Data.Settings exposing (Settings)
+import Data.PlaylistName exposing (PlaylistName)
 import Util.Html
 import Util.Time
 
@@ -95,6 +96,7 @@ currentControls msg model =
                          ]
                      ]
                 ,(discTrackSegment msg song)
+                ,(addToPlaylist msg song model.playlists)
                 ]
         Nothing ->
             div [][]
@@ -370,6 +372,23 @@ discTrackSegment msg ps =
                         [value |> text
                         ]
                     ]
+
+addToPlaylist: Messages -> PlaylistSong -> List PlaylistName -> Html Msg
+addToPlaylist msg song lists =
+    div [classList [("ui dropdown bottom-right", True)
+                   ,("nodisplay", (List.length lists) <= 0)
+                   ]
+        ]
+        [text msg.addToPlaylist
+        ,i [class "dropdown icon"][]
+        ,div [class "menu"]
+            (List.map (playlistNameItem song) lists)
+        ]
+
+playlistNameItem: PlaylistSong -> PlaylistName -> Html Msg
+playlistNameItem song name =
+    a [class "item", onClick (AddToPlaylist name song)][text name.name]
+
 
 tagValue: Tag -> PlaylistSong -> String -> String
 tagValue tag ps default =
