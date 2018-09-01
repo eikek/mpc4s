@@ -1,4 +1,4 @@
-package docspell.build
+package mpc4s.build
 
 import sbt._
 import sbt.Keys._
