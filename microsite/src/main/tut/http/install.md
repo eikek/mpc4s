@@ -43,5 +43,5 @@ _RETURN_ key.
 
 ## Note
 
-If you use the [Player](player.html) application, replace `mpc4s-http`
+If you use the [Player](../player.html) application, replace `mpc4s-http`
 by `mpc4s-player` in this guide.

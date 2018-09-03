@@ -93,10 +93,10 @@ takes an album name and looks up a file using MDP `find` command.
 
 The cover is expected to be a file next to the songs in the
 directory. Some names are tried (which can be
-[configured](http/configuration.html)), while `cover.jpg` is the
-default (it is tried first). For this to work, you need to configure
-the same music directory as in your MPD config file. The cover images
-are delivered directly from the file system and are not requested from
+[configured](configuration.html)), while `cover.jpg` is the default
+(it is tried first). For this to work, you need to configure the same
+music directory as in your MPD config file. The cover images are
+delivered directly from the file system and are not requested from
 MPD.
 
 If you have your cover art only inside each song, then currently that
