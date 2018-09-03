@@ -25,13 +25,13 @@ and receive responses.</p>
 <span class="c1">// import mpc4s.client._
 </span>
 <span class="k">implicit</span> <span class="k">val</span> <span class="nc">EC</span> <span class="k">=</span> <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newCachedThreadPool</span><span class="o">)</span>
-<span class="c1">// EC: scala.concurrent.ExecutionContextExecutorService = scala.concurrent.impl.ExecutionContextImpl$$anon$1@79af65e1
+<span class="c1">// EC: scala.concurrent.ExecutionContextExecutorService = scala.concurrent.impl.ExecutionContextImpl$$anon$1@75c0c0b2
 </span>
 <span class="k">implicit</span> <span class="k">val</span> <span class="nc">ACG</span> <span class="k">=</span> <span class="nc">AsynchronousChannelGroup</span><span class="o">.</span><span class="n">withThreadPool</span><span class="o">(</span><span class="nc">EC</span><span class="o">)</span>
-<span class="c1">// ACG: java.nio.channels.AsynchronousChannelGroup = sun.nio.ch.EPollPort@36e05919
+<span class="c1">// ACG: java.nio.channels.AsynchronousChannelGroup = sun.nio.ch.EPollPort@706876cc
 </span>
 <span class="k">val</span> <span class="n">mpc</span> <span class="k">=</span> <span class="nc">MpdClient</span><span class="o">[</span><span class="kt">IO</span><span class="o">](</span><span class="nc">Connect</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">,</span> <span class="mi">6600</span><span class="o">))</span>
-<span class="c1">// mpc: mpc4s.client.MpdClient[cats.effect.IO] = mpc4s.client.MpdClient$$anon$1@3cac8ccd
+<span class="c1">// mpc: mpc4s.client.MpdClient[cats.effect.IO] = mpc4s.client.MpdClient$$anon$1@4977b26f
 </span></code></pre></div></div>
 
 <p><code class="highlighter-rouge">MpdClient</code> allows to <code class="highlighter-rouge">connect</code> to mpd returning a single element

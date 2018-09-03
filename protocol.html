@@ -30,7 +30,7 @@ conversion from/to MPD protocol.</p>
 // import mpc4s.protocol.codec._
 </span>
 <span class="k">val</span> <span class="n">cc</span> <span class="k">=</span> <span class="nc">CommandCodec</span><span class="o">.</span><span class="n">defaultCodec</span>
-<span class="c1">// cc: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Command] = mpc4s.protocol.codec.LineCodec$$anon$3@526d6bba
+<span class="c1">// cc: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Command] = mpc4s.protocol.codec.LineCodec$$anon$3@2f5e83ea
 </span>
 <span class="k">val</span> <span class="n">cmd</span> <span class="k">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="s">"find album Echoes"</span><span class="o">)</span>
 <span class="c1">// cmd: mpc4s.protocol.codec.Result[mpc4s.protocol.Command] = Right(Find(Filter(ListMap(Map(TagFilter(Album) -&gt; Echoes))),None,None))
@@ -88,7 +88,7 @@ audio: 44100:16:2
 // "
 </span>
 <span class="k">val</span> <span class="n">codec</span> <span class="k">=</span> <span class="nc">StatusAnswer</span><span class="o">.</span><span class="n">codec</span>
-<span class="c1">// codec: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.answer.StatusAnswer] = mpc4s.protocol.codec.LineCodec$$anon$2@3323f04e
+<span class="c1">// codec: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.answer.StatusAnswer] = mpc4s.protocol.codec.LineCodec$$anon$2@ba4cb25
 </span>
 <span class="k">val</span> <span class="n">answer</span> <span class="k">=</span> <span class="n">codec</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="n">mpdResponse</span><span class="o">)</span>
 <span class="c1">// answer: mpc4s.protocol.codec.Result[mpc4s.protocol.answer.StatusAnswer] = Right(StatusAnswer(90,false,false,Off,false,2,1,Play,Some(0),Some(Id(1)),None,None,Some(Range(36,780)),Some(36.223),Some(780.0),Some(457),None,Some(0.0),Some(AudioFormat(44100,16,2)),Some(),Some()))
@@ -130,7 +130,7 @@ if a codec for <code class="highlighter-rouge">Answer</code> is available:</p>
 // import mpc4s.protocol.answer._
 </span>
 <span class="k">val</span> <span class="n">codec</span> <span class="k">=</span> <span class="n">implicitly</span><span class="o">[</span><span class="kt">LineCodec</span><span class="o">[</span><span class="kt">Response</span><span class="o">[</span><span class="kt">StatusAnswer</span><span class="o">]]]</span>
-<span class="c1">// codec: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = mpc4s.protocol.codec.LineCodec$$anon$1@71e4b8ff
+<span class="c1">// codec: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = mpc4s.protocol.codec.LineCodec$$anon$1@3f369d8d
 </span>
 <span class="k">val</span> <span class="n">mpdResponse</span> <span class="k">=</span> <span class="s">"""volume: 90
 repeat: 0
@@ -205,7 +205,7 @@ response given the command:</p>
 <span class="c1">// chooseCodec: [C &lt;: mpc4s.protocol.Command, A &lt;: mpc4s.protocol.Answer](cmd: C)(implicit s: mpc4s.protocol.SelectAnswer[C,A])mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[A]]
 </span>
 <span class="n">chooseCodec</span><span class="o">(</span><span class="nc">Status</span><span class="o">)</span>
-<span class="c1">// res4: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = mpc4s.protocol.codec.LineCodec$$anon$1@65dae425
+<span class="c1">// res4: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = mpc4s.protocol.codec.LineCodec$$anon$1@340b619a
 </span></code></pre></div></div>
 
 <p>All this is pulled together in a map in <code class="highlighter-rouge">CommandCodec</code> that can be
@@ -234,7 +234,7 @@ be created. <code class="highlighter-rouge">CommandCodec.defaultConfig</code> is
 </span>
 <span class="c1">// Looking up a CommandName.Config object using the command name
 </span><span class="k">val</span> <span class="n">cfg</span> <span class="k">=</span> <span class="nc">CommandCodec</span><span class="o">.</span><span class="n">defaultConfig</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">name</span><span class="o">)</span>
-<span class="c1">// cfg: mpc4s.protocol.CommandName.Config = mpc4s.protocol.CommandName$Config$$anon$2@55a3d09f
+<span class="c1">// cfg: mpc4s.protocol.CommandName.Config = mpc4s.protocol.CommandName$Config$$anon$2@674a39c8
 </span>
 <span class="n">cfg</span><span class="o">.</span><span class="n">commandCodec</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="s">"status"</span><span class="o">)</span>
 <span class="c1">// res7: mpc4s.protocol.codec.Result[cfg.Cmd] = Right(Status)
