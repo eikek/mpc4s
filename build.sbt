@@ -88,29 +88,35 @@ lazy val client = project.in(file("modules/client")).
   ).
   dependsOn(protocol)
 
+
+def debianSettings(prj: Reference) = Seq(
+  maintainer := "Eike Kettner <eike.kettner@posteo.de>",
+  packageSummary := description.value,
+  packageDescription := description.value,
+  mappings in Universal += {
+    val conf = (resourceDirectory in (prj, Compile)).value / "reference.conf"
+    if (!conf.exists) {
+      sys.error(s"File $conf not found")
+    }
+    conf -> "conf/mpc4s.conf"
+  },
+  bashScriptExtraDefines += """addJava "-Dconfig.file=${app_home}/../conf/mpc4s.conf""""
+)
+
 lazy val http = project.in(file("modules/http")).
-  enablePlugins(JavaServerAppPackaging).
+  enablePlugins(JavaServerAppPackaging
+    , DebianPlugin
+    , SystemdPlugin).
   settings(sharedSettings).
   settings(publishSettings).
   settings(runSettings).
+  settings(debianSettings(project)).
   settings(
     name := "mpc4s-http",
-    description := "A http bridge to the music player daemon",
+    description := "A http interface to the music player daemon",
     libraryDependencies ++= testDeps ++ Seq(`fs2-http`, pureconfig, `logback-classic`, `circe-core`, `circe-parser`, `circe-generic`, tika)
   ).
   dependsOn(client)
-
-lazy val debianSettings = Seq(
-    maintainer := "Eike Kettner <eike.kettner@posteo.de>",
-    packageSummary := description.value,
-    packageDescription := description.value,
-    //debianPackageDependencies ++= Seq("openjdk-8-jre-headless"),
-    mappings in Universal += {
-      val conf = (resourceDirectory in (http, Compile)).value / "reference.conf"
-      conf -> "conf/mpc4s.conf"
-    },
-    bashScriptExtraDefines += """addJava "-Dconfig.file=${app_home}/../conf/mpc4s.conf""""
-)
 
 lazy val player = project.in(file("modules/player")).
   enablePlugins(ElmPlugin
@@ -120,7 +126,7 @@ lazy val player = project.in(file("modules/player")).
     , SystemdPlugin).
   settings(sharedSettings).
   settings(runSettings).
-  settings(debianSettings).
+  settings(debianSettings(http)).
   settings(
     name := "mpc4s-player",
     description := "A web-based MPD client",
@@ -169,10 +175,44 @@ lazy val benchmark = project.in(file("modules/benchmark")).
   ).
   dependsOn(protocol, client)
 
+lazy val microsite = project.in(file("microsite")).
+  enablePlugins(MicrositesPlugin).
+  settings(sharedSettings).
+  settings(
+    name := "mpc4s-microsite",
+    publishArtifact := false,
+    scalacOptions -= "-Yno-imports",
+    scalacOptions ~= { _ filterNot (_ startsWith "-Ywarn") },
+    scalacOptions ~= { _ filterNot (_ startsWith "-Xlint") },
+    skip in publish := true,
+    micrositeFooterText := Some(
+      """
+        |<p>&copy; 2018 <a href="https://github.com/eikek/mpc4s">mpc4s, v{{site.version}}</a></p>
+        |""".stripMargin
+    ),
+    micrositeName := "mpc4s",
+    micrositeDescription := "Scala- and Web-Client for MPD",
+    micrositeBaseUrl := "/mpc4s",
+    micrositeAuthor := "eikek",
+    micrositeGithubOwner := "eikek",
+    micrositeGithubRepo := "mpc4s",
+    micrositeGitterChannel := false,
+    micrositeFavicons := Seq(microsites.MicrositeFavicon("favicon.png", "96x96")),
+    micrositeShareOnSocial := false,
+    fork in tut := true,
+    scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))),
+    resourceGenerators in Tut += Def.task {
+      val conf = (resourceDirectory in (http, Compile)).value / "reference.conf"
+      val out = resourceManaged.value/"main"/"jekyll"/"http"/"_reference.conf"
+      streams.value.log.info(s"Copying reference.conf: $conf -> $out")
+      IO.copy(Seq(conf -> out))
+      Seq(out)
+    }.taskValue
+  ).dependsOn(protocol, client, http)
 
 lazy val root = project.in(file(".")).
   settings(sharedSettings).
   settings(
     name := "root"
   ).
-  aggregate(protocol, benchmark, client, http, player)
+  aggregate(protocol, benchmark, client, http, player, microsite)

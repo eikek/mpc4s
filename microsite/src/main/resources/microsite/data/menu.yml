@@ -1,0 +1,25 @@
+options:
+  - title: Home
+    url: index.html
+
+  - title: Protocol
+    url: protocol.html
+
+  - title: Client
+    url: client.html
+
+  - title: Http
+    url: http.html
+
+    nested_options:
+     - title: Configuration
+       url: http/configuration.html
+
+     - title: Install
+       url: http/install.html
+
+     - title: Endpoints
+       url: http/endpoints.html
+
+  - title: Player
+    url: player.html

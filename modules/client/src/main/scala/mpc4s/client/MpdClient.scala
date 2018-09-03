@@ -63,7 +63,7 @@ trait MpdClient[F[_]] {
     * each command.
     *
     * Since responses are read after all commands have been submitted,
-    * they are buffered until then in the socket.
+    * they have to be buffered somewhere.
     */
   def sendN(cmds: Seq[Command], timeout: Duration): Stream[F, Response[Answer]]
 }
