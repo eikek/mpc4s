@@ -1,0 +1,165 @@
+<html><head><title>mpc4s: Endpoints</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="eikek" /><meta name="description" content="Scala- and Web-Client for MPD" /><meta name="og:image" content="/mpc4s/img/poster.png" /><meta name="og:title" content="mpc4s: Endpoints" /><meta name="og:site_name" content="mpc4s" /><meta name="og:url" content="https://github.com/eikek/mpc4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala- and Web-Client for MPD" /><link rel="icon" type="image/png" href="/mpc4s/img/favicon.png" /><meta name="twitter:title" content="mpc4s: Endpoints" /><meta name="twitter:image" content="https://github.com/eikek/mpc4simg/poster.png" /><meta name="twitter:description" content="Scala- and Web-Client for MPD" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="96x96" href="/mpc4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/mpc4s/highlight/styles/default.css" /><link rel="stylesheet" href="/mpc4s/css/style.css" /><link rel="stylesheet" href="/mpc4s/css/palette.css" /><link rel="stylesheet" href="/mpc4s/css/codemirror.css" /><link rel="stylesheet" href="/mpc4s/css/mpc4s.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/mpc4s/" class="brand"><div class="brand-wrapper"><span>mpc4s</span></div></a></li> <li><a href="/mpc4s/index.html" class="">Home</a></li> <li><a href="/mpc4s/protocol.html" class="">Protocol</a></li> <li><a href="/mpc4s/client.html" class="">Client</a></li> <li><a href="/mpc4s/http.html" class="">Http</a> <ul class="sub_section"> <li><a href="/mpc4s/http/configuration.html" class="">Configuration</a></li> <li><a href="/mpc4s/http/install.html" class="">Install</a></li> <li><a href="/mpc4s/http/endpoints.html" class=" active ">Endpoints</a></li></ul></li> <li><a href="/mpc4s/player.html" class="">Player</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="eikek" data-github-repo="mpc4s"><div class="content-wrapper"><section><h1 id="endpoints">Endpoints</h1>
+
+<h2 id="generic-endpoint">Generic endpoint</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/v1/mpd
+Content-Type: application/json
+
+{ "command": "some mpd command" }
+</code></pre></div></div>
+
+<p>This is the endpoint that hands a command as is to MPD. The return is
+tha answer of MPD converted to JSON. For a list of commands, see <a href="https://musicpd.org/doc/protocol/command_reference.html">mpds
+protocol
+specification</a>.</p>
+
+<p>For convenience, there are special endpoints for some commands (see
+below).</p>
+
+<p>Responses from MPD are encoded in JSON wrapped in an outer
+object. Here is an example for an idle answer:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IdleAnswer"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"changes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"player"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The outer object contains a field <code class="highlighter-rouge">success</code> which indicates whether
+the response was an <em>OK</em> from MPD. If MPD responded with an <em>ACK</em> this
+is false. If it is <code class="highlighter-rouge">true</code>, then there is a <code class="highlighter-rouge">result</code> field containing
+the payload of the MPD response. If it is <code class="highlighter-rouge">false</code>, there is an <code class="highlighter-rouge">ack</code>
+field that contains the JSON representation of MPD’s ACK response. An
+additional <code class="highlighter-rouge">type</code> field indicates which kind of response it is.</p>
+
+<h2 id="websocket">Websocket</h2>
+
+<p>Using the endpoint <code class="highlighter-rouge">/api/v1/mpd</code> with a GET request allows to create a
+websocket connection. This can be used to get notified about MPD
+events and also to send commands (same json as above) to MPD using the
+same connection. The websocket connection is directly connected to
+MPD; the http server also uses only one connection to MPD for the
+websocket.</p>
+
+<p>When the websocket is opened, it responds with <code class="highlighter-rouge">IdleAnswer</code> events or
+with answers as results to sending some commands through the
+websocket. A json decoder can (for example) check the <code class="highlighter-rouge">type</code> field to
+distinguish answer types.</p>
+
+<h2 id="special-endpoints">Special Endpoints</h2>
+
+<p>These are just convenient endpoints to execute mpd commands. Each one
+corresponds to a single mpd command.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">GET /api/v1/mpdspecial/search?tag=value&amp;tag=value&amp;range=0:2</code> This allows
+to use the <code class="highlighter-rouge">search</code> and <code class="highlighter-rouge">find</code> command directly with an http GET
+request. You can specify multiple tag/value pairs to search for and a
+window range.</li>
+  <li><code class="highlighter-rouge">GET /api/v1/mpdspecial/list?listtype=value&amp;genre=Classical&amp;track=2</code>
+Executes MPD’s <code class="highlighter-rouge">list</code> command. Here the <code class="highlighter-rouge">listtype</code> is literal and
+means the tag to list values for. Optionally multiple tag/value
+pairs can be specified for filtering.</li>
+  <li><code class="highlighter-rouge">GET /api/v1/mpdspecial/count?tag=value</code> Executes MPD’s <code class="highlighter-rouge">count</code>
+command. There must be exactly one tag/value pair.</li>
+  <li><code class="highlighter-rouge">GET /api/v1/mpdspecial/currentsong</code> Executes the <code class="highlighter-rouge">currentsong</code> command.</li>
+  <li><code class="highlighter-rouge">GET /api/v1/mpdspecial/status</code> Executes the <code class="highlighter-rouge">status</code> command.</li>
+  <li><code class="highlighter-rouge">GET /api/v1/mpdspecial/playlistinfo?pos=2&amp;range=1:3</code> Returns the current
+playlist or only a part of it if <code class="highlighter-rouge">pos</code> or <code class="highlighter-rouge">range</code> are specified. If
+both are given, then <code class="highlighter-rouge">pos</code> wins.</li>
+  <li><code class="highlighter-rouge">GET /api/v1/mpdspecial/listplaylists</code> Lists all stored playlists.</li>
+</ul>
+
+<h2 id="cover-files">Cover files</h2>
+
+<p>There are endpoints that deliver cover art for an album. One takes a
+song file and tries to find the corresponding cover image. The other
+takes an album name and looks up a file using MDP <code class="highlighter-rouge">find</code> command.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/v1/cover/album?name=&lt;albumName&gt;
+GET /api/v1/cover/file/&lt;file-uri.flac&gt;
+</code></pre></div></div>
+
+<p>The cover is expected to be a file next to the songs in the
+directory. Some names are tried (which can be
+<a href="http/configuration.html">configured</a>), while <code class="highlighter-rouge">cover.jpg</code> is the
+default (it is tried first). For this to work, you need to configure
+the same music directory as in your MPD config file. The cover images
+are delivered directly from the file system and are not requested from
+MPD.</p>
+
+<p>If you have your cover art only inside each song, then currently that
+cannot be served. You could simply export all of them into its own
+file; for example for flac files:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find /music/dir <span class="nt">-name</span> <span class="s2">"*.flac"</span> <span class="nt">-printf</span> <span class="s2">"%h</span><span class="se">\n</span><span class="s2">"</span> | <span class="nb">uniq</span> | <span class="k">while </span><span class="nb">read </span>f<span class="p">;</span>
+<span class="k">do
+  </span><span class="nv">cover</span><span class="o">=</span><span class="s2">"</span><span class="nv">$f</span><span class="s2">/cover.jpg"</span>
+  <span class="nv">flac</span><span class="o">=</span><span class="k">$(</span><span class="nb">ls</span> <span class="nt">-1</span> <span class="nv">$f</span>/<span class="k">*</span>.flac | <span class="nb">head</span> <span class="nt">-n1</span><span class="k">)</span>
+  <span class="k">if</span> <span class="o">!</span> <span class="o">[</span> <span class="nt">-r</span> <span class="s2">"</span><span class="nv">$cover</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span>
+    metaflac <span class="nt">--export-picture-to</span><span class="o">=</span><span class="s2">"</span><span class="nv">$cover</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$flac</span><span class="s2">"</span>
+  <span class="k">fi
+done</span>
+</code></pre></div></div>
+
+<p>Note that this script assumes that every song in a folder belongs to
+the same album and share the same cover art!</p>
+
+<h3 id="missing-covers">Missing Covers</h3>
+
+<p>A missing cover is replaced by a generated image from
+<a href="https://robohash.org">robohash</a> using the album name as input. This
+way you get unique images per album.</p>
+
+<h3 id="cache">Cache</h3>
+
+<p>When looking for cover art for an album, one song of that album is
+requested from mpd and then its directory is searched for a cover
+file. Since this always requires a call to mpd, the final paths to a
+cover file are cached in memory. The assumption is, that these files
+don’t change (often). If they do, there is an endpoint to clear the
+cache:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">POST /api/v1/cover/clearcache</code></li>
+</ul>
+
+<p>So after startup the first load of all album covers takes a while; but
+this should then speed up significantly.</p>
+
+<p>Cover images are served as is; i.e. they are not resized. Large files
+may slow down loading the album page. But since all images are also
+cached in the browser this should only be annoying for the initial
+load.</p>
+
+<h2 id="multiple-mpd-connections">Multiple MPD connections</h2>
+
+<p>If multiple mpd connections are configured, they are available using
+its id after the usual endpoint ends. For example, <code class="highlighter-rouge">/api/v1/mpd</code> would
+be <code class="highlighter-rouge">/api/v1/mpd/myid</code>, or <code class="highlighter-rouge">/api/v1/mpdspecial/currentsong</code> would be
+<code class="highlighter-rouge">/api/v1/mpdspecial/myid/currentsong</code>. The connection with id
+<code class="highlighter-rouge">default</code> (which is mandatory) is always reachable at the “default”
+endpoints; additionally to its concrete form. For example, both
+endpoints:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">/api/v1/mpd</code> and</li>
+  <li><code class="highlighter-rouge">/api/v1/mpd/default</code></li>
+</ul>
+
+<p>are the same.</p>
+
+<h2 id="custom-data">Custom data</h2>
+
+<p>If you like to serve some static content, it is possible by
+configuring a custom endpoint. Simply specify a directory and
+everything below that is served at the <code class="highlighter-rouge">/custom/</code> endpoint.</p>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/mpc4s/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlighting();
+              </script><script src="/mpc4s/js/main.js"></script></body></html>

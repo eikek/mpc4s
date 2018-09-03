@@ -1,0 +1,58 @@
+<html><head><title>mpc4s: Home</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="eikek" /><meta name="description" content="Scala- and Web-Client for MPD" /><meta name="og:image" content="/mpc4s/img/poster.png" /><meta name="og:title" content="mpc4s: Home" /><meta name="og:site_name" content="mpc4s" /><meta name="og:url" content="https://github.com/eikek/mpc4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala- and Web-Client for MPD" /><link rel="icon" type="image/png" href="/mpc4s/img/favicon.png" /><meta name="twitter:title" content="mpc4s: Home" /><meta name="twitter:image" content="https://github.com/eikek/mpc4simg/poster.png" /><meta name="twitter:description" content="Scala- and Web-Client for MPD" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="96x96" href="/mpc4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/mpc4s/highlight/styles/default.css" /><link rel="stylesheet" href="/mpc4s/css/style.css" /><link rel="stylesheet" href="/mpc4s/css/palette.css" /><link rel="stylesheet" href="/mpc4s/css/codemirror.css" /><link rel="stylesheet" href="/mpc4s/css/mpc4s.css" /></head><body><header id="site-header"><div class="navbar-wrapper"><div class="container"><div class="row"><div class="col-xs-6"><a href="/mpc4s/" class="brand"><div class="icon-wrapper"><span>mpc4s</span></div></a></div><div class="col-xs-6"><nav class="text-right"><ul class=""><li><a href="https://github.com/eikek/mpc4s"><i class="fa fa-github"></i><span class="hidden-xs">GitHub</span></a></li></ul></nav></div></div></div></div><div class="jumbotron"><div class="container"><h1 class="text-center">Scala- and Web-Client for MPD</h1><h2></h2><p class="text-center"><a href="https://github.com/eikek/mpc4s" class="btn btn-outline-inverse">View on GitHub</a></p></div></div><div><ul class="horizontalNav">           <li><a class=" active " href="/mpc4s/">Home</a></li>  <li><a class="" href="/mpc4s/protocol.html">Protocol</a></li>  <li><a class="" href="/mpc4s/client.html">Client</a></li>  <li><a class="" href="/mpc4s/http.html">Http</a></li>  <li><a class="" href="/mpc4s/player.html">Player</a></li> </ul></div></header><main id="site-main"><section class="use"><div class="container"><div id="content"><h1 id="scala--and-web-client-for-mpd">Scala- and Web-Client for MPD</h1>
+
+<p>This project provides a Scala library for connecting to
+<a href="http://www.musicpd.org">MPD</a> and a web based user interface for
+controlling MPD and browsing your music library.</p>
+
+<ul>
+  <li><a href="./protocol/">protocol</a>: Library implementing MPD’s protocol in
+Scala</li>
+  <li><a href="./client/">client</a>: Library for interacting with MPD using
+<a href="https://github.com/functional-streams-for-scala/fs2">FS2</a></li>
+  <li><a href="./http/">http</a>: A http server that allows to connect to MPD via
+Websockets or REST-like endpoints.</li>
+  <li><a href="./player/">player</a>: A web-based user interface for MPD.</li>
+</ul>
+
+<h2 id="getting-it">Getting it</h2>
+
+<p>You can use the first three as libraries in your projects:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"com.github.eikek" %% "mpc4s-protocol" % "0.2.0"
+"com.github.eikek" %% "mpc4s-client" % "0.2.0"
+"com.github.eikek" %% "mpc4s-http" % "0.2.0"
+</code></pre></div></div>
+
+<p>The <em>player</em> and <em>http</em> application are distributed as a <code class="highlighter-rouge">zip</code> or
+<code class="highlighter-rouge">deb</code> archive. Please refer to the <a href="https://github.com/eikek/mpc4s/releases">release
+page</a> for downloads. The
+current version can be found here:</p>
+
+<ul>
+  <li>Player 0.2.0: <a href="https://github.com/eikek/mpc4s/releases/download/v0.2.0/mpc4s-player-0.2.0.zip">zip</a>, <a href="https://github.com/eikek/mpc4s/releases/download/v0.2.0/mpc4s-player-0.2.0.deb">deb</a></li>
+  <li>Http 0.2.0: <a href="https://github.com/eikek/mpc4s/releases/download/v0.2.0/mpc4s-http-0.2.0.zip">zip</a>, <a href="https://github.com/eikek/mpc4s/releases/download/v0.2.0/mpc4s-http-0.2.0.deb">deb</a></li>
+</ul>
+
+<h2 id="what-is-mpd">What is MPD?</h2>
+
+<p><a href="http://www.musicpd.org">MPD</a> is an excellent music player software,
+that has no user interface but runs as a daemon instead. That allows
+to create <a href="https://www.musicpd.org/clients/">many different clients</a>
+and <a href="http://shoaib-ahmed.com/2017/mpd-client-list/">all sorts of other
+things</a>.</p>
+
+<h2 id="license">License</h2>
+
+<p>This project is distributed under the
+<a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a></p>
+</div></div></section><section class="technologies"><div class="container"><div class="row">
+            <div class="col-md-4"><div class="first-icon-wrapper"></div><h3>Scala</h3><p>This is a Scala library</p></div>
+          
+            <div class="col-md-4"><div class="second-icon-wrapper"></div><h3>Elm</h3><p>The web application is written in Elm</p></div>
+          
+            <div class="col-md-4"><div class="third-icon-wrapper"></div><h3>FS2</h3><p>Client and HTTP module are based on FS2</p></div>
+          </div></div></section></main><footer id="site-footer"><div class="container"><div class="row"><div class="col-xs-6"><p>mpc4s is designed and developed by <a href="https://github.com/eikek/mpc4s" target="_blank">eikek</a></p></div><div class="col-xs-6"><p class="text-right"><a href="https://github.com/eikek/mpc4s"><span class="fa fa-github"></span>View on GitHub</a></p></div></div><div class="row"><div class="col-xs-6">
+<p>&copy; 2018 <a href="https://github.com/eikek/mpc4s">mpc4s, v0.2.0</a></p>
+</div></div></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/mpc4s/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlighting();
+              </script></body></html>

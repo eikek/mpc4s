@@ -1,0 +1,131 @@
+<html><head><title>mpc4s: Configuration</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="eikek" /><meta name="description" content="Scala- and Web-Client for MPD" /><meta name="og:image" content="/mpc4s/img/poster.png" /><meta name="og:title" content="mpc4s: Configuration" /><meta name="og:site_name" content="mpc4s" /><meta name="og:url" content="https://github.com/eikek/mpc4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala- and Web-Client for MPD" /><link rel="icon" type="image/png" href="/mpc4s/img/favicon.png" /><meta name="twitter:title" content="mpc4s: Configuration" /><meta name="twitter:image" content="https://github.com/eikek/mpc4simg/poster.png" /><meta name="twitter:description" content="Scala- and Web-Client for MPD" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="96x96" href="/mpc4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/mpc4s/highlight/styles/default.css" /><link rel="stylesheet" href="/mpc4s/css/style.css" /><link rel="stylesheet" href="/mpc4s/css/palette.css" /><link rel="stylesheet" href="/mpc4s/css/codemirror.css" /><link rel="stylesheet" href="/mpc4s/css/mpc4s.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/mpc4s/" class="brand"><div class="brand-wrapper"><span>mpc4s</span></div></a></li> <li><a href="/mpc4s/index.html" class="">Home</a></li> <li><a href="/mpc4s/protocol.html" class="">Protocol</a></li> <li><a href="/mpc4s/client.html" class="">Client</a></li> <li><a href="/mpc4s/http.html" class="">Http</a> <ul class="sub_section"> <li><a href="/mpc4s/http/configuration.html" class=" active ">Configuration</a></li> <li><a href="/mpc4s/http/install.html" class="">Install</a></li> <li><a href="/mpc4s/http/endpoints.html" class="">Endpoints</a></li></ul></li> <li><a href="/mpc4s/player.html" class="">Player</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="eikek" data-github-repo="mpc4s"><div class="content-wrapper"><section><h1 id="configuration">Configuration</h1>
+
+<p>A configuration can be given as argument to the application or via a
+system property <code class="highlighter-rouge">config.file</code>. Please see the
+<a href="https://github.com/typesafehub/config/blob/master/HOCON.md">Spec</a> for
+the config file format.</p>
+
+<p>It is recommended to copy the <code class="highlighter-rouge">reference.conf</code> file (which is shown
+below) and comment everything and then uncomment and change things you
+want to be different.</p>
+
+<p>The packaged application already contains this file. All settings not
+specified in the configuration file falls back to the appropriate
+setting in <code class="highlighter-rouge">reference.conf</code>.</p>
+
+<h2 id="referenceconf">Reference.conf</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mpc4s {
+  http {
+    # The application name, used in loggin and information responses
+    app-name = "mpc4s-http"
+
+    # The base url; used to create links
+    baseurl = "http://localhost:9600"
+
+    # Host and port to bind the http service to
+    bind {
+      host = "127.0.0.1"
+      port = 9600
+    }
+
+    ## The music directory; it should be the same as configured with
+    ## mpd. For multiple mpd connections, this acts as a default and
+    ## is used if no specific music directory is specified for some
+    ## mpd connection.
+    ##
+    ## This is a required setting.
+    #music-directory = "/var/lib/mpd/music"
+
+    # The connection to MPD. Multiple mpd connections can be
+    # specified. If they don't share the same music directory, you
+    # need to configure it per mpd connection.
+    #
+    # There *must* be at least one config with id "default". Other ids
+    # should be short names without weird chars or spaces, because
+    # they will be part of the endpoint url.
+    mpd.configs {
+      default = {
+        host = "127.0.0.1"
+        port = 6600
+        password = ""
+
+        # The `max_connections` setting from your mpd server. The http
+        # server should not exceed this limit.
+        max-connections = 5
+
+        # Timeout for mpd commands
+        timeout = 5 seconds
+
+        # A human readable title, like “Living Room”.
+        title = "Default"
+
+        ## A music directory for this specific mpd. If left out, the
+        ## global configured music directory is used.
+        #music-directory = ""
+      }
+    }
+
+    cover {
+
+      basenames = [ "cover", "artwork", "Cover", "Artwork" ]
+
+      extensions = [ "jpg", "jpeg", "png", "gif" ]
+
+      disc-directories = [ "cd", "disc", "CD", "Cd", "Disc", "DISC" ]
+      disc-separators = [ "", ".", "-", "_", " " ]
+      disc-numbers = [
+        "01", "02", "03", "04", "05", "06", "07", "08", "09",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+        "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"
+      ]
+
+      # Paths to cover files are cached in memory to avoid requests to
+      # mpd. This specifies the maximum cache size. A value &lt;= 0
+      # disables the cache.
+      cache-size = 3000
+    }
+
+    # Allows to specifiy a directory that the http server can serve
+    # files from. Everything below that directory is served!
+    custom-content {
+      enabled = false
+      directory = "some-directory"
+    }
+  }
+}
+</code></pre></div></div>
+
+<h2 id="noteworthy-settings">Noteworthy settings</h2>
+
+<p>There is a required setting (the app won’t start without):</p>
+
+<ul>
+  <li><code class="highlighter-rouge">mpc4s.http.music-directory</code>: The music directory used by MPD. This
+is used to serve cover files from.</li>
+</ul>
+
+<p>Other important ones include:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">mpc4s.http.baseurl</code>: The base url to the application. This is used
+to construct urls.</li>
+  <li><code class="highlighter-rouge">mpc4s.http.bind.{host|port}</code>: The host and port to bind the http
+server to.</li>
+  <li><code class="highlighter-rouge">mpc4s.http.mpd.default.{host|port}</code>: Connection info to MPD.</li>
+  <li><code class="highlighter-rouge">mpc4s.http.mpd.default.max-connections</code>: The maximum allowed connections to
+MPD. This must be lower than the corresponding value in <code class="highlighter-rouge">mpd.conf</code>.</li>
+</ul>
+
+<p>Regarding <code class="highlighter-rouge">max-connections</code> setting: MPD has the same setting that
+specifies how many concurrent connections are allowed. This value
+should always be lower than the one in your MPD config file! It can be
+quite low. But: When the covers are initially loaded, one mpd request
+is issued for each cover. So there are many multiple concurrent
+requests. A high <code class="highlighter-rouge">max-connections</code> value here will speed up loading
+covers initially. However, after first load, the paths to the cover
+files are cached (the images are also cached in the browser) and
+subsequent requests won’t ask mpd again.</p>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/mpc4s/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlighting();
+              </script><script src="/mpc4s/js/main.js"></script></body></html>
