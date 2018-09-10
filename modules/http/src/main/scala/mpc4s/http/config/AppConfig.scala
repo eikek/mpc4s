@@ -8,7 +8,9 @@ case class AppConfig(
     , baseurl: String
     , musicDirectory: Path
     , mpd: MpdConfigs
-    , cover: CoverConfig
+    , albumFile: DirectoryConfig
+    , cover: FilenameConfig
+    , booklet: FilenameConfig
     , customContent: CustomContentConfig
 )
 

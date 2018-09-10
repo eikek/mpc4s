@@ -12,7 +12,6 @@ import org.log4s.{Error => _, _}
 import mpc4s.protocol._
 import mpc4s.protocol.codec._
 import mpc4s.http._
-import mpc4s.http.config.CoverConfig
 import JsonBody._
 import Responses._
 import Files._
@@ -77,37 +76,6 @@ trait Matchers {
         Matcher.respond(NotFound.emptyBody)
       }
     }
-
-  def coverFile(root: Path, cfg: CoverConfig): Matcher[Nothing, Path] =
-    path.flatMap { p =>
-      val file = p.segments.foldLeft(root)(_ / _)
-      // if file.parent < root -> error
-      if (file.isSubpathOf(root)) {
-        logger.trace(s"Find cover for input file '$file'")
-        findCoverFile(file, cfg) match {
-          case Some(cf) => Matcher.success(cf)
-          case None => Matcher.respond(NotFound.emptyBody)
-        }
-      } else {
-        logger.info(s"Try getting cover for file outside root ('$root'): '$file'")
-        Matcher.respond(NotFound.emptyBody)
-      }
-    }
-
-  def findCoverFile(f: Path, cfg: CoverConfig): Option[Path] = {
-    def fromDir(dir: Path): Option[Path] =
-      if (!dir.isDirectory) None
-      else dir.findAnyFile(cfg.files).
-        orElse(dir.findAnyFileInSubDirs(cfg.discs, cfg.files)).
-        orElse {
-          if (cfg.discs.contains(dir.name)) dir.parent.flatMap(_.findAnyFile(cfg.files))
-          else None
-        }
-
-    if (f.isDirectory) fromDir(f)
-    else f.parent.flatMap(fromDir)
-  }
-
 
   implicit def lineCodecStringDecoder[A](implicit lc: LineCodec[A]): StringDecoder[A] =
     StringDecoder(str => lc.parseValue(str).toOption)

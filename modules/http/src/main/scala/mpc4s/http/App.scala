@@ -50,7 +50,7 @@ object App {
   def create[F[_]: Effect](cfg: AppConfig, protocolConfig: ProtocolConfig, playerRoute: Option[Route[F]])
     (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler): F[App[F]] =
     for {
-      cache <- Cache.empty[F,String,Option[Path]](cfg.cover.cacheSize)
+      cache <- Cache.empty[F,String,Option[Path]](cfg.albumFile.cacheSize)
       cfg   <- ServerConfig.create(cfg, protocolConfig, playerRoute)
       mpds  <- Mpds(cfg.app.mpd)
     } yield App(cfg, cache, mpds)
