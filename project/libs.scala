@@ -21,9 +21,9 @@ object libs {
 
   // https://github.com/functional-streams-for-scala/fs2
   // MIT
-  val `fs2-core` = "co.fs2" %% "fs2-core" % "0.10.5"
-  val `fs2-io` = "co.fs2" %% "fs2-io" % "0.10.5"
-  val `fs2-scodec` = "co.fs2" %% "fs2-scodec" % "0.10.5"
+  val `fs2-core` = "co.fs2" %% "fs2-core" % "0.10.6"
+  val `fs2-io` = "co.fs2" %% "fs2-io" % "0.10.6"
+  val `fs2-scodec` = "co.fs2" %% "fs2-scodec" % "0.10.6"
 
   // https://github.com/Spinoco/fs2-http
   // MIT
@@ -39,8 +39,8 @@ object libs {
 
   // https://github.com/monix/minitest
   // Apache 2.0
-  val minitest = "io.monix" %% "minitest" % "2.1.1"
-  val `minitest-laws` = "io.monix" %% "minitest-laws" % "2.1.1"
+  val minitest = "io.monix" %% "minitest" % "2.2.0"
+  val `minitest-laws` = "io.monix" %% "minitest-laws" % "2.2.0"
 
   // https://github.com/rickynils/scalacheck
   // unmodified 3-clause BSD
