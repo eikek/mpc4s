@@ -1,5 +1,6 @@
 module Pages.NowPlaying.Data exposing (..)
 
+import Http
 import Time exposing (Time)
 import Util.Time
 import Util.List
@@ -11,6 +12,7 @@ import Data.MpdConn exposing (MpdConn)
 import Data.Settings exposing (Settings)
 import Data.Info exposing (Info)
 import Data.PlaylistName exposing (PlaylistName)
+import Data.AlbumFile exposing (AlbumFile)
 
 type alias Model =
     { playlist: List PlaylistSong
@@ -25,6 +27,7 @@ type alias Model =
     , settings: Settings
     , baseurl: String
     , playlists: List PlaylistName
+    , booklet: AlbumFile
     }
 
 makeModel: String -> Model
@@ -41,6 +44,7 @@ makeModel baseurl =
     , settings = Data.Settings.empty
     , baseurl = baseurl
     , playlists = []
+    , booklet = Data.AlbumFile.empty
     }
 
 type Msg
@@ -65,6 +69,7 @@ type Msg
     | ReceiveSettings Settings
     | PlayCurrentAt MpdConn
     | AddToPlaylist PlaylistName PlaylistSong
+    | AlbumBookletResp (Result Http.Error AlbumFile)
 
 playlistLength: Model -> String
 playlistLength model =

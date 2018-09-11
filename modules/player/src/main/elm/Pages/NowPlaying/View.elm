@@ -96,6 +96,15 @@ currentControls msg model =
                          ]
                      ]
                 ,(discTrackSegment msg song)
+                ,if model.booklet.exists then
+                     a [class "ui bottom-left small basic button"
+                       , href model.booklet.fileUrl
+                       ]
+                       [i [class "ui eye icon"][]
+                       ,text msg.viewBooklet
+                       ]
+                 else
+                     span[][]
                 ,(addToPlaylist msg song model.playlists)
                 ]
         Nothing ->
