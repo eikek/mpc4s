@@ -9,6 +9,7 @@ import java.nio.channels.AsynchronousChannelGroup
 import scala.concurrent.ExecutionContext
 import spinoco.fs2.http.HttpResponse
 import spinoco.fs2.http.routing._
+import spinoco.protocol.http.Uri
 import org.log4s._
 import java.net.URL
 import io.circe._, io.circe.generic.semiauto._
@@ -67,7 +68,8 @@ final class AlbumFile[F[_]: Effect](mpd: Mpd[F], cache: PathCache[F], pcfg: Prot
   def testFile(cfg: AlbumFile.Config[F]): Route[F] =
     "test"/"file"/Get >> asFile(musicDirectory) map { file =>
       val f = cfg.findFile(file)
-      val info = AlbumFile.AlbumFileInfo(f.exists(_.exists), None)
+      val p = f.map(_ => makeFileUrl(file, cfg.basePath, "file"))
+      val info = AlbumFile.AlbumFileInfo(f.exists(_.exists), p)
       Stream.emit(Ok.body[F, AlbumFile.AlbumFileInfo](info))
     }
 
@@ -76,7 +78,8 @@ final class AlbumFile[F[_]: Effect](mpd: Mpd[F], cache: PathCache[F], pcfg: Prot
     "test"/"album"/Get >> param[String]("name") map { albumName =>
       lookupFile(albumName, cfg).
         map { ofile =>
-          Ok.body(AlbumFile.AlbumFileInfo(ofile.exists(_.exists), None))
+          val p = makeAlbumUrl(albumName, cfg.basePath, "album")
+          Ok.body(AlbumFile.AlbumFileInfo(ofile.exists(_.exists), ofile.map(_ => p)))
         }
     }
 
@@ -110,6 +113,27 @@ final class AlbumFile[F[_]: Effect](mpd: Mpd[F], cache: PathCache[F], pcfg: Prot
     Stream.eval(cache.getOrCreate(cfg.cacheKey(musicDirectory, albumName), lookup))
   }
 
+  /** Create the URL to the album file given a song file.
+    */
+  private def makeFileUrl(songFile: Path, basePath: Uri.Path, prefix: String): String = {
+    import scala.collection.JavaConverters._
+
+    val rel = musicDirectory.relativize(songFile)
+    basePath.copy(segments = (basePath.segments :+ prefix) ++ rel.asScala.map(_.toString)).stringify
+  }
+
+  /** Create the URL to the album file given an album name.
+    */
+  private def makeAlbumUrl(albumName: String, basePath: Uri.Path, prefix: String): String = {
+    import scodec.{Attempt, Err}
+
+    val p = basePath/prefix
+    val q = Uri.Query(Uri.QueryParameter.single("name", albumName) :: Nil)
+    p.stringify + "?" + (Uri.Query.codec.encode(q).flatMap { bytes =>
+      Attempt.fromEither(bytes.decodeUtf8.left.map(rsn => Err(s"Failed to decode UTF8: $rsn")))
+    }).fold(err => throw new Exception(s"Unable to render query param: ${err.message}"), identity)
+  }
+
 }
 
 object AlbumFile {
@@ -117,6 +141,7 @@ object AlbumFile {
   case class Config[F[_]](dirCfg: DirectoryConfig
     , fileCfg: FilenameConfig
     , cacheDim: String
+    , basePath: Uri.Path
     , missingRoutes: MissingRoutes[F]) {
 
     def findFile(f: Path): Option[Path] =

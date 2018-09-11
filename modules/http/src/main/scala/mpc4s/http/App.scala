@@ -23,7 +23,7 @@ final class App[F[_]](coreConfig: ServerConfig[F], cache: PathCache[F], mpds: Mp
 
   def endpoints: Route[F] =
     withDefaultHeaders(choice(
-      "api"/"v1"/cut(Endpoint(coreConfig, cache, mpds)),
+      "api"/"v1"/cut(Endpoint(coreConfig, cache, mpds, config.baseUri.path/"api"/"v1")),
       "custom"/cut(CustomContent(config.customContent)),
       "player"/cut(coreConfig.playerRoute.getOrElse(Matcher.respond(NotFound.emptyBody)))
     ))

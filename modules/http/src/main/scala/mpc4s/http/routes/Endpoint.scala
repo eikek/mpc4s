@@ -3,6 +3,7 @@ package mpc4s.http.routes
 import fs2.Scheduler
 import cats.effect.Effect
 import spinoco.fs2.http.routing._
+import spinoco.protocol.http.Uri
 import java.nio.channels.AsynchronousChannelGroup
 import scala.concurrent.ExecutionContext
 
@@ -13,7 +14,7 @@ import mpc4s.http.util.all._
 
 object Endpoint {
 
-  def apply[F[_]: Effect](cfg: ServerConfig[F], cache: PathCache[F], mpds: Mpds[F])
+  def apply[F[_]: Effect](cfg: ServerConfig[F], cache: PathCache[F], mpds: Mpds[F], basePath: Uri.Path)
     (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler): Route[F] = {
 
     val pcfg = cfg.protocolConfig
@@ -21,8 +22,8 @@ object Endpoint {
     choice(
       "mpd"/createMpdRoutes(pcfg, mpds),
       "mpdspecial"/createSpecialRoutes(pcfg, mpds),
-      "cover"/createAlbumFileRoutes(mpds, AlbumFileRoute.cover(cache, cfg)),
-      "booklet"/createAlbumFileRoutes(mpds, AlbumFileRoute.booklet(cache, cfg)),
+      "cover"/createAlbumFileRoutes(mpds, AlbumFileRoute.cover(cache, cfg, basePath/"cover")),
+      "booklet"/createAlbumFileRoutes(mpds, AlbumFileRoute.booklet(cache, cfg, basePath/"booklet")),
       "info"/cut(Version(cfg.app.mpd))
     )
   }
@@ -64,23 +65,25 @@ object Endpoint {
 
   object AlbumFileRoute {
 
-    def cover[F[_]: Effect](cache: PathCache[F], serverCfg: ServerConfig[F])
+    def cover[F[_]: Effect](cache: PathCache[F], serverCfg: ServerConfig[F], basePath: Uri.Path)
       (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext): AlbumFileRoute[F] =
       AlbumFileRoute(mpd =>
         ( new AlbumFile(mpd, cache, serverCfg.protocolConfig)
         , AlbumFile.Config(serverCfg.app.albumFile
           , serverCfg.app.cover
           , "cover"
+          , basePath
           , AlbumFile.MissingRoutes.imagePlaceholder(mpd, serverCfg.protocolConfig)))
         )
 
-    def booklet[F[_]: Effect](cache: PathCache[F], serverCfg: ServerConfig[F])
+    def booklet[F[_]: Effect](cache: PathCache[F], serverCfg: ServerConfig[F], basePath: Uri.Path)
       (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext): AlbumFileRoute[F] =
       AlbumFileRoute(mpd =>
         ( new AlbumFile(mpd, cache, serverCfg.protocolConfig)
         , AlbumFile.Config(serverCfg.app.albumFile
           , serverCfg.app.booklet
           , "booklet"
+          , basePath
           , AlbumFile.MissingRoutes.notFound))
         )
   }
