@@ -8,6 +8,7 @@ import Json.Encode as Encode
 import Data.MpdCommand exposing (..)
 import Data.Info exposing (Info)
 import Data.MpdConn exposing (MpdConn)
+import Data.AlbumFile exposing (AlbumFile)
 import Ports
 
 send: MpdConn -> String -> MpdCommand -> Cmd msg
@@ -55,6 +56,12 @@ clearCoverCache: String -> (Result Http.Error () -> msg) -> Cmd msg
 clearCoverCache baseurl f =
     Http.post (baseurl ++ "/api/v1/cover/clearcache")  Http.emptyBody (Decode.succeed ())
         |> Http.send f
+
+testBooklet: String -> String -> (Result Http.Error AlbumFile -> msg) -> Cmd msg
+testBooklet baseurl albumName f =
+    Http.get (baseurl ++ "/api/v1/booklet/test/album?name=" ++ Http.encodeUri(albumName)) Data.AlbumFile.jsonDecode
+        |> Http.send f
+
 
 baseUrlToWs: MpdConn -> String -> String
 baseUrlToWs conn url =
