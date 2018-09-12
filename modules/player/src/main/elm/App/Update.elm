@@ -37,8 +37,10 @@ initPage page model =
                         let
                             (m1, c1) = libraryPageMsg (Pages.Library.Data.FindAlbum album) model
                             libraryInit = Pages.Library.Update.initCommands m1.libraryModel
+                            bookletCmd = let cmd = Requests.testBooklet model.baseUrl album Pages.Library.Data.AlbumBookletResp in
+                                         Cmd.map LibraryMsg cmd
                         in
-                            m1 ! ((libraryInit |> send) :: c1 :: globalInit)
+                            m1 ! ((libraryInit |> send) :: c1 :: bookletCmd :: globalInit)
 
                     Nothing ->
                         let

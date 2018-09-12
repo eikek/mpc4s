@@ -15,6 +15,7 @@ import Data.TagValue exposing (TagValue)
 import Data.Filter
 import Data.Answer exposing (Answer(..))
 import Data.Settings exposing (Settings)
+import Data.AlbumFile exposing (AlbumFile)
 
 update: Msg -> Settings -> Model -> (Model, Cmd Msg, List MpdCommand, Cmd Msg)
 update msg settings model =
@@ -116,7 +117,7 @@ update msg settings model =
                 ({model|collapsedDiscs = [], currentCmd = Just cmd}, Ports.getScroll (), [cmd], Cmd.none)
 
         SwitchMode mode ->
-            ({model|mode = mode}, Cmd.none, [], Ports.scrollTo (Debug.log "Scroll to: " model.scroll))
+            ({model|mode = mode, albumBooklet = Data.AlbumFile.empty}, Cmd.none, [], Ports.scrollTo (Debug.log "Scroll to: " model.scroll))
 
         ClearPlayAll name ->
             (model, Cmd.none, [Clear, FindAdd [TagValue Album name], Play Nothing], Cmd.none)
@@ -242,7 +243,13 @@ update msg settings model =
                 next = if settings.libraryIcons == "medium" then "small" else "medium"
                 sett = {settings|libraryIcons = next}
             in
-            (model, Ports.storeSettings sett, [], Cmd.none)
+                (model, Ports.storeSettings sett, [], Cmd.none)
+
+        AlbumBookletResp (Ok af) ->
+            ({model|albumBooklet = af}, Cmd.none, [], Cmd.none)
+
+        AlbumBookletResp (Err err) ->
+            ({model|albumBooklet = Data.AlbumFile.empty}, Cmd.none, [], Cmd.none)
 
 updateSelection: Model -> Model
 updateSelection model =

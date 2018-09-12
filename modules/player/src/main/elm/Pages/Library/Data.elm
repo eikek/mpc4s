@@ -11,14 +11,8 @@ import Data.Song exposing (Song)
 import Data.Status exposing (Status)
 import Data.MpdCommand exposing (MpdCommand)
 import Data.PlaylistName exposing (PlaylistName)
+import Data.AlbumFile exposing (AlbumFile)
 import Pages.Library.AlbumInfo exposing (AlbumInfo)
-
-{- Note: The albums are in a dict to be accessed via index. I first
-used a List String which is much better since I can reference an album
-detail without runtime state. But encoding current album in the url, I
-ran into weird errors with url-parser and arbitrary text (chars like =
-or : broke the parser) --> need custom “safe-string” codec
--}
 
 type alias Model =
     { albums: List String
@@ -38,6 +32,7 @@ type alias Model =
     , currentCmd: Maybe MpdCommand
     , playlists: List PlaylistName
     , selectedPlaylist: Maybe PlaylistName
+    , albumBooklet: AlbumFile
     }
 
 emptyModel: Model
@@ -59,6 +54,7 @@ emptyModel =
     , currentCmd = Nothing
     , playlists = []
     , selectedPlaylist = Nothing
+    , albumBooklet = Data.AlbumFile.empty
     }
 
 type ViewMode
@@ -120,3 +116,4 @@ type Msg
     | InsertDisc String String
     | SelectPlaylist (Maybe PlaylistName)
     | ToggleLibraryIcons
+    | AlbumBookletResp (Result Http.Error AlbumFile)

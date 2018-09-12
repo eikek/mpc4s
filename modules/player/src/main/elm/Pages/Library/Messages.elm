@@ -19,6 +19,7 @@ type alias Messages =
     , time: String
     , currentPlaylist: String
     , smallCovers: String
+    , viewBooklet: String
     }
 
 messagesDE: Messages
@@ -38,6 +39,7 @@ messagesDE =
     , time = "Zeit"
     , currentPlaylist = "Aktuelle Playlist"
     , smallCovers = "Kleine Bilder"
+    , viewBooklet = "Booklet anschauen"
     }
 
 messagesEN: Messages
@@ -57,6 +59,7 @@ messagesEN =
     , time = "Time"
     , currentPlaylist = "Current Playlist"
     , smallCovers = "Small Covers"
+    , viewBooklet = "View booklet"
     }
 
 getMessages: String -> Messages

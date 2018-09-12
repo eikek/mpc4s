@@ -82,22 +82,25 @@ window range.
 - `GET /api/v1/mpdspecial/listplaylists` Lists all stored playlists.
 
 
-## Cover files
+## Cover and Booklet files
 
-There are endpoints that deliver cover art for an album. One takes a
-song file and tries to find the corresponding cover image. The other
-takes an album name and looks up a file using MDP `find` command.
+There are endpoints that deliver cover art or booklet files for an
+album. One takes a song file and tries to find the corresponding cover
+image. The other takes an album name and looks up a file using MDP
+`find` command.
 
     GET /api/v1/cover/album?name=<albumName>
     GET /api/v1/cover/file/<file-uri.flac>
+    GET /api/v1/booklet/album?name=<albumName>
+    GET /api/v1/booklet/file/<file-uri.flac>
 
-The cover is expected to be a file next to the songs in the
+The cover or booklet is expected to be a file next to the songs in the
 directory. Some names are tried (which can be
-[configured](configuration.html)), while `cover.jpg` is the default
-(it is tried first). For this to work, you need to configure the same
-music directory as in your MPD config file. The cover images are
-delivered directly from the file system and are not requested from
-MPD.
+[configured](configuration.html)), while `cover.jpg` (and
+`booklet.pdf`, respectively) is the default (it is tried first). For
+this to work, you need to configure the same music directory as in
+your MPD config file. The cover images and booklet files are delivered
+directly from the file system and are not requested from MPD.
 
 If you have your cover art only inside each song, then currently that
 cannot be served. You could simply export all of them into its own
@@ -117,6 +120,7 @@ done
 
 Note that this script assumes that every song in a folder belongs to
 the same album and share the same cover art!
+
 
 ### Missing Covers
 
@@ -142,6 +146,10 @@ Cover images are served as is; i.e. they are not resized. Large files
 may slow down loading the album page. But since all images are also
 cached in the browser this should only be annoying for the initial
 load.
+
+Booklets and covers share the same cache. So while there is the same
+route for booklets (`/api/v1/booklet/clearcache`), they have an
+identical effect.
 
 ## Multiple MPD connections
 

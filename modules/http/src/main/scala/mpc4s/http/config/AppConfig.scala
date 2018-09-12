@@ -2,15 +2,27 @@ package mpc4s.http.config
 
 import java.nio.file.Path
 import pureconfig._
+import spinoco.protocol.http.Uri
 
 case class AppConfig(
   appName: String
     , baseurl: String
     , musicDirectory: Path
     , mpd: MpdConfigs
-    , cover: CoverConfig
+    , albumFile: DirectoryConfig
+    , cover: FilenameConfig
+    , booklet: FilenameConfig
     , customContent: CustomContentConfig
-)
+) {
+
+  val baseUri: Uri = Uri.parse(baseurl).toEither match {
+    case Right(uri) =>
+      uri.copy(path = uri.path.copy(initialSlash = true))
+    case Left(err) =>
+      throw new Exception(s"Invalid baseurl: $err")
+  }
+
+}
 
 object AppConfig {
 

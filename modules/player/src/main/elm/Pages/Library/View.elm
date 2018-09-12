@@ -188,6 +188,15 @@ albumDetail covers msg model =
                           [i [class "ui arrow right icon"][]
                           ,text msg.insertAll
                           ]
+                       ,if model.albumBooklet.exists then
+                            a [class "item"
+                              ,href model.albumBooklet.fileUrl
+                              ]
+                              [i [class "ui eye icon"][]
+                              ,text msg.viewBooklet
+                              ]
+                        else
+                            span[][]
                        ,a [class "disabled item"]
                           [i [class "ui download icon"][]
                           ,text "Download"

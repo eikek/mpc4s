@@ -20,6 +20,7 @@ type alias Messages =
     , time: String
     , playElsewhere: String
     , addToPlaylist: String
+    , viewBooklet: String
     }
 
 messagesDE: Messages
@@ -43,6 +44,7 @@ messagesDE =
     , time = "Zeit"
     , playElsewhere = "Woanders abspielen"
     , addToPlaylist = "Zur Playlist hinzufügen"
+    , viewBooklet = lm.viewBooklet
     }
 
 messagesEN: Messages
@@ -66,6 +68,7 @@ messagesEN =
     , time = "Time"
     , playElsewhere = "Play elsewhere"
     , addToPlaylist = "Add to playlist"
+    , viewBooklet = lm.viewBooklet
     }
 
 getMessages: String -> Messages

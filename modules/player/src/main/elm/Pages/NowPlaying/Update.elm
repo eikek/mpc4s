@@ -14,15 +14,25 @@ import Data.Range exposing (Range)
 import Data.Status
 import Data.PlayState
 import Data.SingleState
+import Data.Song
 import Data.Tag exposing (Tag(..))
 import Data.TagValue exposing (TagValue)
 import Data.Settings exposing (Settings)
+import Data.AlbumFile exposing (AlbumFile)
 
 update: Settings -> Msg -> Model -> (Model, Cmd Msg, List MpdCommand, Cmd Msg)
 update settings msg model =
     case msg of
         HandleAnswer (CurrentSongInfo s) ->
-            ({model| current = Just s}, Cmd.none, [], Ports.initElements())
+            let
+                cmd = case Data.Song.findTag Album s.song of
+                          Just name -> Requests.testBooklet model.baseurl name AlbumBookletResp
+                          Nothing -> Cmd.none
+            in
+                ({model|current = Just s, booklet = Data.AlbumFile.empty}
+                , cmd
+                , []
+                , Ports.initElements())
 
         HandleAnswer (Playlist pl) ->
             ({model|playlist = pl}, Cmd.none, [], Cmd.none)
@@ -170,6 +180,12 @@ update settings msg model =
 
         AddToPlaylist name song ->
             (model, Cmd.none, [PlaylistAdd name.name song.song.file], Cmd.none)
+
+        AlbumBookletResp (Ok af) ->
+            ({model|booklet = af}, Cmd.none, [], Cmd.none)
+
+        AlbumBookletResp (Err err) ->
+            ({model|booklet = Data.AlbumFile.empty}, Cmd.none, [], Cmd.none)
 
 initCommands: Model -> List MpdCommand
 initCommands model =
