@@ -73,15 +73,16 @@ object MpdClient {
   def apply[F[_]: Effect](connectInfo: Connect
     , config: ProtocolConfig = CommandCodec.defaultConfig
     , connectionTimeout: Duration = 5.seconds
-    , chunkSize: Int = 16384)
+    , chunkSize: Int = 16384
+    , logger: Logger = Logger.none)
     (implicit ACG: AsynchronousChannelGroup, ec: ExecutionContext): MpdClient[F] =
     new MpdClient[F] {
 
       def connect: Stream[F, MpdConnection[F]] =
-        MpdConnection[F](connectInfo, config, connectionTimeout, chunkSize)
+        MpdConnection[F](connectInfo, config, connectionTimeout, chunkSize, logger)
 
       def idle(cmd: Idle): Stream[F, MpdIdle[F]] =
-        connect.evalMap(conn => MpdIdle(conn, config, cmd))
+        connect.evalMap(conn => MpdIdle(conn, config, cmd, logger))
 
       def sendN(cmds: Seq[Command], timeout: Duration): Stream[F, Response[Answer]] = {
         val decoders = cmds.map(_.name).flatMap(config.get).map(_.responseCodec).toList

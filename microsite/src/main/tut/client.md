@@ -167,4 +167,3 @@ This module has the following dependencies:
 
 - [mpc4s-protocol](protocol.html)
 - [fs2-core and fs2-io](https://github.com/functional-streams-for-scala/fs2)
-- [log4s](https://github.com/Log4s/log4s)

@@ -84,3 +84,4 @@ section for details.
 - [logback-classic](https://logback.qos.ch/)
 - [circe (core, parser, generic)](https://github.com/circe/circe)
 - [tika-core](https://tika.apache.org/)
+- [log4s](https://github.com/Log4s/log4s)

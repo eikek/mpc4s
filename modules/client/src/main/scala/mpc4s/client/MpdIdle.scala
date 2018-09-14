@@ -1,11 +1,10 @@
 package mpc4s.client
 
 import fs2._
-import cats.effect.{Effect, Sync}
+import cats.effect.Effect
 import cats.implicits._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
-import org.log4s._
 
 import mpc4s.protocol._
 import mpc4s.protocol.codec.{LineCodec, ProtocolConfig}
@@ -54,12 +53,8 @@ trait MpdIdle[F[_]] {
 }
 
 object MpdIdle {
-  private[this] val logger = getLogger
 
-  private def debug[F[_]: Sync](msg: => String): F[Unit] =
-    Sync[F].delay(logger.trace(msg))
-
-  private[client] def apply[F[_]: Effect](conn: MpdConnection[F], cfg: ProtocolConfig, idle: Idle)
+  private[client] def apply[F[_]: Effect](conn: MpdConnection[F], cfg: ProtocolConfig, idle: Idle, logger: Logger = Logger.none)
     (implicit EC: ExecutionContext): F[MpdIdle[F]] = {
     val timeout = 5.seconds
 
@@ -124,7 +119,7 @@ object MpdIdle {
 
           def write(cmd: CommandOrList): F[Unit] = {
             Stream.bracket(permit.decrement)(
-              _ => Stream.eval(debug(s"Send command $cmd") >> breakIdle >> send(cmd) >> setIdle),
+              _ => Stream.eval(logger.trace(s"Send command $cmd") >> breakIdle >> send(cmd) >> setIdle),
               _ => permit.increment).
               compile.drain
           }
