@@ -7,7 +7,6 @@ import cats.implicits._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 import java.nio.channels.AsynchronousChannelGroup
-import org.log4s._
 import mpc4s.protocol._
 import mpc4s.protocol.codec._
 
@@ -65,12 +64,12 @@ trait MpdConnection[F[_]] {
 }
 
 object MpdConnection {
-  private[this] val logger = getLogger
 
   def apply[F[_]](connect: Connect
     , config: ProtocolConfig = CommandCodec.defaultConfig
     , connectionTimeout: Duration = 5.seconds
-    , chunkSize: Int = 32 * 1024)
+    , chunkSize: Int = 32 * 1024
+    , logger: Logger = Logger.none)
     (implicit ACG: AsynchronousChannelGroup, ec: ExecutionContext, F: Effect[F]): Stream[F, MpdConnection[F]] =
     io.tcp.client(connect.address).
       evalMap({ socket =>
@@ -79,6 +78,7 @@ object MpdConnection {
           through(text.lines).
           take(1).
           compile.toVector.
+          flatMap(line => logger.debug(s"$connect: ${line.headOption.map(_.trim)}").map(_ => line)).
           map(initialLine =>
             new MpdConnection[F] {
               logger.debug(s"$connect: ${initialLine.headOption.map(_.trim)}")
@@ -110,14 +110,14 @@ object MpdConnection {
                 requestStream[F](cmd, commandCodec).
                   to(socketWrite(socket, timeout)).
                   last.
-                  evalMap(_ => F.delay(logger.trace(s"Sent command $cmd"))).
+                  evalMap(_ => logger.trace(s"Sent command $cmd")).
                   compile.drain
 
               def sendList(req: CommandList, timeout: Duration): F[Unit] =
                 requestListStream[F](req, commandListCodec).
                   to(socketWrite(socket, timeout)).
                   last.
-                  evalMap(_ => F.delay(logger.trace(s"Sent command list $req"))).
+                  evalMap(_ => logger.trace(s"Sent command list $req")).
                   compile.drain
 
               def request(req: Command, timeout: Duration): F[String] =

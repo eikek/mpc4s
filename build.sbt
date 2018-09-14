@@ -84,7 +84,7 @@ lazy val client = project.in(file("modules/client")).
   settings(
     name := "mpc4s-client",
     description := "A mpd client library based on fs2",
-    libraryDependencies ++= Seq(`fs2-core`, `fs2-io`, log4s) ++ testDeps
+    libraryDependencies ++= Seq(`fs2-core`, `fs2-io`) ++ testDeps
   ).
   dependsOn(protocol)
 
@@ -114,7 +114,7 @@ lazy val http = project.in(file("modules/http")).
   settings(
     name := "mpc4s-http",
     description := "A http interface to the music player daemon",
-    libraryDependencies ++= testDeps ++ Seq(`fs2-http`, pureconfig, `logback-classic`, `circe-core`, `circe-parser`, `circe-generic`, tika)
+    libraryDependencies ++= testDeps ++ Seq(`fs2-http`, pureconfig, `logback-classic`, `circe-core`, `circe-parser`, `circe-generic`, tika, log4s)
   ).
   dependsOn(client)
 
