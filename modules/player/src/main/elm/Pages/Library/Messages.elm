@@ -20,6 +20,7 @@ type alias Messages =
     , currentPlaylist: String
     , smallCovers: String
     , viewBooklet: String
+    , randomize: String
     }
 
 messagesDE: Messages
@@ -40,6 +41,7 @@ messagesDE =
     , currentPlaylist = "Aktuelle Playlist"
     , smallCovers = "Kleine Bilder"
     , viewBooklet = "Booklet anschauen"
+    , randomize = "Zufällig mischen"
     }
 
 messagesEN: Messages
@@ -60,6 +62,7 @@ messagesEN =
     , currentPlaylist = "Current Playlist"
     , smallCovers = "Small Covers"
     , viewBooklet = "View booklet"
+    , randomize = "Random mix"
     }
 
 getMessages: String -> Messages

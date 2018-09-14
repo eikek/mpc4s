@@ -28,8 +28,8 @@ view covers settings lang model =
         msg = getMessages lang
     in
     div [class "main-content"]
-        [(albumView covers settings model)
-        ,(albumDetail covers msg model)
+        [if model.mode == AlbumList then (albumView covers settings model.albums) else span[class "nodisplay"][]
+        ,if model.mode == AlbumDetail then (albumDetail covers msg model) else span[class "nodisplay"][]
         ,(filterSelect msg model)
         ,(bottomMenu settings lang model)
         ]
@@ -61,6 +61,9 @@ bottomMenu settings lang model =
                             ]
                          ,a [class "item", onClick (ToggleFilterMenu Albumartist)]
                             [filterMenuLabel msg model Albumartist |> text
+                            ]
+                         ,a [class "item", onClick ShuffleAlbums]
+                            [text msg.randomize
                             ]
                          ,div [class "right menu"]
                               [div [class "item"]
@@ -129,13 +132,13 @@ filterSelectItem msg model tag name =
       [text (if (name == "") then msg.noName else name)
       ]
 
-albumView: CoverUrls -> Settings -> Model -> Html Msg
-albumView covers settings model =
+albumView: CoverUrls -> Settings -> List String -> Html Msg
+albumView covers settings albums =
     div [classList [("ui album-list", True)
-                   ,("nodisplay", model.mode /= AlbumList)]
+                   ]
              ]
              [ div [class ("ui " ++ settings.libraryIcons ++ " images")]
-                   (List.map (albumItem covers) model.albums)
+                   (List.map (albumItem covers) albums)
              ]
 
 albumItem: CoverUrls -> String -> Html Msg
