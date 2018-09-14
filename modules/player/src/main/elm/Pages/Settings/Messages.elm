@@ -12,6 +12,11 @@ type alias Messages =
     , playElsewhere: String
     , enabled: String
     , timeOffset: String
+    , searchPage: String
+    , searchLimit: String
+    , searchView: String
+    , searchAlbumView: String
+    , searchSongView: String
     }
 
 messagesDE: Messages
@@ -27,6 +32,11 @@ messagesDE =
     , playElsewhere = "Woanders abspielen"
     , enabled = "Aktiviert"
     , timeOffset = "Sekunden Offset"
+    , searchPage = "Suche"
+    , searchLimit = "Limit"
+    , searchView = "Ansicht"
+    , searchAlbumView = "Alben"
+    , searchSongView = "Tracks"
     }
 
 messagesEN: Messages
@@ -42,6 +52,11 @@ messagesEN =
     , playElsewhere = "Play elsewhere"
     , enabled = "Enabled"
     , timeOffset = "Seconds offset"
+    , searchPage = "Search"
+    , searchLimit = "Limit"
+    , searchView = "View"
+    , searchAlbumView = "Albums"
+    , searchSongView = "Tracks"
     }
 
 getMessages: String -> Messages

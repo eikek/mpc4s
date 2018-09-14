@@ -1,6 +1,6 @@
 /* mpc4s-player.js */
 
-var currentSettingsVersion = 2;
+var currentSettingsVersion = 3;
 
 elmApp.ports.updateProgress.subscribe(function(input) {
     var id = input[0];

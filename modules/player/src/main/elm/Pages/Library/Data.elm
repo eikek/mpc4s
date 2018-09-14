@@ -117,3 +117,5 @@ type Msg
     | SelectPlaylist (Maybe PlaylistName)
     | ToggleLibraryIcons
     | AlbumBookletResp (Result Http.Error AlbumFile)
+    | ShuffleAlbums
+    | ReceiveShuffled (List String)

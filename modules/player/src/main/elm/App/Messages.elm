@@ -8,6 +8,7 @@ type alias Messages =
     , nowPlayingTitle: String
     , settingsTitle: String
     , playlistsTitle: String
+    , searchPageTitle: String
     }
 
 getMessages: String -> Messages
@@ -24,6 +25,7 @@ messagesDE =
     , nowPlayingTitle = "Gerade"
     , settingsTitle = "Einstellungen"
     , playlistsTitle = "Playlists"
+    , searchPageTitle = "Suche"
     }
 
 messagesEN: Messages
@@ -33,6 +35,7 @@ messagesEN =
     , nowPlayingTitle = "Now Playing"
     , settingsTitle = "Settings"
     , playlistsTitle = "Playlists"
+    , searchPageTitle = "Search"
     }
 
 getTitle: String -> Route -> String
@@ -45,3 +48,4 @@ getTitle lang page =
         NowPlayingPage -> msg.nowPlayingTitle
         SettingsPage -> msg.settingsTitle
         PlaylistsPage _ -> msg.playlistsTitle
+        SearchPage _ _ -> msg.searchPageTitle

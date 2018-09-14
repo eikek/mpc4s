@@ -17,6 +17,8 @@ import Pages.Playlists.Data
 import Pages.Playlists.Update
 import Pages.Settings.Data
 import Pages.Settings.Update
+import Pages.Search.Data
+import Pages.Search.Update
 import Ports
 import Requests
 import Route exposing (Route(..), findPage, setPage)
@@ -70,6 +72,14 @@ initPage page model =
                 in
                     {model|playlistsModel = m_} ! ((mpd |> send) :: globalInit)
 
+            SearchPage query page ->
+                let
+                    p = Maybe.withDefault 1 page
+                    q = Maybe.withDefault "" query
+                    (m_, mpd) = Pages.Search.Update.initCommands q p model.settingsModel.settings model.searchModel
+                in
+                    {model|searchModel = m_} ! ((mpd |> send) :: globalInit)
+
             _ ->
                 model ! globalInit
 
@@ -122,6 +132,9 @@ update msg model =
         PlaylistsMsg m ->
             playlistsMsg m model
 
+        SearchMsg m ->
+            searchMsg m model
+
         ProcessItemWS str ->
             case (Data.MpdResponse.decodeString str) of
                 Ok (Data.MpdResponse.Result ans) ->
@@ -161,8 +174,9 @@ update msg model =
             let
                 (m1, c1) = settingsMsg (Pages.Settings.Data.ReceiveSettings settings) model
                 (m2, c2) = nowPlayingMsg (Pages.NowPlaying.Data.ReceiveSettings settings) m1
+                (m3, c3) = searchMsg (Pages.Search.Data.ReceiveSettings settings) m2
             in
-                (m2, Cmd.batch [c1, c2])
+                (m3, Cmd.batch [c1, c2, c3])
 
         InfoLoad (Ok info) ->
             let
@@ -192,8 +206,9 @@ handleAnswerPages ans model =
         (m2, c2) = nowPlayingMsg (Pages.NowPlaying.Data.HandleAnswer ans) m1
         (m3, c3) = settingsMsg (Pages.Settings.Data.HandleAnswer ans) m2
         (m4, c4) = playlistsMsg (Pages.Playlists.Data.HandleAnswer ans) m3
+        (m5, c5) = searchMsg (Pages.Search.Data.HandleAnswer ans) m4
     in
-        m4 ! [c1, c2, c3, c4]
+        m5 ! [c1, c2, c3, c4, c5]
 
 handleAnswerGlobal: Answer -> Model -> (Model, Cmd Msg)
 handleAnswerGlobal ans model =
@@ -268,6 +283,15 @@ indexMsg msg model =
         (m1, c1) = Pages.Index.Update.update msg model.indexModel
     in
         {model|indexModel = m1} ! [Cmd.map IndexMsg c1]
+
+searchMsg: Pages.Search.Data.Msg -> Model -> (Model, Cmd Msg)
+searchMsg msg model =
+    let
+        (m1, c1, mpd) = Pages.Search.Update.update model.settingsModel.settings msg model.searchModel
+        model_ = {model|searchModel = m1}
+        (m2, c2) = sendMpd model_ mpd
+    in
+        m2 ! [Cmd.map SearchMsg c1, c2]
 
 sendMpd: Model -> List MpdCommand -> (Model, Cmd msg)
 sendMpd model cmds =

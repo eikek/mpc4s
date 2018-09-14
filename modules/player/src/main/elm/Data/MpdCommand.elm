@@ -26,6 +26,7 @@ type MpdCommand
     | ListTags Tag Filter
     | CountSongs Filter
     | Find Filter
+    | SearchAny String Range
     | FindAdd Filter
     | Clear
     | PlaylistInfo
@@ -137,6 +138,9 @@ encode cmd =
 
         Find filter ->
             "find" %> (Data.Filter.encode filter)
+
+        SearchAny query range ->
+            "search" %> "any" %> (Util.String.quote query) %> "window" %> (Data.Range.encode range)
 
         FindAdd filter ->
             "findadd" %> (Data.Filter.encode filter)

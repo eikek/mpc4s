@@ -15,6 +15,7 @@ type Route
     | NowPlayingPage
     | SettingsPage
     | PlaylistsPage (Maybe String)
+    | SearchPage (Maybe String) (Maybe Int)
 
 
 findPage: Location -> Route
@@ -45,15 +46,21 @@ setPage page =
         PlaylistsPage mname ->
             newUrl ("playlists" ++ (Maybe.map Util.String.crazyEncode mname |> Maybe.map (\n -> "?name=" ++ n) |> Maybe.withDefault ""))
 
+        SearchPage query page ->
+            newUrl ("search" ++
+                        (Maybe.map Util.String.crazyEncode query |> Maybe.map (\n -> "?q=" ++ n) |> Maybe.withDefault "?q=") ++
+                        "&p=" ++ (Maybe.withDefault 1 page |> toString))
+
 
 routeParser: Parser (Route -> a) a
 routeParser =
     oneOf
         [ map IndexPage (oneOf [(s ""), (s "/")]),
           map NowPlayingPage (s "playing"),
-          map LibraryPage (s "library" <?> albumParam "album" <?> filterParam "filter"),
+          map LibraryPage (s "library" <?> crazyParamNonEmpty "album" <?> filterParam "filter"),
           map SettingsPage (s "settings"),
-          map PlaylistsPage (s "playlists" <?> albumParam "name")
+          map PlaylistsPage (s "playlists" <?> crazyParamNonEmpty "name"),
+          map SearchPage (s "search" <?> crazyParam "q" <?> intParam "p")
         ]
 
 decodedString: Parser (String -> a) a
@@ -93,8 +100,8 @@ crazyParam name =
     UrlParser.customParam name (\ma -> Maybe.map Util.String.crazyDecode ma)
 
 
-albumParam: String -> QueryParser (Maybe String -> a) a
-albumParam name =
+crazyParamNonEmpty: String -> QueryParser (Maybe String -> a) a
+crazyParamNonEmpty name =
     UrlParser.customParam name
         (\ma -> Maybe.map Util.String.crazyDecode ma
                 |> Util.Maybe.filter (String.isEmpty >> not))

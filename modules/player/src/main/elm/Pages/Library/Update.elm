@@ -1,5 +1,7 @@
 module Pages.Library.Update exposing (update, initCommands)
 
+import Random
+import Random.List
 import Json.Decode as Decode exposing (field)
 import Ports
 import Pages.Library.Data exposing (..)
@@ -250,6 +252,16 @@ update msg settings model =
 
         AlbumBookletResp (Err err) ->
             ({model|albumBooklet = Data.AlbumFile.empty}, Cmd.none, [], Cmd.none)
+
+        ShuffleAlbums ->
+            let
+                cmd = Random.generate ReceiveShuffled (Random.List.shuffle model.albums)
+            in
+                (model, cmd, [], Cmd.none)
+
+        ReceiveShuffled list ->
+            ({model|albums = list}, Cmd.none, [], Cmd.none)
+
 
 updateSelection: Model -> Model
 updateSelection model =

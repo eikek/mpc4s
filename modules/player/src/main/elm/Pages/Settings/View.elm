@@ -27,6 +27,7 @@ view model =
                  ,(mpdDatabaseRow msg model)
                  ,(coverRow msg model)
                  ,(playElsewhereRow msg model)
+                 ,(searchPageSizeRow msg model)
                  ]
              ]
         ]
@@ -189,6 +190,50 @@ playElsewhereRow msg model =
                          ][]
                   ,button [class "ui button", onClick PlayElsewhereOffsetInc][text "+"]
                   ,button [class "ui button", onClick PlayElsewhereOffsetDec][text "-"]
+                  ]
+             ]
+        ]
+
+searchPageSizeRow: Messages -> Model -> Html Msg
+searchPageSizeRow msg model =
+    div [class "row"]
+        [div [class "four wide column"]
+             [text msg.searchPage
+             ]
+        ,div [class "three wide column"]
+             [div [class "ui form"]
+                  [div [class "grouped fields"]
+                       [div [class "field"]
+                            [div [class "ui radio checkbox"]
+                                 [input [type_ "radio"
+                                        , name "albumview"
+                                        , checked (model.settings.searchView == 0)
+                                        , onCheck (\_ -> SetSearchView 0)
+                                        ][]
+                                 ,label [][text "Album View"]
+                                 ]
+                            ]
+                       ,div [class "field"]
+                           [div [class "ui radio checkbox"]
+                                [input [type_ "radio"
+                                       , name "songview"
+                                       , checked (model.settings.searchView == 1)
+                                       , onCheck (\_ -> SetSearchView 1)
+                                       ][]
+                                ,label [][text msg.searchSongView]
+                                ]
+                           ]
+                       ]
+                  ]
+             ]
+        ,div [class "nine wide column"]
+             [div [class "ui labeled action input"]
+                  [div [class "ui label"][text msg.searchLimit]
+                  ,input [type_ "text"
+                         ,model.settings.searchPageSize |> toString |> value
+                         ][]
+                  ,button [class "ui button", onClick SearchPageSizeInc][text "+"]
+                  ,button [class "ui button", onClick SearchPageSizeDec][text "-"]
                   ]
              ]
         ]

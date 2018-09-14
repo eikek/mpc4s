@@ -48,6 +48,7 @@ headerMenu model =
              ,(createLibraryLink model)
              ,(createNowPlayingLink model)
              ,(createPlaylistsLink model)
+             ,(createSearchLink model)
              ,div [class "right menu"]
                  ((playControlMenu model) ++ (volumeControlMenu model) ++ [(settingsMenu model)])
              ]
@@ -88,6 +89,12 @@ createPlaylistsLink model =
         a [class (activePage2 isPlaylistsPage model), onClick (SwitchPage (PlaylistsPage Nothing))]
             [getTitle lang (PlaylistsPage Nothing) |> text]
 
+
+createSearchLink: Model -> Html Msg
+createSearchLink model =
+    a [class (activePage2 isSearchPage model), onClick (SwitchPage (SearchPage Nothing Nothing))]
+      [i [class "ui search icon"][]
+      ]
 
 playControlMenu: Model -> List (Html Msg)
 playControlMenu model =
@@ -149,4 +156,10 @@ isPlaylistsPage: Route -> Bool
 isPlaylistsPage route =
     case route of
         PlaylistsPage _ -> True
+        _ -> False
+
+isSearchPage: Route -> Bool
+isSearchPage route =
+    case route of
+        SearchPage _ _ -> True
         _ -> False

@@ -141,6 +141,7 @@ lazy val player = project.in(file("modules/player")).
       "elm-lang/animation-frame" -> "1.0.0 <= v < 2.0.0",
       "elm-lang/navigation" -> "2.0.0 <= v < 3.0.0",
       "elm-lang/websocket" -> "1.0.0 <= v < 2.0.0",
+      "elm-community/random-extra" -> "2.0.0 <= v < 3.0.0",
       "evancz/url-parser" -> "2.0.0 <= v < 3.0.0",
       "evancz/elm-markdown" -> "3.0.0 <= v < 4.0.0",
       "truqu/elm-base64" -> "2.0.0 <= v < 3.0.0",

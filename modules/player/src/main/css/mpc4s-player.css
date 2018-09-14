@@ -3,6 +3,10 @@
 /*     width: 0px; */
 /* } */
 
+.default-layout .search-form {
+    margin-bottom: 1em;
+}
+
 .default-layout .bottom-left {
     position: absolute;
     bottom: 1em;
