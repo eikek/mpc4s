@@ -45,7 +45,7 @@ final class AlbumFile[F[_]: Effect](mpd: Mpd[F], cache: PathCache[F], pcfg: Prot
           flatMap {
             case Some(file) if file.exists =>
               logger.trace(s"Find album-file $file")
-              staticFile(file, musicDirectory, noneMatch)
+              staticFile(file, musicDirectory, noneMatch, Some(s"Booklet - $albumName"))
             case _ =>
               logger.trace(s"Album-file not found (${cfg.cacheDim}) for album '${albumName}'")
               cfg.missingRoutes.byAlbum(albumName, noneMatch)
@@ -58,7 +58,7 @@ final class AlbumFile[F[_]: Effect](mpd: Mpd[F], cache: PathCache[F], pcfg: Prot
         cfg.findFile(file) match {
           case Some(f) if f.exists =>
             logger.trace(s"Found album-file '$f' for file '$file'")
-            staticFile(f, musicDirectory, noneMatch)
+            staticFile(f, musicDirectory, noneMatch, None)
           case _ =>
             logger.trace(s"Album-file not found (${cfg.cacheDim}) for file '$file'")
             cfg.missingRoutes.byFile(file, noneMatch)

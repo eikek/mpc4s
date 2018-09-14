@@ -6,6 +6,7 @@ import cats.implicits._
 import spinoco.protocol.http.{HttpStatusCode, HttpResponseHeader, Uri}
 import spinoco.protocol.http.header._
 import spinoco.protocol.http.header.value._
+import spinoco.protocol.mime._
 import spinoco.fs2.http._
 import spinoco.fs2.http.body.{BodyEncoder, StreamBodyEncoder}
 import org.log4s._
@@ -74,6 +75,9 @@ trait Responses {
     def withHeader(name: String, value: String) =
       r.withHeader(GenericHeader(name, value))
 
+    def withDisposition(value: String, filename: String) =
+      r.withHeader(`Content-Disposition`(ContentDisposition(value, Map("filename" -> filename))))
+
     def detectContentType(contents: Stream[F, Byte], hint: TikaMimetype.MimetypeHint)(implicit F: Sync[F]): F[HttpResponse[F]] =
       TikaMimetype.detect(contents, hint).map(ct => r.withContentType(ct))
 
@@ -105,7 +109,7 @@ trait Responses {
     BadRequest.body(Option(th).map(_.toString).getOrElse("no error message"))
   }
 
-  def staticFile[F[_]: Sync](body: Path, root: Path, noneMatch: Option[String]): Stream[F, HttpResponse[F]] =
+  def staticFile[F[_]: Sync](body: Path, root: Path, noneMatch: Option[String], baseName: Option[String]): Stream[F, HttpResponse[F]] =
     if (body.isSubpathOf(root)) {
       logger.trace(s"About to deliver file '$body' (exists: ${body.exists})")
       if (body.notExists) Stream.emit(NotFound.emptyBody[F])
@@ -113,6 +117,7 @@ trait Responses {
       else Stream.eval(Ok.byteBody(body.contents).
         withContentLength(body.size).
         withETag(body.etag).
+        withDisposition("inline", makeFilename(body, baseName)).
         detectContentType(body))
     } else {
       logger.warn(s"Cancelled attempt to deliver file above root '$root': '$body'")
@@ -140,6 +145,16 @@ trait Responses {
 
   def urlContents[F[_]: Sync](body: ResourceFile, noneMatch: Option[String]): Stream[F, HttpResponse[F]] =
     urlContents(body.url, Some(body.length), Some(body.checksum), Some(body.mime), noneMatch)
+
+  private def makeFilename(file: Path, base: Option[String]): String =
+    base match {
+      case Some(name) =>
+        file.extension.
+          map(ext => s"${name}.${ext}").
+          getOrElse(name)
+      case _ =>
+        file.getFileName.toString
+    }
 }
 
 object Responses extends Responses

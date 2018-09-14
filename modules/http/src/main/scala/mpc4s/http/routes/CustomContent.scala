@@ -16,12 +16,12 @@ object CustomContent {
 
   def directory[F[_]: Sync](dir: Path): Route[F] = choice(
     Get >> empty >> ifNoneMatch map { noneMatch =>
-      staticFile(dir.resolve("index.html"), dir, noneMatch)
+      staticFile(dir.resolve("index.html"), dir, noneMatch, None)
     },
     Get >> ifNoneMatch :: restPath map {
       case noneMatch :: path :: HNil  =>
         val file = path.foldLeft(dir)(_ / _)
-        staticFile(file, dir, noneMatch)
+        staticFile(file, dir, noneMatch, None)
     })
 
 }
