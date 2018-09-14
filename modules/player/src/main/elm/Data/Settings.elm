@@ -12,6 +12,8 @@ type alias Settings =
     , playElsewhereEnabled: Bool
     , playElsewhereOffset: Int
     , libraryIcons: String
+    , searchPageSize: Int
+    , searchView: Int
     }
 
 empty: Settings
@@ -23,4 +25,6 @@ empty =
     , playElsewhereEnabled = True
     , playElsewhereOffset = 5
     , libraryIcons = "medium"
+    , searchPageSize = 300
+    , searchView = 0
     }

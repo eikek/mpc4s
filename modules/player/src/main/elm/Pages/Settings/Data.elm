@@ -55,3 +55,6 @@ type Msg
     | TogglePlayElsewhere
     | PlayElsewhereOffsetInc
     | PlayElsewhereOffsetDec
+    | SearchPageSizeInc
+    | SearchPageSizeDec
+    | SetSearchView Int

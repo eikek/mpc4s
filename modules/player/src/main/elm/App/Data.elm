@@ -17,6 +17,7 @@ import Pages.Library.Data
 import Pages.NowPlaying.Data
 import Pages.Settings.Data
 import Pages.Playlists.Data
+import Pages.Search.Data
 
 type alias Model =
     { location: Navigation.Location
@@ -29,6 +30,7 @@ type alias Model =
     , libraryModel: Pages.Library.Data.Model
     , settingsModel: Pages.Settings.Data.Model
     , playlistsModel: Pages.Playlists.Data.Model
+    , searchModel: Pages.Search.Data.Model
     }
 
 type alias Scroll =
@@ -48,6 +50,7 @@ makeModel flags location =
     , libraryModel = Pages.Library.Data.emptyModel
     , settingsModel = Pages.Settings.Data.makeModel flags.baseUrl
     , playlistsModel = Pages.Playlists.Data.empty
+    , searchModel = Pages.Search.Data.empty
     }
 
 getLanguage: Model -> String
@@ -65,6 +68,7 @@ type Msg
     | NowPlayingMsg Pages.NowPlaying.Data.Msg
     | SettingsMsg Pages.Settings.Data.Msg
     | PlaylistsMsg Pages.Playlists.Data.Msg
+    | SearchMsg Pages.Search.Data.Msg
     | CurrentScroll Scroll
     | Tick Time
     | SeekClick Float

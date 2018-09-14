@@ -89,6 +89,29 @@ update msg model =
                 in
                     ({model|settings = sett_}, Ports.storeSettings sett_, [])
 
+            SearchPageSizeInc ->
+                let
+                    cur = settings.searchPageSize
+                    new = if cur < 1000 then cur + 50 else cur
+                    sett = {settings|searchPageSize = new}
+                in
+                    ({model|settings = sett}, Ports.storeSettings sett, [])
+
+            SearchPageSizeDec ->
+                let
+                    cur = settings.searchPageSize
+                    new = if cur >= 100 then cur - 50 else 50
+                    sett = {settings|searchPageSize = new}
+                in
+                    ({model|settings = sett}, Ports.storeSettings sett, [])
+
+            SetSearchView n ->
+                let
+                    sett = {settings|searchView = n}
+                in
+                    ({model|settings = sett}, Ports.storeSettings sett, [])
+
+
 initCommands: Model -> List MpdCommand
 initCommands model =
     [Status]
