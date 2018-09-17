@@ -118,110 +118,108 @@ playlist covers settings msg model =
         plsize =
             List.length model.playlist
     in
-    div []
-        [div [class "ui divider"][]
-        ,table [class "ui table"]
-            [thead []
-                 [tr []
-                     [th [colspan 5, class "no-padding"]
-                         [div [class "ui secondary menu"]
-                              [a [class "item", onClick (Run (DeleteRange (Range 0 activePos)))]
-                                 [div [class "icons"]
-                                      [i [class "alternate trash icon"][]
-                                      ,i [class "corner long alternate arrow up icon"][]
-                                      ]
-                                 ]
-                              ,a [class "item", onClick (Run (DeleteRange (Range (activePos + 1) plsize)))]
-                                 [div [class "icons"]
-                                      [i [class "alternate trash icon"][]
-                                      ,i [class "corner long alternate arrow down icon"][]
-                                      ]
-                                 ]
-                              ,a [class "item", onClick (Run Clear)]
-                                 [i [class "ui trash icon"][]
-                                 ]
-                              ,a [class "item", onClick (Run Shuffle)]
-                                 [i [class "ui random icon"][]
-                                 ]
-                              ,a [class "item", onClick ToggleSavePlaylist]
-                                 [i [class "ui save icon"][]
-                                 ]
-                              ,a [class "item", onClick ToggleAddUri]
-                                 [i [class "ui plus icon"][]
-                                 ]
-                              ,div [classList [("ui right aligned dropdown item", True)
-                                              ,("nodisplay", (List.length model.mpdConns) <= 1 || (not settings.playElsewhereEnabled))
-                                              ]
-                                   ]
-                                   [text msg.playElsewhere
-                                   ,i [class "dropdown icon"][]
-                                   ,div [class "menu"]
-                                       (List.map mpdConnectionItem (otherMpdConnections model))
-                                   ]
-                              ]
-                         ]
-                     ]
-                 ,tr [classList [("nodisplay", not model.addUriVisible)]]
-                     [th [colspan 5]
-                         [div [class "right aligned"]
-                              [div [class "ui fluid action input"]
-                                   [input [type_ "text"
-                                          ,placeholder "File/Uri..."
-                                          ,onInput AddUriChange
-                                          ][]
-                                   ,button [class "ui button", onClick AddUri][text msg.add]
-                                   ]
-                              ]
-                         ]
-                     ]
-                 ,tr [classList [("nodisplay", not model.savePlaylistVisible)]]
-                     [th [colspan 5]
-                         [div [class "right aligned"]
-                              [div [class "ui fluid action input"]
-                                   [input [type_ "text"
-                                          ,placeholder "Save playlist as..."
-                                          ,onInput SavePlaylistChange
-                                          ][]
-                                   ,button [class "ui button", onClick SavePlaylist][text msg.save]
-                                   ]
-                              ]
-                         ]
-                     ]
-                    ,tr []
-                        [th [colspan 5, class "right aligned"]
-                            [span []
-                                 [plsize |> toString |> text
-                                 ,text (" " ++ msg.items)
-                                 ,text (" • " ++ msg.total ++ ": ")
-                                 ,playlistLength model |> text
-                                 ]
-                            ,span [classList [("nodisplay", model.status.repeat || model.status.random)]]
-                                [text " • "
-                                ,text (msg.played ++ ": ")
-                                ,playlistPlayedTime model |> text
-                                ,text (" • " ++ msg.remaining ++ ": ")
-                                ,playlistRemainTime model |> text
-                                ]
-                            ,span [classList [("nodisplay", model.status.repeat || model.currentTime <= 0)]]
-                                [text " • "
-                                ,text (msg.ends ++ ": ")
-                                ,playlistEndsAt model |> text
+        div [class "playlist"]
+            [table [class "ui table"]
+                   [thead []
+                        [tr []
+                            [th [colspan 5, class "no-padding"]
+                                [div [class "ui secondary menu"]
+                                     [a [class "item", onClick (Run (DeleteRange (Range 0 activePos)))]
+                                        [div [class "icons"]
+                                             [i [class "alternate trash icon"][]
+                                             ,i [class "corner long alternate arrow up icon"][]
+                                             ]
+                                        ]
+                                     ,a [class "item", onClick (Run (DeleteRange (Range (activePos + 1) plsize)))]
+                                        [div [class "icons"]
+                                             [i [class "alternate trash icon"][]
+                                             ,i [class "corner long alternate arrow down icon"][]
+                                             ]
+                                        ]
+                                     ,a [class "item", onClick (Run Clear)]
+                                        [i [class "ui trash icon"][]
+                                        ]
+                                     ,a [class "item", onClick (Run Shuffle)]
+                                        [i [class "ui random icon"][]
+                                        ]
+                                     ,a [class "item", onClick ToggleSavePlaylist]
+                                        [i [class "ui save icon"][]
+                                        ]
+                                     ,a [class "item", onClick ToggleAddUri]
+                                        [i [class "ui plus icon"][]
+                                        ]
+                                     ,div [classList [("ui right aligned dropdown item", True)
+                                                     ,("nodisplay", (List.length model.mpdConns) <= 1 || (not settings.playElsewhereEnabled))
+                                                     ]
+                                          ]
+                                          [text msg.playElsewhere
+                                          ,i [class "dropdown icon"][]
+                                          ,div [class "menu"]
+                                              (List.map mpdConnectionItem (otherMpdConnections model))
+                                          ]
+                                     ]
                                 ]
                             ]
+                        ,tr [classList [("nodisplay", not model.addUriVisible)]]
+                            [th [colspan 5]
+                                [div [class "right aligned"]
+                                     [div [class "ui fluid action input"]
+                                          [input [type_ "text"
+                                                 ,placeholder "File/Uri..."
+                                                 ,onInput AddUriChange
+                                                 ][]
+                                          ,button [class "ui button", onClick AddUri][text msg.add]
+                                          ]
+                                     ]
+                                ]
+                            ]
+                        ,tr [classList [("nodisplay", not model.savePlaylistVisible)]]
+                            [th [colspan 5]
+                                [div [class "right aligned"]
+                                     [div [class "ui fluid action input"]
+                                          [input [type_ "text"
+                                                 ,placeholder "Save playlist as..."
+                                                 ,onInput SavePlaylistChange
+                                                 ][]
+                                          ,button [class "ui button", onClick SavePlaylist][text msg.save]
+                                          ]
+                                     ]
+                                ]
+                            ]
+                        ,tr []
+                            [th [colspan 5, class "right aligned"]
+                                [span []
+                                     [plsize |> toString |> text
+                                     ,text (" " ++ msg.items)
+                                     ,text (" • " ++ msg.total ++ ": ")
+                                     ,playlistLength model |> text
+                                     ]
+                                ,span [classList [("nodisplay", model.status.repeat || model.status.random)]]
+                                    [text " • "
+                                    ,text (msg.played ++ ": ")
+                                    ,playlistPlayedTime model |> text
+                                    ,text (" • " ++ msg.remaining ++ ": ")
+                                    ,playlistRemainTime model |> text
+                                    ]
+                                ,span [classList [("nodisplay", model.status.repeat || model.currentTime <= 0)]]
+                                    [text " • "
+                                    ,text (msg.ends ++ ": ")
+                                    ,playlistEndsAt model |> text
+                                    ]
+                                ]
+                            ]
+                        ,tr []
+                            [th [][text "#"]
+                            ,th [][]
+                            ,th [][msg.forTag Title |> text]
+                            ,th [][msg.time |> text]
+                            ,th [][]
+                            ]
                         ]
-                    ,tr []
-                        [th [][text "#"]
-                        ,th [][]
-                        ,th [][msg.forTag Title |> text]
-                        ,th [][msg.time |> text]
-                        ,th [][]
-                        ]
-                    ]
-             ,tbody []
-                    (List.map (playlistItem covers activePos plsize) model.playlist)
-             ]
-
-        ]
+                   ,tbody []
+                       (List.map (playlistItem covers activePos plsize) model.playlist)
+                   ]
+            ]
 
 playlistItem: CoverUrls -> Int -> Int -> PlaylistSong -> Html Msg
 playlistItem covers active size ps =

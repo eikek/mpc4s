@@ -3,6 +3,11 @@
 /*     width: 0px; */
 /* } */
 
+.default-layout .playlist {
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
 .default-layout .search-form {
     margin-bottom: 1em;
 }
