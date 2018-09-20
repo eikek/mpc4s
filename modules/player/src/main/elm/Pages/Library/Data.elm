@@ -27,7 +27,6 @@ type alias Model =
     , albumInfo: AlbumInfo
     , collapsedDiscs: List String
     , mode: ViewMode
-    , scroll: Pos
     , status: Status
     , currentCmd: Maybe MpdCommand
     , playlists: List PlaylistName
@@ -49,7 +48,6 @@ emptyModel =
     , albumInfo = Pages.Library.AlbumInfo.emptyInfo
     , collapsedDiscs = []
     , mode = AlbumList
-    , scroll = Pos 0 0
     , status = Data.Status.empty
     , currentCmd = Nothing
     , playlists = []
@@ -71,6 +69,10 @@ type alias SelectionInfo =
 setFilter: Filter -> Model -> Model
 setFilter filter model =
     {model|filter = filter}
+
+setAlbumList: Filter -> Model -> Model
+setAlbumList filter model =
+    {model|filter = filter, mode = AlbumList, albumBooklet = Data.AlbumFile.empty}
 
 discCollapsed: String -> Model -> Bool
 discCollapsed disc model =
@@ -101,10 +103,8 @@ type Msg
     | ToggleFilterMenu Tag
     | ClearFilter
     | FindAlbum String
-    | SwitchMode ViewMode
     | ClearPlayAll String
     | AppendAll String
-    | CurrentScroll Pos
     | ToDetailPage String
     | ClearPlayDisc String String
     | AppendDisc String String

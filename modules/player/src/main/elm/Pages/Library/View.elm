@@ -143,11 +143,15 @@ albumView covers settings albums =
 
 albumItem: CoverUrls -> String -> Html Msg
 albumItem coverurls name =
-    a [class "ui image pointer", onClick (ToDetailPage name)]
-        [ img [(Util.Html.width "100%")
-              , src (coverurls.forAlbum name)
-              ][]
-        ]
+    a [class "ui image pointer"
+      , onClick (ToDetailPage name)
+      , Util.Html.makeId name |> id
+      ]
+      [img [(Util.Html.width "100%")
+           , src (coverurls.forAlbum name)
+           , title name
+           ][]
+      ]
 
 albumDetail: CoverUrls -> Messages -> Model -> Html Msg
 albumDetail covers msg model =

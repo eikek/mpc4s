@@ -69,7 +69,6 @@ type Msg
     | SettingsMsg Pages.Settings.Data.Msg
     | PlaylistsMsg Pages.Playlists.Data.Msg
     | SearchMsg Pages.Search.Data.Msg
-    | CurrentScroll Scroll
     | Tick Time
     | SeekClick Float
     | SettingsLoad Settings

@@ -24,6 +24,7 @@ import Requests
 import Route exposing (Route(..), findPage, setPage)
 import Time
 import Util.List
+import Util.Html
 
 initPage: Route -> Model -> (Model, Cmd Msg)
 initPage page model =
@@ -46,11 +47,11 @@ initPage page model =
 
                     Nothing ->
                         let
-                            m_ = {model|libraryModel = Pages.Library.Data.setFilter filter model.libraryModel}
-                            (m1, c1) = libraryPageMsg (Pages.Library.Data.SwitchMode Pages.Library.Data.AlbumList) m_
-                            libraryInit = Pages.Library.Update.initCommands m1.libraryModel
+                            m_ = {model|libraryModel = Pages.Library.Data.setAlbumList filter model.libraryModel}
+                            scroll = Ports.scrollToElem (Util.Html.makeId m_.libraryModel.albumInfo.name)
+                            libraryInit = Pages.Library.Update.initCommands m_.libraryModel
                         in
-                            m1 ! ((libraryInit |> send) :: c1 :: globalInit)
+                            {m_|deferredCmds = scroll :: m_.deferredCmds} ! ((libraryInit |> send) :: globalInit)
 
             NowPlayingPage ->
                 let
@@ -99,7 +100,7 @@ updatePage loc model =
     in {model_
            | page = page
            , location = loc
-           , deferredCmds = Ports.initElements() :: model.deferredCmds} ! [Ports.setTitle (getTitle lang page), cmd_]
+           , deferredCmds = Ports.initElements() :: model_.deferredCmds} ! [Ports.setTitle (getTitle lang page), cmd_]
 
 
 update: Msg -> Model -> (Model, Cmd Msg)
@@ -152,9 +153,6 @@ update msg model =
                         x = Debug.log "Decoding error: " (str ++ err)
                     in
                         model ! []
-
-        CurrentScroll scroll ->
-            libraryPageMsg (Pages.Library.Data.CurrentScroll scroll) model
 
         Tick time ->
             let

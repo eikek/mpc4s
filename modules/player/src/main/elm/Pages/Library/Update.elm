@@ -118,9 +118,6 @@ update msg settings model =
             in
                 ({model|collapsedDiscs = [], currentCmd = Just cmd}, Ports.getScroll (), [cmd], Cmd.none)
 
-        SwitchMode mode ->
-            ({model|mode = mode, albumBooklet = Data.AlbumFile.empty}, Cmd.none, [], Ports.scrollTo (Debug.log "Scroll to: " model.scroll))
-
         ClearPlayAll name ->
             (model, Cmd.none, [Clear, FindAdd [TagValue Album name], Play Nothing], Cmd.none)
 
@@ -164,9 +161,6 @@ update msg settings model =
 
                 Nothing ->
                     (model, Cmd.none, [Add file], Cmd.none)
-
-        CurrentScroll pos ->
-            ({model|scroll = Debug.log "pos = " pos}, Cmd.none, [], Cmd.none)
 
         ToDetailPage album ->
             (model, Route.setPage (LibraryPage (Just album) []), [], Cmd.none)

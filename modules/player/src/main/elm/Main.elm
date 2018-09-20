@@ -36,7 +36,6 @@ subscriptions model =
     Sub.batch
         [ if model.deferredCmds == [] then Sub.none else AnimationFrame.times DeferredTick
         , WebSocket.listen wsurl ProcessItemWS
-        , Ports.currentScroll CurrentScroll
         , Ports.seekClick SeekClick
         , Ports.receiveSettings SettingsLoad
         , if model.status.state == Data.PlayState.Play then Time.every (1 * Time.second) Tick else Sub.none

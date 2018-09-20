@@ -49,6 +49,21 @@ elmApp.ports.scrollTo.subscribe(function(scroll) {
     window.scrollTo(scroll.left, scroll.top);
 });
 
+elmApp.ports.scrollToElem.subscribe(function(id) {
+    if (id && id != "") {
+        window.setTimeout(function() {
+            var el = document.getElementById(id);
+            if (el) {
+                if (el["scrollIntoViewIfNeeded"]) {
+                    el.scrollIntoViewIfNeeded();
+                } else {
+                    el.scrollIntoView();
+                }
+            }
+        }, 0);
+    }
+});
+
 elmApp.ports.storeSettings.subscribe(function(settings) {
     settings.version = currentSettingsVersion;
     localStorage.setItem('settings', JSON.stringify(settings));

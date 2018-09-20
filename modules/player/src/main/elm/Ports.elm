@@ -10,6 +10,7 @@ port updateProgress: (String, {start: Int, end: Int}) -> Cmd msg
 port getScroll: () -> Cmd msg
 port scrollTo: Scroll -> Cmd msg
 port currentScroll: (Scroll -> msg) -> Sub msg
+port scrollToElem: String -> Cmd msg
 
 port seekClick: (Float -> msg) -> Sub msg
 
