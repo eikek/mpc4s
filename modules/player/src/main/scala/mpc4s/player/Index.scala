@@ -8,6 +8,7 @@ import org.log4s._
 import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
 
 import mpc4s.player.webjar.Webjars
+import mpc4s.http.util.Size.Implicits._
 import mpc4s.http.util.all._
 
 object Index {
@@ -34,7 +35,7 @@ object Index {
           evalMap {
             case Some(str) =>
               Ok.byteBody(Stream.emits(str.getBytes).covary[F]).
-                withContentLength(str.getBytes.length.toLong).
+                withContentLength(str.getBytes.length.toLong.bytes).
                 withETag(wj.hash + flags.hashCode).
                 useOrDetect(url, file.map(_.contentType))
 

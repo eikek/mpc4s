@@ -6,6 +6,7 @@ import spinoco.fs2.http.HttpResponse
 import org.log4s._
 
 import mpc4s.player.webjar.Webjars
+import mpc4s.http.util.Size.Implicits._
 import mpc4s.http.util.all._
 
 object Assets {
@@ -26,7 +27,7 @@ object Assets {
       case Some((wj, url)) =>
         logger.trace(s"Found asset $name/$p")
         val file = toc.get(wj.hash).flatMap(_.get(p))
-        val len = file.map(_.length)
+        val len = file.map(_.length.bytes)
         urlContents(url, len, Some(wj.hash), file.map(_.contentType), noneMatch)
 
       case None =>
