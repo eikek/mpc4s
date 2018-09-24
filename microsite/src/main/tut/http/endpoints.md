@@ -87,14 +87,14 @@ window range.
 There are endpoints that deliver cover art or booklet files for an
 album. One takes a song file and tries to find the corresponding cover
 image. The other takes an album name and looks up a file using MDP
-`find` command.
+`find` command and uses it to look up the cover or booklet file.
 
-    GET /api/v1/cover/album?name=<albumName>
-    GET /api/v1/cover/file/<file-uri.flac>
+    GET /api/v1/cover/album?name=<albumName>[&size=<sz>]
+    GET /api/v1/cover/file/<file-uri.flac>[?size=<sz>]
     GET /api/v1/booklet/album?name=<albumName>
     GET /api/v1/booklet/file/<file-uri.flac>
 
-The cover or booklet is expected to be a file next to the songs in the
+The cover or booklet is expected to be a file next to the songs in a
 directory. Some names are tried (which can be
 [configured](configuration.html)), while `cover.jpg` (and
 `booklet.pdf`, respectively) is the default (it is tried first). For
@@ -102,8 +102,23 @@ this to work, you need to configure the same music directory as in
 your MPD config file. The cover images and booklet files are delivered
 directly from the file system and are not requested from MPD.
 
+For cover art, a `size` parameter can be specified. If this is
+present, the cover art is resized (if it exceeds `size`) and a squared
+thumbnail of the given size is returned. The thumbnail is created on
+the fly and stored on the file system, so it might take a while when
+requesting for the first time. Keep in mind that this slows down the
+library page a lot on first access. But once all the thumbnails are
+created, they are then served from the file system and everything goes
+pretty fast. If you don't like this feature, you can turn it off
+“globally” in the [configuration file](configuration.html); the `size`
+parameter is then ignored and all clients receive the original cover
+art file. If an error occurs during resizing, it is logged and the
+original file is returned. Please see the [config
+file](configuration.html) for how to configure this feature. Also note
+that the directory of thumbnails is not cleaned up automatically.
+
 If you have your cover art only inside each song, then currently that
-cannot be served. You could simply export all of them into its own
+is not supported. You could simply export all of them into its own
 file; for example for flac files:
 
 ```bash
@@ -119,7 +134,7 @@ done
 ```
 
 Note that this script assumes that every song in a folder belongs to
-the same album and share the same cover art!
+the same album and shares the same cover art!
 
 
 ### Missing Covers
@@ -127,6 +142,7 @@ the same album and share the same cover art!
 A missing cover is replaced by a generated image from
 [robohash](https://robohash.org) using the album name as input. This
 way you get unique images per album.
+
 
 ### Cache
 

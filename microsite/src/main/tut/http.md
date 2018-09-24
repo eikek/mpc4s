@@ -13,9 +13,12 @@ concept). Responses from MPD are returned as JSON. The commands are
 normal MPD commands (simple strings) just wrapped in a basic JSON
 structure.
 
-It also deals with cover images from the file system. This requires
-that `mpc4s-http` can access the same music directory as MPD.
+It also deals with cover images and booklet files from the file
+system. This requires that `mpc4s-http` can access the same music
+directory as MPD.
 
+It is designed to run with low memory and cpu constraints and works
+quite well on the raspberry pi.
 
 ## Usage
 
