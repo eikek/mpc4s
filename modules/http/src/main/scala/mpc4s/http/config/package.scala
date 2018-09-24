@@ -5,6 +5,8 @@ import pureconfig._
 import pureconfig.error._
 import pureconfig.ConvertHelpers._
 
+import mpc4s.http.util.Size
+
 package object config {
 
   implicit final class ConfigEitherOps[A](r: Either[ConfigReaderFailures, A]) {
@@ -23,5 +25,12 @@ package object config {
 
   implicit val durationConvert: ConfigReader[Duration] = ConfigReader.fromString[Duration](catchReadError(s =>
     Duration.unsafeParse(s)
+  ))
+
+  implicit val sizeConvert: ConfigReader[Size] = ConfigReader.fromString[Size](catchReadError(s =>
+    Size.parse(s) match {
+      case None => throw new Exception(s"Invalid size: $s. Use units G,M,K or B")
+      case Some(sz) => sz
+    }
   ))
 }

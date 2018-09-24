@@ -14,7 +14,7 @@ import mpc4s.http.util.all._
 
 object Endpoint {
 
-  def apply[F[_]: Effect](cfg: ServerConfig[F], cache: PathCache[F], mpds: Mpds[F], basePath: Uri.Path)
+  def apply[F[_]: Effect](cfg: ServerConfig[F], cache: PathCache[F], thumb: Thumbnail[F], mpds: Mpds[F], basePath: Uri.Path)
     (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler): Route[F] = {
 
     val pcfg = cfg.protocolConfig
@@ -22,7 +22,7 @@ object Endpoint {
     choice(
       "mpd"/createMpdRoutes(pcfg, mpds),
       "mpdspecial"/createSpecialRoutes(pcfg, mpds),
-      "cover"/createAlbumFileRoutes(mpds, AlbumFileRoute.cover(cache, cfg, basePath/"cover")),
+      "cover"/createAlbumFileRoutes(mpds, AlbumFileRoute.cover(cache, thumb, cfg, basePath/"cover")),
       "booklet"/createAlbumFileRoutes(mpds, AlbumFileRoute.booklet(cache, cfg, basePath/"booklet")),
       "info"/cut(Version(cfg.app.mpd))
     )
@@ -65,7 +65,7 @@ object Endpoint {
 
   object AlbumFileRoute {
 
-    def cover[F[_]: Effect](cache: PathCache[F], serverCfg: ServerConfig[F], basePath: Uri.Path)
+    def cover[F[_]: Effect](cache: PathCache[F], thumb: Thumbnail[F], serverCfg: ServerConfig[F], basePath: Uri.Path)
       (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext): AlbumFileRoute[F] =
       AlbumFileRoute(mpd =>
         ( new AlbumFile(mpd, cache, serverCfg.protocolConfig)
@@ -73,7 +73,8 @@ object Endpoint {
           , serverCfg.app.cover
           , "cover"
           , basePath
-          , AlbumFile.MissingRoutes.imagePlaceholder(mpd, serverCfg.protocolConfig)))
+          , AlbumFile.MissingRoutes.imagePlaceholder(mpd, serverCfg.protocolConfig)
+          , AlbumFile.FileRoute.thumbnail("Cover", thumb)))
         )
 
     def booklet[F[_]: Effect](cache: PathCache[F], serverCfg: ServerConfig[F], basePath: Uri.Path)
@@ -84,7 +85,8 @@ object Endpoint {
           , serverCfg.app.booklet
           , "booklet"
           , basePath
-          , AlbumFile.MissingRoutes.notFound))
+          , AlbumFile.MissingRoutes.notFound
+          , AlbumFile.FileRoute.default("Booklet")))
         )
   }
 }

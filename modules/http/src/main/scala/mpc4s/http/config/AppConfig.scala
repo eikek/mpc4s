@@ -13,6 +13,7 @@ case class AppConfig(
     , cover: FilenameConfig
     , booklet: FilenameConfig
     , customContent: CustomContentConfig
+    , coverThumbnails: ThumbnailConfig
 ) {
 
   val baseUri: Uri = Uri.parse(baseurl).toEither match {

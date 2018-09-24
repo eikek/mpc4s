@@ -11,6 +11,14 @@ applications. A debian package and a universal zip package are
 
 ## Debian
 
+The provided `deb` file can be installed on most Linuxes that are
+dervied from Debian (like Debian itself, obviously, Ubuntu, Raspbian,
+…).  Install the `deb` file using this command:
+
+```bash
+dpkg -i mpc4s-http_{{ site.version }}_all.deb
+```
+
 The deb package includes a systemd unit. After installing the package,
 you can find the configuration file in
 `/etc/mpc4s-http/mpc4s.conf`. After a change, you need to restart

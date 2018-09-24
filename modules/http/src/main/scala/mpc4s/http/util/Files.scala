@@ -3,7 +3,10 @@ package mpc4s.http.util
 import fs2.{io, Stream}
 import cats.effect.Sync
 import java.net.URL
-import java.nio.file.{Files => JF, Path, Paths}
+import java.nio.file.{Files => JF, Path, Paths, StandardCopyOption}
+import scodec.bits.ByteVector
+
+import mpc4s.http.util.Size.Implicits._
 
 trait Files {
 
@@ -68,10 +71,13 @@ trait Files {
     def contents[F[_]: Sync]: Stream[F, Byte] =
       io.file.readAll(path, 32 * 1024)
 
-    def size: Long = JF.size(path)
+    def size: Size = JF.size(path).bytes
 
-    def etag: String =
-      size + name
+    def etag: String = {
+      ByteVector.view((path.toAbsolutePath.toString + size.toBytes).getBytes).
+        digest("SHA-256").
+        toHex
+    }
 
     def checkETag(tag: String): Boolean =
       etag == tag
@@ -88,6 +94,15 @@ trait Files {
         case "gif" => "image/gif"
         case _ => "application/octet-stream"
       }
+
+    def moveTo[F[_]: Sync](target: Path): F[Path] =
+      Sync[F].delay(JF.move(path, target
+        , StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING))
+  }
+
+  object TempFile {
+    def create[F[_]: Sync](prefix: String, suffix: String, parent: Path): F[Path] =
+      Sync[F].delay(JF.createTempFile(parent, prefix, suffix))
   }
 }
 

@@ -9,6 +9,8 @@ import spinoco.protocol.http.header.value._
 import spinoco.protocol.mime._
 import spinoco.fs2.http._
 import spinoco.fs2.http.body.{BodyEncoder, StreamBodyEncoder}
+import spinoco.fs2.http.routing.MatchResult
+import spinoco.fs2.http.routing.MatchResult._
 import org.log4s._
 import java.net.URL
 import java.time.{Instant, ZoneId}
@@ -57,10 +59,10 @@ trait Responses {
   }
 
   implicit final class ReqRespOps[F[_]](r: HttpResponse[F]) {
-    def withContentLength(len: Long): HttpResponse[F] =
-      r.withHeader(`Content-Length`(len))
+    def withContentLength(len: Size): HttpResponse[F] =
+      r.withHeader(`Content-Length`(len.toBytes))
 
-    def withContentLength(len: Option[Long]): HttpResponse[F] =
+    def withContentLength(len: Option[Size]): HttpResponse[F] =
       len.map(withContentLength).getOrElse(r)
 
     def withETag(id: String) =
@@ -109,22 +111,31 @@ trait Responses {
     BadRequest.body(Option(th).map(_.toString).getOrElse("no error message"))
   }
 
-  def staticFile[F[_]: Sync](body: Path, root: Path, noneMatch: Option[String], baseName: Option[String]): Stream[F, HttpResponse[F]] =
-    if (body.isSubpathOf(root)) {
-      logger.trace(s"About to deliver file '$body' (exists: ${body.exists})")
-      if (body.notExists) Stream.emit(NotFound.emptyBody[F])
-      else if (noneMatch.exists(body.checkETag)) Stream(NotModified.emptyBody[F].withETag(body.etag))
-      else Stream.eval(Ok.byteBody(body.contents).
-        withContentLength(body.size).
-        withETag(body.etag).
-        withDisposition("inline", makeFilename(body, baseName)).
-        detectContentType(body))
-    } else {
-      logger.warn(s"Cancelled attempt to deliver file above root '$root': '$body'")
-      Stream.emit(NotFound.emptyBody[F])
+  def checkFile[F[_]](file: Path, root: Path): MatchResult[F, Path] =
+    if (file.isSubpathOf(root)) MatchResult.success(file)
+    else {
+      logger.warn(s"Cancelled attempt to deliver file above root '$root': '$file'")
+      MatchResult.NotFoundResponse
     }
 
-  def urlContents[F[_]: Sync](body: URL, length: Option[Long], tag: Option[String], mime: Option[String], noneMatch: Option[String]): Stream[F, HttpResponse[F]] =
+  def staticFile[F[_]: Sync](body: Path, root: Path, noneMatch: Option[String], baseName: Option[String]): Stream[F, HttpResponse[F]] =
+    checkFile[F](body, root).fold(
+      resp => Stream.emit(resp),
+      file => fileContents(file, noneMatch, baseName)
+    )
+
+  def fileContents[F[_]: Sync](file: Path, noneMatch: Option[String], baseName: Option[String]): Stream[F, HttpResponse[F]] = {
+    logger.trace(s"About to deliver file '$file' (exists: ${file.exists})")
+    if (file.notExists) Stream.emit(NotFound.emptyBody[F])
+    else if (noneMatch.exists(file.checkETag)) Stream(NotModified.emptyBody[F].withETag(file.etag))
+    else Stream.eval(Ok.byteBody(file.contents).
+      withContentLength(file.size).
+      withETag(file.etag).
+      withDisposition("inline", makeFilename(file, baseName)).
+      detectContentType(file))
+  }
+
+  def urlContents[F[_]: Sync](body: URL, length: Option[Size], tag: Option[String], mime: Option[String], noneMatch: Option[String]): Stream[F, HttpResponse[F]] =
     if (noneMatch.isDefined && noneMatch == tag) {
       Stream(NotModified.emptyBody[F].withETag(tag))
     } else {

@@ -2,7 +2,7 @@ package mpc4s.http.routes
 
 import java.nio.file.Path
 import fs2.Stream
-import cats.effect.Effect
+import cats.effect.{Effect, Sync}
 import cats.implicits._
 import shapeless.{::, HNil}
 import java.nio.channels.AsynchronousChannelGroup
@@ -39,13 +39,16 @@ final class AlbumFile[F[_]: Effect](mpd: Mpd[F], cache: PathCache[F], pcfg: Prot
 
   def byAlbum(cfg: AlbumFile.Config[F])
     (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext): Route[F] =
-    "album" / Get >> param[String]("name") :: ifNoneMatch map {
-      case albumName :: noneMatch :: HNil =>
+    "album" / Get >> param[String]("name") :: ifNoneMatch :: param[Int]("size").? map {
+      case albumName :: noneMatch :: size :: HNil =>
         lookupFile(albumName, cfg).
           flatMap {
             case Some(file) if file.exists =>
               logger.trace(s"Find album-file $file")
-              staticFile(file, musicDirectory, noneMatch, Some(s"Booklet - $albumName"))
+              checkFile[F](file, musicDirectory).fold(
+                resp => Stream.emit(resp),
+                _ => cfg.defaultRoute.serve(file, Some(albumName), noneMatch, size)
+              )
             case _ =>
               logger.trace(s"Album-file not found (${cfg.cacheDim}) for album '${albumName}'")
               cfg.missingRoutes.byAlbum(albumName, noneMatch)
@@ -53,12 +56,15 @@ final class AlbumFile[F[_]: Effect](mpd: Mpd[F], cache: PathCache[F], pcfg: Prot
     }
 
   def byFile(cfg: AlbumFile.Config[F]): Route[F] =
-    "file" / Get >> asFile(musicDirectory) :: ifNoneMatch map {
-      case file :: noneMatch :: HNil =>
+    "file" / Get >> asFile(musicDirectory) :: ifNoneMatch :: param[Int]("size").? map {
+      case file :: noneMatch :: size :: HNil =>
         cfg.findFile(file) match {
           case Some(f) if f.exists =>
             logger.trace(s"Found album-file '$f' for file '$file'")
-            staticFile(f, musicDirectory, noneMatch, None)
+            checkFile[F](f, musicDirectory).fold(
+              resp => Stream.emit(resp),
+              _ => cfg.defaultRoute.serve(f, None, noneMatch, size)
+            )
           case _ =>
             logger.trace(s"Album-file not found (${cfg.cacheDim}) for file '$file'")
             cfg.missingRoutes.byFile(file, noneMatch)
@@ -142,7 +148,8 @@ object AlbumFile {
     , fileCfg: FilenameConfig
     , cacheDim: String
     , basePath: Uri.Path
-    , missingRoutes: MissingRoutes[F]) {
+    , missingRoutes: MissingRoutes[F]
+    , defaultRoute: FileRoute[F]) {
 
     def findFile(f: Path): Option[Path] =
       FilenameConfig.findFile(f, dirCfg, fileCfg)
@@ -155,6 +162,34 @@ object AlbumFile {
 
   object AlbumFileInfo {
     implicit def jsonEncoder: Encoder[AlbumFileInfo] = deriveEncoder[AlbumFileInfo]
+  }
+
+
+  trait FileRoute[F[_]] {
+    def serve(file: Path
+      , albumName: Option[String]
+      , noneMatch: Option[String]
+      , size: Option[Int]): Stream[F, HttpResponse[F]]
+  }
+
+  object FileRoute {
+    def default[F[_]: Sync](namePrefix: String): FileRoute[F] =
+      new FileRoute[F] {
+        def serve(file: Path
+          , albumName: Option[String]
+          , noneMatch: Option[String]
+          , size: Option[Int]): Stream[F, HttpResponse[F]] =
+          fileContents(file, noneMatch, albumName.map(n => s"$namePrefix - $n"))
+      }
+
+    def thumbnail[F[_]: Sync](namePrefix: String, thumb: Thumbnail[F]): FileRoute[F] =
+      new FileRoute[F] {
+        def serve(file: Path
+          , albumName: Option[String]
+          , noneMatch: Option[String]
+          , size: Option[Int]): Stream[F, HttpResponse[F]] =
+          thumb.serve(file, albumName.map(n => s"$namePrefix - $n"), noneMatch, size, namePrefix)
+      }
   }
 
   trait MissingRoutes[F[_]] {
