@@ -5,6 +5,7 @@ type alias Messages =
     , headline: String
     , subhead: String
     , moreOnGithub: String
+    , website: String
     , photosFrom: String
     , takenBy: String
     }
@@ -14,7 +15,8 @@ messagesDE =
     { title = "mpc4s"
     , headline = "mpc4s Player"
     , subhead = "Ein einfaches Frontent zu MPD"
-    , moreOnGithub = "Mehr bei Github"
+    , moreOnGithub = "Github"
+    , website = "Webseite"
     , photosFrom = "Fotos von"
     , takenBy = "von"
     }
@@ -24,7 +26,8 @@ messagesEN =
     { title = "mpc4s"
     , headline = "mpc4s Player"
     , subhead = "A simple frontend to MPD"
-    , moreOnGithub = "More on Github"
+    , moreOnGithub = "Github"
+    , website = "Website"
     , photosFrom = "Photos from"
     , takenBy = "taken by"
     }

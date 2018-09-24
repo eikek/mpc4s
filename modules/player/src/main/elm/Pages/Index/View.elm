@@ -26,9 +26,15 @@ view lang model =
                   ]
              ,div [class "ui very padded center aligned basic red segment"]
                   [a [class "basic primary large ui button"
-                     , href "https://github.com/eikek/mpc4s"
+                     , href "https://eikek.github.io/mpc4s/"
                      ]
-                     [i [class "ui github icon"][]
+                     [i [class "ui external alternate icon"][]
+                     ,text msg.website
+                     ]
+                  ,a [class "basic primary large ui button"
+                     , href "https://github.com/eikek/mpc4s/"
+                     ]
+                     [i [class "ui external alternate icon"][]
                      ,text msg.moreOnGithub
                      ]
                   ]
