@@ -37,20 +37,25 @@ info baseurl receive =
     Http.get (baseurl ++ "/api/v1/info") Data.Info.jsonDecode
         |> Http.send receive
 
-albumCoverUrl: MpdConn -> String -> String -> String
-albumCoverUrl conn baseurl albumName =
+albumCoverUrl: MpdConn -> String -> Maybe Int -> String -> String
+albumCoverUrl conn baseurl thumbSize albumName =
     let
         base = if String.endsWith "/" baseurl then baseurl else baseurl ++ "/"
+        path = base ++ "api/v1/cover/" ++ conn.id ++ "/album"
+        size = "size=" ++ (Maybe.map toString thumbSize |> Maybe.withDefault "")
+        name = "name=" ++ Http.encodeUri(albumName)
     in
-        base ++ "api/v1/cover/" ++ conn.id ++ "/album?name=" ++ Http.encodeUri(albumName)
+        path ++ "?" ++ size ++ "&" ++ name
 
-fileCoverUrl: MpdConn -> String -> String -> String
-fileCoverUrl conn baseurl file =
+fileCoverUrl: MpdConn -> String -> Maybe Int -> String -> String
+fileCoverUrl conn baseurl thumbSize file =
     let
         base = if String.endsWith "/" baseurl then baseurl else baseurl ++ "/"
+        path = base ++ "api/v1/cover/" ++ conn.id ++ "/file/"
+        size = "size=" ++ (Maybe.map toString thumbSize |> Maybe.withDefault "")
+        filename = Http.encodeUri(file)
     in
-        base ++ "api/v1/cover/" ++ conn.id ++ "/file/" ++ Http.encodeUri(file)
-
+        path ++ filename ++ "?" ++ size
 
 clearCoverCache: String -> (Result Http.Error () -> msg) -> Cmd msg
 clearCoverCache baseurl f =

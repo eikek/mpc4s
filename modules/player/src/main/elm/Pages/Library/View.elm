@@ -165,9 +165,11 @@ albumDetail covers msg model =
         [div [class "ui grid container"]
              [div [class "sixteen wide tablet five wide computer column"]
                   [div []
-                       [img [class "ui image"
-                            ,Util.Html.width "100%"
-                            ,src (covers.forAlbum info.name)][]
+                       [a [href (covers.forAlbumOrig info.name)]
+                          [img [class "ui image"
+                               ,Util.Html.width "100%"
+                               ,src (covers.forAlbum info.name)][]
+                          ]
                        ]
                   ,div [class "text-right"]
                        [List.length info.discs |> toString |> text

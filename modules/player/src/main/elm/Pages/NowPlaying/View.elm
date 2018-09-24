@@ -54,14 +54,24 @@ coverUrl covers ps =
         Nothing ->
             covers.forFile ps.song.file
 
+coverUrlOrig: CoverUrls -> PlaylistSong -> String
+coverUrlOrig covers ps =
+    case (Data.Song.findTag Album ps.song) of
+        Just album ->
+            covers.forAlbumOrig album
+        Nothing ->
+            covers.forFileOrig ps.song.file
+
 
 currentCover: CoverUrls -> Model -> Html Msg
 currentCover covers model =
     case model.current of
         Just song ->
-            img [(Util.Html.width "100%")
-                , src (coverUrl covers song)
-                ][]
+            a [href (coverUrlOrig covers song)]
+              [img [(Util.Html.width "100%")
+                   , src (coverUrl covers song)
+                   ][]
+              ]
         Nothing ->
             div [][]
 

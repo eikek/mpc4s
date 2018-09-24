@@ -14,6 +14,7 @@ type alias Settings =
     , libraryIcons: String
     , searchPageSize: Int
     , searchView: Int
+    , thumbnailSize: Int
     }
 
 empty: Settings
@@ -27,4 +28,5 @@ empty =
     , libraryIcons = "medium"
     , searchPageSize = 300
     , searchView = 0
+    , thumbnailSize = 500
     }

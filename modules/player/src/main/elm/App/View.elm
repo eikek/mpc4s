@@ -18,12 +18,14 @@ import App.Layout.Default exposing (render)
 view: Model -> Html Msg
 view model =
     let
-        conn = model.settingsModel.settings.mpdConn
-        lang = getLanguage model
         settings = model.settingsModel.settings
+        conn = settings.mpdConn
+        lang = getLanguage model
         covers = CoverUrls
-                   (Requests.albumCoverUrl conn model.baseUrl)
-                   (Requests.fileCoverUrl conn model.baseUrl)
+                   (Requests.albumCoverUrl conn model.baseUrl (Just settings.thumbnailSize))
+                   (Requests.fileCoverUrl conn model.baseUrl (Just settings.thumbnailSize))
+                   (Requests.albumCoverUrl conn model.baseUrl Nothing)
+                   (Requests.fileCoverUrl conn model.baseUrl Nothing)
     in
     case model.page of
         IndexPage ->
