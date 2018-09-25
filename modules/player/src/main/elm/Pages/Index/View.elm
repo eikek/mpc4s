@@ -34,7 +34,7 @@ view lang model =
                   ,a [class "basic primary large ui button"
                      , href "https://github.com/eikek/mpc4s/"
                      ]
-                     [i [class "ui external alternate icon"][]
+                     [i [class "ui github icon"][]
                      ,text msg.moreOnGithub
                      ]
                   ]
