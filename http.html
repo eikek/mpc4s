@@ -7,8 +7,12 @@ concept). Responses from MPD are returned as JSON. The commands are
 normal MPD commands (simple strings) just wrapped in a basic JSON
 structure.</p>
 
-<p>It also deals with cover images from the file system. This requires
-that <code class="highlighter-rouge">mpc4s-http</code> can access the same music directory as MPD.</p>
+<p>It also deals with cover images and booklet files from the file
+system. This requires that <code class="highlighter-rouge">mpc4s-http</code> can access the same music
+directory as MPD.</p>
+
+<p>It is designed to run with low memory and cpu constraints and works
+quite well on the raspberry pi.</p>
 
 <h2 id="usage">Usage</h2>
 
@@ -77,6 +81,7 @@ section for details.</p>
   <li><a href="https://logback.qos.ch/">logback-classic</a></li>
   <li><a href="https://github.com/circe/circe">circe (core, parser, generic)</a></li>
   <li><a href="https://tika.apache.org/">tika-core</a></li>
+  <li><a href="https://github.com/Log4s/log4s">log4s</a></li>
 </ul>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/mpc4s/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
 hljs.initHighlighting();

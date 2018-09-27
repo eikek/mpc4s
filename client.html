@@ -25,13 +25,13 @@ and receive responses.</p>
 <span class="c1">// import mpc4s.client._
 </span>
 <span class="k">implicit</span> <span class="k">val</span> <span class="nc">EC</span> <span class="k">=</span> <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newCachedThreadPool</span><span class="o">)</span>
-<span class="c1">// EC: scala.concurrent.ExecutionContextExecutorService = scala.concurrent.impl.ExecutionContextImpl$$anon$1@75c0c0b2
+<span class="c1">// EC: scala.concurrent.ExecutionContextExecutorService = scala.concurrent.impl.ExecutionContextImpl$$anon$1@23631be7
 </span>
 <span class="k">implicit</span> <span class="k">val</span> <span class="nc">ACG</span> <span class="k">=</span> <span class="nc">AsynchronousChannelGroup</span><span class="o">.</span><span class="n">withThreadPool</span><span class="o">(</span><span class="nc">EC</span><span class="o">)</span>
-<span class="c1">// ACG: java.nio.channels.AsynchronousChannelGroup = sun.nio.ch.EPollPort@706876cc
+<span class="c1">// ACG: java.nio.channels.AsynchronousChannelGroup = sun.nio.ch.EPollPort@79658682
 </span>
 <span class="k">val</span> <span class="n">mpc</span> <span class="k">=</span> <span class="nc">MpdClient</span><span class="o">[</span><span class="kt">IO</span><span class="o">](</span><span class="nc">Connect</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">,</span> <span class="mi">6600</span><span class="o">))</span>
-<span class="c1">// mpc: mpc4s.client.MpdClient[cats.effect.IO] = mpc4s.client.MpdClient$$anon$1@4977b26f
+<span class="c1">// mpc: mpc4s.client.MpdClient[cats.effect.IO] = mpc4s.client.MpdClient$$anon$1@5439cfec
 </span></code></pre></div></div>
 
 <p><code class="highlighter-rouge">MpdClient</code> allows to <code class="highlighter-rouge">connect</code> to mpd returning a single element
@@ -170,7 +170,6 @@ connection.</p>
 <ul>
   <li><a href="protocol.html">mpc4s-protocol</a></li>
   <li><a href="https://github.com/functional-streams-for-scala/fs2">fs2-core and fs2-io</a></li>
-  <li><a href="https://github.com/Log4s/log4s">log4s</a></li>
 </ul>
 </section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/mpc4s/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
 hljs.initHighlighting();

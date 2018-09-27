@@ -1,9 +1,9 @@
 <html><head><title>mpc4s: Player</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="eikek" /><meta name="description" content="Scala- and Web-Client for MPD" /><meta name="og:image" content="/mpc4s/img/poster.png" /><meta name="og:title" content="mpc4s: Player" /><meta name="og:site_name" content="mpc4s" /><meta name="og:url" content="https://github.com/eikek/mpc4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala- and Web-Client for MPD" /><link rel="icon" type="image/png" href="/mpc4s/img/favicon.png" /><meta name="twitter:title" content="mpc4s: Player" /><meta name="twitter:image" content="https://github.com/eikek/mpc4simg/poster.png" /><meta name="twitter:description" content="Scala- and Web-Client for MPD" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="96x96" href="/mpc4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/mpc4s/highlight/styles/default.css" /><link rel="stylesheet" href="/mpc4s/css/style.css" /><link rel="stylesheet" href="/mpc4s/css/palette.css" /><link rel="stylesheet" href="/mpc4s/css/codemirror.css" /><link rel="stylesheet" href="/mpc4s/css/mpc4s.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/mpc4s/" class="brand"><div class="brand-wrapper"><span>mpc4s</span></div></a></li> <li><a href="/mpc4s/index.html" class="">Home</a></li> <li><a href="/mpc4s/protocol.html" class="">Protocol</a></li> <li><a href="/mpc4s/client.html" class="">Client</a></li> <li><a href="/mpc4s/http.html" class="">Http</a> <ul class="sub_section"> <li><a href="/mpc4s/http/configuration.html" class="">Configuration</a></li> <li><a href="/mpc4s/http/install.html" class="">Install</a></li> <li><a href="/mpc4s/http/endpoints.html" class="">Endpoints</a></li></ul></li> <li><a href="/mpc4s/player.html" class=" active ">Player</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="eikek" data-github-repo="mpc4s"><div class="content-wrapper"><section><h1 id="player">Player</h1>
 
-<p>A web application written in Elm that provides a simple frontend to
-MPD. It uses the <a href="./http.html">http</a> module and communicates to MPD
-via Websockets. It runs completely in the browser and only relies on
-MPD commands and the additional <a href="http/endpoints.html#cover-files">cover
+<p>A web application written in <a href="http://elm-lang.org">Elm</a> that provides
+a simple frontend to MPD. It uses the <a href="./http.html">http</a> module and
+communicates to MPD via Websockets. It runs completely in the browser
+and only relies on MPD commands and the additional <a href="http/endpoints.html#cover-files">cover/booklet
 routes</a> provided by <code class="highlighter-rouge">mpc4s-http</code>.</p>
 
 <p><img src="img/screenshot-early.jpg" alt="Screenshot (probably outdated)" class="img-responsive" /></p>
@@ -15,7 +15,7 @@ have the following features:</p>
 
 <ul>
   <li>album-centric: I want to choose an album to listen to</li>
-  <li>cover/album art support</li>
+  <li>cover/album art and booklet support</li>
   <li>support for multi disc albums</li>
   <li>support for multiple MPD connections</li>
   <li>make use of the <em>composer</em> tag</li>
@@ -48,18 +48,20 @@ be tagged properly. The following tags are used:</p>
 
 <p>Cover art is quite important, since it is used exclusively to present
 your albums. That means you should have cover art available next to
-your music files. If the song uri is <code class="highlighter-rouge">path/to/a/song.flac</code>, then the
-cover art is looked up at <code class="highlighter-rouge">path/to/a/cover.jpg</code>, for example. See
-<a href="http/endpoints.html#cover-files">this</a> for more information.</p>
+your music files. For example, if the song uri is
+<code class="highlighter-rouge">path/to/a/song.flac</code>, then the cover art is looked up at
+<code class="highlighter-rouge">path/to/a/cover.jpg</code>. See
+<a href="http/endpoints.html#cover-and-booklet-files">this</a> for more
+information.</p>
 
 <h2 id="getting-it">Getting it</h2>
 
-<p>You can <a href="index.html#getting-it">download</a> a zip or deb package.</p>
+<p>You can <a href="index.html#getting-it">download</a> a zip or deb package. Please
+see the <a href="http/install.html">install</a> page for install instructions.</p>
 
-<p>Since this is just the <a href="http.html">http module</a> packaged with an Elm
-application, see the <a href="http/configuration.html">configuration</a> and
-<a href="http/install.html">install</a> section of the http module for how to
-configure the server part.</p>
+<p>Since this web application is backed by the <a href="http.html">http module</a>
+module, see its <a href="http/configuration.html">configuration</a> section for
+how to configure the server side.</p>
 
 <p>The client settings can be changed in the web application. They are
 persisted in local storage of the browser.</p>
