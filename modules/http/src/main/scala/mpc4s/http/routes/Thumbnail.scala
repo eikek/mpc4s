@@ -22,7 +22,7 @@ final class Thumbnail[F[_]: Sync](cfg: ThumbnailConfig, maxParallel: Semaphore[F
     , size: Option[Int]
     , namePrefix: String): Stream[F, HttpResponse[F]] =
     size match {
-      case Some(sz) if isEnabled(file) =>
+      case Some(sz) if isEnabled(file, sz) =>
         val out = makeOut(file, sz).toAbsolutePath
         if (out.exists) fileContents(out, noneMatch, albumName.map(n => s"$namePrefix - $n"))
         else Stream.bracket(maxParallel.decrement)(
@@ -36,8 +36,9 @@ final class Thumbnail[F[_]: Sync](cfg: ThumbnailConfig, maxParallel: Semaphore[F
         fileContents(file, noneMatch, albumName.map(n => s"$namePrefix - $n"))
     }
 
-  private def isEnabled(file: Path): Boolean =
+  private def isEnabled(file: Path, size: Int): Boolean =
     cfg.enable &&
+      (size > 0) &&
       (file.size > cfg.minFileSize) &&
       (file.size < cfg.maxFileSize)
 
