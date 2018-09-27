@@ -7,7 +7,6 @@ import java.nio.channels.AsynchronousChannelGroup
 import scala.concurrent.ExecutionContext
 
 import cats.effect.IO
-import cats.implicits._
 import fs2.{async, Scheduler, Stream}
 import spinoco.fs2.http.routing.Route
 import org.log4s._

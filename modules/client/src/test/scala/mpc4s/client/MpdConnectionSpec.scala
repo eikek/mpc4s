@@ -2,7 +2,6 @@ package mpc4s.client
 
 import fs2._
 import cats.effect.IO
-import cats.implicits._
 import mpc4s.protocol._
 import mpc4s.protocol.commands._
 import mpc4s.protocol.answer._

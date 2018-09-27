@@ -2,7 +2,7 @@ import sbt._
 
 object libs {
 
-  val `scala-version` = "2.12.6"
+  val `scala-version` = "2.12.7"
 
   def webjar(name: String, version: String): ModuleID =
     "org.webjars" % name % version
@@ -14,10 +14,6 @@ object libs {
   // https://github.com/melrief/pureconfig
   // MPL 2.0
   val pureconfig = "com.github.pureconfig" %% "pureconfig" % "0.9.2"
-
-  // https://github.com/typelevel/cats
-  // MIT http://opensource.org/licenses/mit-license.php
-  val `cats-core` = "org.typelevel" %% "cats-core" % "1.1.0"
 
   // https://github.com/functional-streams-for-scala/fs2
   // MIT
@@ -39,7 +35,7 @@ object libs {
 
   // https://github.com/monix/minitest
   // Apache 2.0
-  val minitest = "io.monix" %% "minitest" % "2.2.0"
+  val minitest = "io.monix" %% "minitest" % "2.2.1"
   val `minitest-laws` = "io.monix" %% "minitest-laws" % "2.2.0"
 
   // https://github.com/rickynils/scalacheck
@@ -56,13 +52,13 @@ object libs {
 
   // https://github.com/circe/circe
   // ASL 2.0
-  val `circe-core` = "io.circe" %% "circe-core" % "0.9.3"
-  val `circe-generic` = "io.circe" %% "circe-generic" % "0.9.3"
-  val `circe-parser` = "io.circe" %% "circe-parser" % "0.9.3"
+  val `circe-core` = "io.circe" %% "circe-core" % "0.10.0"
+  val `circe-generic` = "io.circe" %% "circe-generic" % "0.10.0"
+  val `circe-parser` = "io.circe" %% "circe-parser" % "0.10.0"
 
   // http://tika.apache.org
   // ASL 2.0
-  val tika = "org.apache.tika" % "tika-core" % "1.18"
+  val tika = "org.apache.tika" % "tika-core" % "1.19"
 
   // https://github.com/Log4s/log4s
   // ASL 2.0
@@ -74,7 +70,7 @@ object libs {
 
   // https://github.com/Semantic-Org/Semantic-UI
   // MIT
-  val `semantic-ui` = webjar("Semantic-UI", "2.3.3")
+  val `semantic-ui` = webjar("Semantic-UI", "2.4.0")
 
   // https://github.com/jquery/jquery
   // MIT
