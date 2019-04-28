@@ -158,10 +158,9 @@ cache:
 So after startup the first load of all album covers takes a while; but
 this should then speed up significantly.
 
-Cover images are served as is; i.e. they are not resized. Large files
-may slow down loading the album page. But since all images are also
-cached in the browser this should only be annoying for the initial
-load.
+Cover images are by default resized. This is faster when there are
+high qualitiy cover art, since all resized images are cached once they
+are created.
 
 Booklets and covers share the same cache. So while there is the same
 route for booklets (`/api/v1/booklet/clearcache`), they have an

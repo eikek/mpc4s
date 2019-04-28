@@ -111,6 +111,21 @@ update msg model =
                 in
                     ({model|settings = sett}, Ports.storeSettings sett, [])
 
+            ThumbSizeInc ->
+                let
+                    cur = settings.thumbnailSize
+                    new = if cur < 2000 then cur + 10 else cur
+                    sett = {settings|thumbnailSize = new}
+                in
+                    ({model|settings = sett}, Ports.storeSettings sett, [])
+
+            ThumbSizeDec ->
+                let
+                    cur = settings.thumbnailSize
+                    new = if cur >= 110 then cur - 10 else 100
+                    sett = {settings|thumbnailSize = new}
+                in
+                    ({model|settings = sett}, Ports.storeSettings sett, [])
 
 initCommands: Model -> List MpdCommand
 initCommands model =
