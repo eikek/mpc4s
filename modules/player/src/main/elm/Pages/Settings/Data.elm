@@ -13,6 +13,7 @@ type alias Model =
     , status: Status
     , baseurl: String
     , mpdConns: List MpdConn
+    , thumbSizeDisplay: String
     }
 
 empty: Model
@@ -21,6 +22,7 @@ empty =
     , status = Data.Status.empty
     , baseurl = ""
     , mpdConns = []
+    , thumbSizeDisplay = ""
     }
 
 makeModel: String -> Model
@@ -58,3 +60,5 @@ type Msg
     | SearchPageSizeInc
     | SearchPageSizeDec
     | SetSearchView Int
+    | ThumbSizeInc
+    | ThumbSizeDec

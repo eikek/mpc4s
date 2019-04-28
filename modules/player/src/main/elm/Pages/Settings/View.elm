@@ -2,7 +2,7 @@ module Pages.Settings.View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onCheck)
+import Html.Events exposing (onClick, onCheck, onInput)
 
 import Pages.Settings.Messages exposing (..)
 import Pages.Settings.Data exposing (..)
@@ -28,6 +28,7 @@ view model =
                  ,(coverRow msg model)
                  ,(playElsewhereRow msg model)
                  ,(searchPageSizeRow msg model)
+                 ,(thumbSizeRow msg model)
                  ]
              ]
         ]
@@ -236,4 +237,23 @@ searchPageSizeRow msg model =
                   ,button [class "ui button", onClick SearchPageSizeDec][text "-"]
                   ]
              ]
+        ]
+
+thumbSizeRow: Messages -> Model -> Html Msg
+thumbSizeRow msg model =
+    div [class "row"]
+        [div [class "four wide column"]
+             [div [class ""]
+                  [msg.thumbSizeStep |> text
+                  ]
+             ]
+        ,div [class "twelve wide column"]
+            [div [class "ui action input"]
+                 [input [type_ "text"
+                        ,model.settings.thumbnailSize |> toString |> value
+                        ][]
+                 ,button [class "ui button", onClick ThumbSizeInc][text "+"]
+                 ,button [class "ui button", onClick ThumbSizeDec][text "-"]
+                 ]
+            ]
         ]

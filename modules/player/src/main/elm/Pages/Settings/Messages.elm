@@ -17,6 +17,7 @@ type alias Messages =
     , searchView: String
     , searchAlbumView: String
     , searchSongView: String
+    , thumbSizeStep: String
     }
 
 messagesDE: Messages
@@ -37,6 +38,7 @@ messagesDE =
     , searchView = "Ansicht"
     , searchAlbumView = "Alben"
     , searchSongView = "Tracks"
+    , thumbSizeStep = "Cover Größe"
     }
 
 messagesEN: Messages
@@ -57,6 +59,7 @@ messagesEN =
     , searchView = "View"
     , searchAlbumView = "Albums"
     , searchSongView = "Tracks"
+    , thumbSizeStep = "Cover size"
     }
 
 getMessages: String -> Messages

@@ -13,12 +13,13 @@ import spinoco.fs2.http.HttpResponse
 import spinoco.fs2.http.routing._
 import spinoco.protocol.http.{HttpRequestHeader, HttpResponseHeader}
 import spinoco.protocol.http.codec.{HttpHeaderCodec, HttpRequestHeaderCodec, HttpResponseHeaderCodec}
-import spinoco.protocol.http.header.HttpHeader
+import spinoco.protocol.http.header.{HttpHeader}
 
 import org.log4s.{Error => _, _}
 
 import mpc4s.http.config.ServerBind
 import mpc4s.http.util.Responses
+import mpc4s.http.internal.HeaderCompat
 
 final class Server[F[_]: Effect](val app: App[F], val bind: ServerBind) {
   private final val logger = getLogger
@@ -56,7 +57,7 @@ final class Server[F[_]: Effect](val app: App[F], val bind: ServerBind) {
     HttpHeaderCodec.codec(Int.MaxValue)
 
   private def requestHeaderCodec: Codec[HttpRequestHeader] = {
-    val codec = HttpRequestHeaderCodec.codec(headerCodec)
+    val codec = HttpRequestHeaderCodec.codec(HeaderCompat.codec(Int.MaxValue))
     Codec (
       h => codec.encode(h),
       v => codec.decode(v) match {
@@ -67,6 +68,19 @@ final class Server[F[_]: Effect](val app: App[F], val bind: ServerBind) {
       }
     )
   }
+
+  // private def requestHeaderCodec: Codec[HttpRequestHeader] = {
+  //   val codec = HttpRequestHeaderCodec.codec(headerCodec)
+  //   Codec (
+  //     h => codec.encode(h),
+  //     v => codec.decode(v) match {
+  //       case a: Attempt.Successful[_] => a
+  //       case f@ Attempt.Failure(cause) =>
+  //         logger.error(s"Error parsing request ${v.decodeUtf8} \n$cause")
+  //         Attempt.successful(DecodeResult(GenericHeader("X-Parsing-Error", ""), BitVector.empty))
+  //     }
+  //   )
+  // }
 
   private def responseHeaderCodec: Codec[HttpResponseHeader] =
     HttpResponseHeaderCodec.codec(headerCodec)
