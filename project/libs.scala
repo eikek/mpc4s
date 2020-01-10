@@ -23,7 +23,7 @@ object libs {
 
   // https://github.com/Spinoco/fs2-http
   // MIT
-  val `fs2-http` = "com.spinoco" %% "fs2-http" % "0.3.0"
+  val `fs2-http` = "com.spinoco" %% "fs2-http" % "0.4.1"
 
   // version that comes with fs2-http has some bugs
   // https://github.com/Spinoco/protocol
