@@ -52,9 +52,9 @@ object libs {
 
   // https://github.com/circe/circe
   // ASL 2.0
-  val `circe-core` = "io.circe" %% "circe-core" % "0.10.1"
-  val `circe-generic` = "io.circe" %% "circe-generic" % "0.10.1"
-  val `circe-parser` = "io.circe" %% "circe-parser" % "0.10.1"
+  val `circe-core` = "io.circe" %% "circe-core" % "0.12.3"
+  val `circe-generic` = "io.circe" %% "circe-generic" % "0.12.3"
+  val `circe-parser` = "io.circe" %% "circe-parser" % "0.12.3"
 
   // http://tika.apache.org
   // ASL 2.0
