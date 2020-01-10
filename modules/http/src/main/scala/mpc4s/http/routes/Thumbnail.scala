@@ -1,7 +1,6 @@
 package mpc4s.http.routes
 
 import fs2.Stream
-import fs2.async.mutable.Semaphore
 import cats.effect.{Effect, Sync}
 import cats.implicits._
 import spinoco.fs2.http.HttpResponse
@@ -12,6 +11,7 @@ import org.log4s._
 import mpc4s.http.config._
 import mpc4s.http.internal.ImageCrop
 import mpc4s.http.util.all._
+import cats.effect.concurrent.Semaphore
 
 final class Thumbnail[F[_]: Sync](cfg: ThumbnailConfig, maxParallel: Semaphore[F]) {
   private[this] val logger = getLogger
