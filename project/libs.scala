@@ -13,7 +13,7 @@ object libs {
 
   // https://github.com/melrief/pureconfig
   // MPL 2.0
-  val pureconfig = "com.github.pureconfig" %% "pureconfig" % "0.9.2"
+  val pureconfig = "com.github.pureconfig" %% "pureconfig" % "0.12.2"
 
   // https://github.com/functional-streams-for-scala/fs2
   // MIT
