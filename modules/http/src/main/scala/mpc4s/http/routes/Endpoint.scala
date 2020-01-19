@@ -15,7 +15,7 @@ import mpc4s.http.util.all._
 object Endpoint {
 
   def apply[F[_]: Effect](cfg: ServerConfig[F], cache: PathCache[F], thumb: Thumbnail[F], mpds: Mpds[F], basePath: Uri.Path)
-    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler): Route[F] = {
+    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Timer[F]): Route[F] = {
 
     val pcfg = cfg.protocolConfig
 
@@ -29,7 +29,7 @@ object Endpoint {
   }
 
   def createMpdRoutes[F[_]: Effect](pcfg: ProtocolConfig, mpds: Mpds[F])
-    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler): Route[F] =
+    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Timer[F]): Route[F] =
     if (mpds.size <= 1) makeDefaultRoute(MpdRequest(pcfg, mpds.default))
     else makeAllRoute(mpds, mpd => MpdRequest(pcfg, mpd))
 

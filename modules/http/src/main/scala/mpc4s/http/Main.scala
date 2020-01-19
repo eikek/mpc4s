@@ -46,22 +46,16 @@ final class Main(playerRoute: AppConfig => Option[Route[IO]]) {
 
     val appConfig = AppConfig.default
     val appStart: Stream[IO, Unit] =
-      Stream.bracket(App.create[IO](appConfig, CommandCodec.defaultConfig, playerRoute(appConfig)))(
-        app => {
-          val server = new Server(app, ServerBind.default)
-          logger.info(s"""
+      Stream.bracket(App.create[IO](appConfig, CommandCodec.defaultConfig, playerRoute(appConfig)))(app => app.stop.flatMap(_ => IO(ecGlobal.shutdown()))).flatMap(app => {
+  val server = new Server(app, ServerBind.default)
+  logger.info(s"""
            |––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
            | • Starting mpc4s-http server at ${server.bind.host}:${server.bind.port}
            | • Config: ${params.effectiveConfig.getOrElse("default")}
            | • ${appConfig.mpd}
            |––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––""".stripMargin)
-
-          Stream.eval(app.start) >>
-          (if (params.console) Stream.eval(startWithConsole(server.create))
-          else server.create)
-
-        },
-        app => app.stop.flatMap(_ => IO(ecGlobal.shutdown())))
+  Stream.eval(app.start) >> (if (params.console) Stream.eval(startWithConsole(server.create)) else server.create)
+})
 
     appStart.compile.drain.unsafeRunSync
   }

@@ -42,7 +42,7 @@ object Cache {
                 value.flatMap { v =>
                   if (m.size >= maxSize) Sync[F].pure(v)
                   else ref.
-                    tryModify(m => m.updated(key, v)).
+                    tryUpdate(m => m.updated(key, v)).
                     flatMap {
                       case Some(c) => Sync[F].pure(v)
                       case None => op
