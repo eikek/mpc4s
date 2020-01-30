@@ -17,8 +17,8 @@ object libs {
 
   // https://github.com/functional-streams-for-scala/fs2
   // MIT
-  val `fs2-core` = "co.fs2" %% "fs2-core" % "0.10.7"
-  val `fs2-io` = "co.fs2" %% "fs2-io" % "0.10.7"
+  val `fs2-core` = "co.fs2" %% "fs2-core" % "2.2.2"
+  val `fs2-io` = "co.fs2" %% "fs2-io" % "2.2.2"
   val `fs2-scodec` = "co.fs2" %% "fs2-scodec" % "0.10.7"
 
   // https://github.com/Spinoco/fs2-http

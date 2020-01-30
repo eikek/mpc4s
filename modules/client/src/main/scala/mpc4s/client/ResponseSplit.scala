@@ -15,10 +15,10 @@ object ResponseSplit {
 
   def responses[F[_]](bufferSize: Int = 32 * 1024): Pipe[F, Byte, String] = {
     def go(buffer: Array[Byte], s: Stream[F, Byte]): Pull[F, String, Option[Unit]] =
-      s.pull.unconsChunk.flatMap {
+      s.pull.uncons.flatMap {
         case Some((chunk, rest)) =>
           val (resp, newBuffer) = extractResponses(buffer, chunk, bufferSize)
-          if (resp.nonEmpty) Pull.outputChunk(Chunk.vector(resp)) >> go(newBuffer, rest)
+          if (resp.nonEmpty) Pull.output(Chunk.vector(resp)) >> go(newBuffer, rest)
           else go(newBuffer, rest)
 
         case None if buffer.nonEmpty =>

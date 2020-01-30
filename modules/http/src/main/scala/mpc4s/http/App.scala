@@ -17,7 +17,7 @@ import mpc4s.http.routes.{CustomContent, Endpoint, Thumbnail}
 import mpc4s.http.util.all._
 
 final class App[F[_]](coreConfig: ServerConfig[F], cache: PathCache[F], thumb: Thumbnail[F], mpds: Mpds[F])
-  (implicit F: Effect[F], ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler) {
+  (implicit F: Effect[F], ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Timer[F]) {
 
   val config = coreConfig.app
 
@@ -44,11 +44,11 @@ final class App[F[_]](coreConfig: ServerConfig[F], cache: PathCache[F], thumb: T
 object App {
 
   def apply[F[_]: Effect](cfg: ServerConfig[F], cache: Cache[F,String,Option[Path]], thumb: Thumbnail[F], mpds: Mpds[F])
-    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler) =
+    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Timer[F]) =
     new App(cfg, cache, thumb, mpds)
 
   def create[F[_]: Effect](cfg: AppConfig, protocolConfig: ProtocolConfig, playerRoute: Option[Route[F]])
-    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler): F[App[F]] =
+    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Timer[F]): F[App[F]] =
     for {
       cache <- Cache.empty[F,String,Option[Path]](cfg.albumFile.cacheSize)
       thumb <- Thumbnail(cfg.coverThumbnails)

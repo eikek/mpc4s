@@ -20,7 +20,7 @@ import mpc4s.http.util.all._
 object MpdRequest {
 
   def apply[F[_]: Effect](cfg: ProtocolConfig, mpd: Mpd[F])
-    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Scheduler): Route[F] = {
+    (implicit ACG: AsynchronousChannelGroup, EC: ExecutionContext, SCH: Timer[F]): Route[F] = {
 
     cut(choice(command(cfg,  mpd), idle(cfg, mpd)))
   }
@@ -36,7 +36,7 @@ object MpdRequest {
   }
 
   def idle[F[_]: Effect](cfg: ProtocolConfig, mpd: Mpd[F])
-    (implicit ACG: AsynchronousChannelGroup, S: Scheduler, EC: ExecutionContext): Route[F] = {
+    (implicit ACG: AsynchronousChannelGroup, S: Timer[F], EC: ExecutionContext): Route[F] = {
 
     val cc = CommandCodec.createCodec(cfg)
     val codec = CommandCodec.commandOrListCodec(cc)
