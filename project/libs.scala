@@ -35,7 +35,7 @@ object libs {
 
   // https://github.com/monix/minitest
   // Apache 2.0
-  val minitest = "io.monix" %% "minitest" % "2.4.0"
+  val minitest = "io.monix" %% "minitest" % "2.7.0"
   val `minitest-laws` = "io.monix" %% "minitest-laws" % "2.4.0"
 
   // https://github.com/rickynils/scalacheck
@@ -52,17 +52,17 @@ object libs {
 
   // https://github.com/circe/circe
   // ASL 2.0
-  val `circe-core` = "io.circe" %% "circe-core" % "0.10.1"
-  val `circe-generic` = "io.circe" %% "circe-generic" % "0.10.1"
-  val `circe-parser` = "io.circe" %% "circe-parser" % "0.10.1"
+  val `circe-core` = "io.circe" %% "circe-core" % "0.13.0"
+  val `circe-generic` = "io.circe" %% "circe-generic" % "0.13.0"
+  val `circe-parser` = "io.circe" %% "circe-parser" % "0.13.0"
 
   // http://tika.apache.org
   // ASL 2.0
-  val tika = "org.apache.tika" % "tika-core" % "1.20"
+  val tika = "org.apache.tika" % "tika-core" % "1.23"
 
   // https://github.com/Log4s/log4s
   // ASL 2.0
-  val log4s = "org.log4s" %% "log4s" % "1.7.0"
+  val log4s = "org.log4s" %% "log4s" % "1.8.2"
 
   // http://logback.qos.ch/
   // EPL1.0 or LGPL 2.1
@@ -74,7 +74,7 @@ object libs {
 
   // https://github.com/jquery/jquery
   // MIT
-  val jquery = webjar("jquery", "3.4.0")
+  val jquery = webjar("jquery", "3.4.1")
 
   // https://github.com/eikek/yamusca
   // MIT
