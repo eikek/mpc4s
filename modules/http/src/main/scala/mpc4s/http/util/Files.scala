@@ -18,9 +18,7 @@ trait Files {
         getOrElse("")
 
     def open[F[_]](chunkSize: Int)(implicit F: Sync[F]): Stream[F, Byte] = {
-      Stream.bracket(F.delay(url.openStream))(
-        in => io.readInputStream(F.pure(in), chunkSize),
-        in => F.delay(in.close))
+      Stream.bracket(F.delay(url.openStream))(in => F.delay(in.close)).flatMap(in => io.readInputStream(F.pure(in), chunkSize))
     }
 
   }

@@ -1,7 +1,6 @@
 package mpc4s.http.internal
 
 import fs2.{async, Stream}
-import fs2.async.mutable.Semaphore
 import cats.effect.{Effect, Sync}
 import cats.Traverse
 import cats.implicits._
@@ -16,6 +15,7 @@ import mpc4s.protocol.codec._
 import mpc4s.client._
 import mpc4s.http.config._
 import mpc4s.http.util.all._
+import cats.effect.concurrent.Semaphore
 
 final class Mpd[F[_]: Effect](val cfg: MpdConfig, maxConn: Semaphore[F]) {
   private[this] val logger = getLogger
@@ -35,10 +35,7 @@ final class Mpd[F[_]: Effect](val cfg: MpdConfig, maxConn: Semaphore[F]) {
 
 
   def connect(pc: ProtocolConfig)(implicit ACG: AsynchronousChannelGroup, ec: ExecutionContext): Stream[F, MpdClient[F]] =
-    Stream.bracket(maxConn.decrement)(
-      _ => Stream.eval(Effect[F].delay(Connect(cfg.host, cfg.port).withPassword(cfg.password))).
-        map(c => MpdClient[F](c, pc, cfg.timeout.asScala, 32 * 1024, clientLogger)),
-      _ => maxConn.increment)
+    Stream.bracket(maxConn.decrement)(_ => maxConn.increment).flatMap(_ => Stream.eval(Effect[F].delay(Connect(cfg.host, cfg.port).withPassword(cfg.password))).map(c => MpdClient[F](c, pc, cfg.timeout.asScala, 32 * 1024, clientLogger)))
 
   private def clientLogger: mpc4s.client.Logger = new mpc4s.client.Logger {
     def trace[G[_]: Sync](msg: => String): G[Unit] =

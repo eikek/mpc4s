@@ -49,7 +49,7 @@ trait MpdIdle[F[_]] {
     * return a non-empty response. All previous commands must be
     * commands that expect an empty response from mpd.
     */
-  def writeSink: Sink[F, CommandOrList]
+  def writeSink: Pipe[F, CommandOrList, Unit]
 }
 
 object MpdIdle {
@@ -124,7 +124,7 @@ object MpdIdle {
               compile.drain
           }
 
-          def writeSink: Sink[F, CommandOrList] =
+          def writeSink: Pipe[F, CommandOrList, Unit] =
             _.evalMap(write)
         }
       }

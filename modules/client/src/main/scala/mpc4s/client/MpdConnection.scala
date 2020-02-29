@@ -107,15 +107,13 @@ object MpdConnection {
                   }
 
               def send(cmd: Command, timeout: Duration): F[Unit] =
-                requestStream[F](cmd, commandCodec).
-                  to(socketWrite(socket, timeout)).
+                requestStream[F](cmd, commandCodec).through(socketWrite(socket, timeout)).
                   last.
                   evalMap(_ => logger.trace(s"Sent command $cmd")).
                   compile.drain
 
               def sendList(req: CommandList, timeout: Duration): F[Unit] =
-                requestListStream[F](req, commandListCodec).
-                  to(socketWrite(socket, timeout)).
+                requestListStream[F](req, commandListCodec).through(socketWrite(socket, timeout)).
                   last.
                   evalMap(_ => logger.trace(s"Sent command list $req")).
                   compile.drain
@@ -146,7 +144,7 @@ object MpdConnection {
           })
       })
 
-  private def socketWrite[F[_]](socket: Socket[F], timeout: Duration): Sink[F, Byte] =
+  private def socketWrite[F[_]](socket: Socket[F], timeout: Duration): Pipe[F, Byte, Unit] =
     timeout match {
       case fin: FiniteDuration =>
         socket.writes(Some(fin))
