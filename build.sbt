@@ -178,17 +178,15 @@ lazy val benchmark = project.in(file("modules/benchmark")).
 
 lazy val microsite = project.in(file("microsite")).
   enablePlugins(MicrositesPlugin).
+  disablePlugins(RevolverPlugin).
   settings(sharedSettings).
   settings(
     name := "mpc4s-microsite",
     publishArtifact := false,
-    scalacOptions -= "-Yno-imports",
-    scalacOptions ~= { _ filterNot (_ startsWith "-Ywarn") },
-    scalacOptions ~= { _ filterNot (_ startsWith "-Xlint") },
     skip in publish := true,
     micrositeFooterText := Some(
       """
-        |<p>&copy; 2018 <a href="https://github.com/eikek/mpc4s">mpc4s, v{{site.version}}</a></p>
+        |<p>&copy; 2020 <a href="https://github.com/eikek/mpc4s">mpc4s, v{{site.version}}</a></p>
         |""".stripMargin
     ),
     micrositeName := "mpc4s",
@@ -200,8 +198,11 @@ lazy val microsite = project.in(file("microsite")).
     micrositeGitterChannel := false,
     micrositeFavicons := Seq(microsites.MicrositeFavicon("favicon.png", "96x96")),
     micrositeShareOnSocial := false,
-    fork in tut := true,
-    scalacOptions in Tut ~= (_.filterNot(Set("-Ywarn-unused-import", "-Ywarn-dead-code"))),
+    micrositeCompilingDocsTool := WithTut,
+    Tut / run / fork := true,
+    scalacOptions in Tut := Seq(
+      "-encoding", "UTF-8"
+    ),
     resourceGenerators in Tut += Def.task {
       val conf = (resourceDirectory in (http, Compile)).value / "reference.conf"
       val out = resourceManaged.value/"main"/"jekyll"/"http"/"_reference.conf"

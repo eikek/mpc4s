@@ -1,3 +1,11 @@
-.jumbotron {
-    background-size: 100% 540px;
+#masthead {
+    background: url(../img/johannes-plenio-473709-unsplash.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    animation: none;
+    height: 300px;
+}
+
+img.img-responsive {
+    width: 100%;
 }
