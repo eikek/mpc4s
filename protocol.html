@@ -1,4 +1,4 @@
-<html><head><title>mpc4s: Protocol</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="eikek" /><meta name="description" content="Scala- and Web-Client for MPD" /><meta name="og:image" content="/mpc4s/img/poster.png" /><meta name="og:title" content="mpc4s: Protocol" /><meta name="og:site_name" content="mpc4s" /><meta name="og:url" content="https://github.com/eikek/mpc4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala- and Web-Client for MPD" /><link rel="icon" type="image/png" href="/mpc4s/img/favicon.png" /><meta name="twitter:title" content="mpc4s: Protocol" /><meta name="twitter:image" content="https://github.com/eikek/mpc4simg/poster.png" /><meta name="twitter:description" content="Scala- and Web-Client for MPD" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="96x96" href="/mpc4s/img/favicon.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/mpc4s/highlight/styles/default.css" /><link rel="stylesheet" href="/mpc4s/css/style.css" /><link rel="stylesheet" href="/mpc4s/css/palette.css" /><link rel="stylesheet" href="/mpc4s/css/codemirror.css" /><link rel="stylesheet" href="/mpc4s/css/mpc4s.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/mpc4s/" class="brand"><div class="brand-wrapper"><span>mpc4s</span></div></a></li> <li><a href="/mpc4s/index.html" class="">Home</a></li> <li><a href="/mpc4s/protocol.html" class=" active ">Protocol</a></li> <li><a href="/mpc4s/client.html" class="">Client</a></li> <li><a href="/mpc4s/http.html" class="">Http</a> <ul class="sub_section"> <li><a href="/mpc4s/http/configuration.html" class="">Configuration</a></li> <li><a href="/mpc4s/http/install.html" class="">Install</a></li> <li><a href="/mpc4s/http/endpoints.html" class="">Endpoints</a></li></ul></li> <li><a href="/mpc4s/player.html" class="">Player</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="eikek" data-github-repo="mpc4s"><div class="content-wrapper"><section><h1 id="protocol">Protocol</h1>
+<!DOCTYPE html><html><head><title>mpc4s: Protocol</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="eikek" /><meta name="description" content="Scala- and Web-Client for MPD" /><meta name="og:image" content="/mpc4s/img/poster.png" /><meta name="image" property="og:image" content="/mpc4s/img/poster.png" /><meta name="og:title" content="mpc4s: Protocol" /><meta name="title" property="og:title" content="mpc4s: Protocol" /><meta name="og:site_name" content="mpc4s" /><meta name="og:url" content="https://github.com/eikek/mpc4s" /><meta name="og:type" content="website" /><meta name="og:description" content="Scala- and Web-Client for MPD" /><link rel="icon" type="image/png" href="/mpc4s/img/favicon.png" /><meta name="twitter:title" content="mpc4s: Protocol" /><meta name="twitter:image" content="/mpc4s/img/poster.png" /><meta name="twitter:description" content="Scala- and Web-Client for MPD" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="96x96" href="/mpc4s/img/favicon.png" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/mpc4s/highlight/styles/vs.css" /><link rel="stylesheet" href="/mpc4s/css/light-style.css" /><link rel="stylesheet" href="/mpc4s/css/mpc4s.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><div id="sidebar-brand"><a href="/mpc4s/" class="brand"><div class="brand-wrapper"></div><span>mpc4s</span></a><button id="main-toggle" class="sidebar-toggle"><span class="close"></span></button></div><div class="sidebar-nav"> <div class="sidebar-nav-item  "><a href="/mpc4s/index.html" title="Home" class="">Home</a></div> <div class="sidebar-nav-item active "><a href="/mpc4s/protocol.html" title="Protocol" class="active">Protocol</a></div> <div class="sidebar-nav-item  "><a href="/mpc4s/client.html" title="Client" class="">Client</a></div> <div class="sidebar-nav-item  "><a href="/mpc4s/http.html" title="Http" class="drop-nested">Http</a><i class="fa fa-angle-right"></i><div class="sub-section"> <a href="/mpc4s/http/configuration.html" title="Configuration" class="">Configuration</a> <a href="/mpc4s/http/install.html" title="Install" class="">Install</a> <a href="/mpc4s/http/endpoints.html" title="Endpoints" class="">Endpoints</a></div></div> <div class="sidebar-nav-item  "><a href="/mpc4s/player.html" title="Player" class="">Player</a></div></div></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s" target="_blank" rel="noopener noreferrer"><i class="fa fa-eye"></i><span>Watchers<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/eikek/mpc4s" target="_blank" rel="noopener noreferrer"><i class="fa fa-star-o"></i><span>Stars<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="eikek" data-github-repo="mpc4s"><div class="content-wrapper"><section><h1 id="protocol">Protocol</h1>
 
 <p>This module implements <a href="https://www.musicpd.org/doc/protocol/">MPD’s
 protocol</a> in terms of case
@@ -25,19 +25,19 @@ conversion from/to MPD protocol.</p>
 
 <p>For example, to parse a <code class="highlighter-rouge">find</code> command:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol._</span><span class="o">,</span> <span class="n">mpc4s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">codec</span><span class="o">.</span><span class="k">_</span>
-<span class="c1">// import mpc4s.protocol._
-// import mpc4s.protocol.codec._
-</span>
-<span class="k">val</span> <span class="n">cc</span> <span class="k">=</span> <span class="nc">CommandCodec</span><span class="o">.</span><span class="n">defaultCodec</span>
-<span class="c1">// cc: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Command] = mpc4s.protocol.codec.LineCodec$$anon$3@1fa99aca
-</span>
-<span class="k">val</span> <span class="n">cmd</span> <span class="k">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="s">"find album Echoes"</span><span class="o">)</span>
-<span class="c1">// cmd: mpc4s.protocol.codec.Result[mpc4s.protocol.Command] = Right(Find(Filter(ListMap(Map(TagFilter(Album) -&gt; Echoes))),None,None))
-</span>
-<span class="n">cc</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">get</span><span class="o">)</span>
-<span class="c1">// res0: mpc4s.protocol.codec.Result[String] = Right(find album Echoes)
-</span></code></pre></div></div>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol._</span><span class="o">,</span> <span class="nv">mpc4s</span><span class="o">.</span><span class="py">protocol</span><span class="o">.</span><span class="py">codec</span><span class="o">.</span><span class="py">_</span>
+<span class="c1">// import mpc4s.protocol._</span>
+<span class="c1">// import mpc4s.protocol.codec._</span>
+
+<span class="k">val</span> <span class="nv">cc</span> <span class="k">=</span> <span class="nv">CommandCodec</span><span class="o">.</span><span class="py">defaultCodec</span>
+<span class="c1">// cc: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Command] = mpc4s.protocol.codec.LineCodec$$anon$3@6f85ee02</span>
+
+<span class="k">val</span> <span class="nv">cmd</span> <span class="k">=</span> <span class="nv">cc</span><span class="o">.</span><span class="py">parseValue</span><span class="o">(</span><span class="s">"find album Echoes"</span><span class="o">)</span>
+<span class="c1">// cmd: mpc4s.protocol.codec.Result[mpc4s.protocol.Command] = Right(Find(Filter(ListMap(Map(TagFilter(Album) -&gt; Echoes))),None,None))</span>
+
+<span class="nv">cc</span><span class="o">.</span><span class="py">write</span><span class="o">(</span><span class="nv">cmd</span><span class="o">.</span><span class="py">right</span><span class="o">.</span><span class="py">get</span><span class="o">)</span>
+<span class="c1">// res0: mpc4s.protocol.codec.Result[String] = Right(find album Echoes)</span>
+</code></pre></div></div>
 
 <p>The <code class="highlighter-rouge">CommandCodec.defaultCodec</code> can parse most mpd commands. In the
 example above the command was parsed into an object of class
@@ -49,9 +49,9 @@ object. And all of them are then pulled together in <code class="highlighter-rou
 <p>This example parses the response to the <code class="highlighter-rouge">status</code> command:</p>
 
 <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol.answer._</span>
-<span class="c1">// import mpc4s.protocol.answer._
-</span>
-<span class="k">val</span> <span class="n">mpdResponse</span> <span class="k">=</span> <span class="s">"""volume: 90
+<span class="c1">// import mpc4s.protocol.answer._</span>
+
+<span class="k">val</span> <span class="nv">mpdResponse</span> <span class="k">=</span> <span class="s">"""volume: 90
 repeat: 0
 random: 0
 single: 0
@@ -68,51 +68,51 @@ bitrate: 457
 duration: 780.000
 audio: 44100:16:2
 """</span>
-<span class="c1">// mpdResponse: String =
-// "volume: 90
-// repeat: 0
-// random: 0
-// single: 0
-// consume: 0
-// playlist: 2
-// playlistlength: 1
-// mixrampdb: 0.000000
-// state: play
-// song: 0
-// songid: 1
-// time: 36:780
-// elapsed: 36.223
-// bitrate: 457
-// duration: 780.000
-// audio: 44100:16:2
-// "
-</span>
-<span class="k">val</span> <span class="n">codec</span> <span class="k">=</span> <span class="nc">StatusAnswer</span><span class="o">.</span><span class="n">codec</span>
-<span class="c1">// codec: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.answer.StatusAnswer] = mpc4s.protocol.codec.LineCodec$$anon$2@47294835
-</span>
-<span class="k">val</span> <span class="n">answer</span> <span class="k">=</span> <span class="n">codec</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="n">mpdResponse</span><span class="o">)</span>
-<span class="c1">// answer: mpc4s.protocol.codec.Result[mpc4s.protocol.answer.StatusAnswer] = Right(StatusAnswer(90,false,false,Off,false,2,1,Play,Some(0),Some(Id(1)),None,None,Some(Range(36,780)),Some(36.223),Some(780.0),Some(457),None,Some(0.0),Some(AudioFormat(44100,16,2)),Some(),Some()))
-</span>
-<span class="n">codec</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">answer</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">get</span><span class="o">)</span>
-<span class="c1">// res1: mpc4s.protocol.codec.Result[String] =
-// Right(volume: 90
-// repeat: 0
-// random: 0
-// single: 0
-// consume: 0
-// playlist: 2
-// playlistlength: 1
-// state: play
-// song: 0
-// songid: 1
-// time: 36:780
-// elapsed: 36.223
-// duration: 780.0
-// bitrate: 457
-// mixrampdb: 0.0
-// audio: 44100:16:2
-// )
-</span></code></pre></div></div>
+<span class="c1">// mpdResponse: String =</span>
+<span class="c1">// "volume: 90</span>
+<span class="c1">// repeat: 0</span>
+<span class="c1">// random: 0</span>
+<span class="c1">// single: 0</span>
+<span class="c1">// consume: 0</span>
+<span class="c1">// playlist: 2</span>
+<span class="c1">// playlistlength: 1</span>
+<span class="c1">// mixrampdb: 0.000000</span>
+<span class="c1">// state: play</span>
+<span class="c1">// song: 0</span>
+<span class="c1">// songid: 1</span>
+<span class="c1">// time: 36:780</span>
+<span class="c1">// elapsed: 36.223</span>
+<span class="c1">// bitrate: 457</span>
+<span class="c1">// duration: 780.000</span>
+<span class="c1">// audio: 44100:16:2</span>
+<span class="c1">// "</span>
+
+<span class="k">val</span> <span class="nv">codec</span> <span class="k">=</span> <span class="nv">StatusAnswer</span><span class="o">.</span><span class="py">codec</span>
+<span class="c1">// codec: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.answer.StatusAnswer] = mpc4s.protocol.codec.LineCodec$$anon$2@5ebf776c</span>
+
+<span class="k">val</span> <span class="nv">answer</span> <span class="k">=</span> <span class="nv">codec</span><span class="o">.</span><span class="py">parseValue</span><span class="o">(</span><span class="n">mpdResponse</span><span class="o">)</span>
+<span class="c1">// answer: mpc4s.protocol.codec.Result[mpc4s.protocol.answer.StatusAnswer] = Right(StatusAnswer(90,false,false,Off,false,2,1,Play,Some(0),Some(Id(1)),None,None,Some(Range(36,780)),Some(36.223),Some(780.0),Some(457),None,Some(0.0),Some(AudioFormat(44100,16,2)),Some(),Some()))</span>
+
+<span class="nv">codec</span><span class="o">.</span><span class="py">write</span><span class="o">(</span><span class="nv">answer</span><span class="o">.</span><span class="py">right</span><span class="o">.</span><span class="py">get</span><span class="o">)</span>
+<span class="c1">// res1: mpc4s.protocol.codec.Result[String] =</span>
+<span class="c1">// Right(volume: 90</span>
+<span class="c1">// repeat: 0</span>
+<span class="c1">// random: 0</span>
+<span class="c1">// single: 0</span>
+<span class="c1">// consume: 0</span>
+<span class="c1">// playlist: 2</span>
+<span class="c1">// playlistlength: 1</span>
+<span class="c1">// state: play</span>
+<span class="c1">// song: 0</span>
+<span class="c1">// songid: 1</span>
+<span class="c1">// time: 36:780</span>
+<span class="c1">// elapsed: 36.223</span>
+<span class="c1">// duration: 780.0</span>
+<span class="c1">// bitrate: 457</span>
+<span class="c1">// mixrampdb: 0.0</span>
+<span class="c1">// audio: 44100:16:2</span>
+<span class="c1">// )</span>
+</code></pre></div></div>
 
 <p><code class="highlighter-rouge">Answer</code> defines the payload returned from MPD, which are implemented
 in <code class="highlighter-rouge">mpc4s.protocol.answer</code> package (that also contains
@@ -125,14 +125,14 @@ MPD: either an error or some <code class="highlighter-rouge">Answer</code>. MPD 
 response. A codec for a response can be looked up from implicit scope,
 if a codec for <code class="highlighter-rouge">Answer</code> is available:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol._</span><span class="o">,</span> <span class="n">mpc4s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">answer</span><span class="o">.</span><span class="k">_</span>
-<span class="c1">// import mpc4s.protocol._
-// import mpc4s.protocol.answer._
-</span>
-<span class="k">val</span> <span class="n">codec</span> <span class="k">=</span> <span class="n">implicitly</span><span class="o">[</span><span class="kt">LineCodec</span><span class="o">[</span><span class="kt">Response</span><span class="o">[</span><span class="kt">StatusAnswer</span><span class="o">]]]</span>
-<span class="c1">// codec: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = mpc4s.protocol.codec.LineCodec$$anon$1@e7bfb3f
-</span>
-<span class="k">val</span> <span class="n">mpdResponse</span> <span class="k">=</span> <span class="s">"""volume: 90
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol._</span><span class="o">,</span> <span class="nv">mpc4s</span><span class="o">.</span><span class="py">protocol</span><span class="o">.</span><span class="py">answer</span><span class="o">.</span><span class="py">_</span>
+<span class="c1">// import mpc4s.protocol._</span>
+<span class="c1">// import mpc4s.protocol.answer._</span>
+
+<span class="k">val</span> <span class="nv">codec</span> <span class="k">=</span> <span class="n">implicitly</span><span class="o">[</span><span class="kt">LineCodec</span><span class="o">[</span><span class="kt">Response</span><span class="o">[</span><span class="kt">StatusAnswer</span><span class="o">]]]</span>
+<span class="c1">// codec: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = mpc4s.protocol.codec.LineCodec$$anon$1@535b4dbf</span>
+
+<span class="k">val</span> <span class="nv">mpdResponse</span> <span class="k">=</span> <span class="s">"""volume: 90
 repeat: 0
 random: 0
 single: 0
@@ -150,37 +150,37 @@ duration: 780.000
 audio: 44100:16:2
 OK
 """</span>
-<span class="c1">// mpdResponse: String =
-// "volume: 90
-// repeat: 0
-// random: 0
-// single: 0
-// consume: 0
-// playlist: 2
-// playlistlength: 1
-// mixrampdb: 0.000000
-// state: play
-// song: 0
-// songid: 1
-// time: 36:780
-// elapsed: 36.223
-// bitrate: 457
-// duration: 780.000
-// audio: 44100:16:2
-// OK
-// "
-</span>
-<span class="n">codec</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="n">mpdResponse</span><span class="o">)</span>
-<span class="c1">// res2: mpc4s.protocol.codec.Result[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = Right(MpdResult(StatusAnswer(90,false,false,Off,false,2,1,Play,Some(0),Some(Id(1)),None,None,Some(Range(36,780)),Some(36.223),Some(780.0),Some(457),None,Some(0.0),Some(AudioFormat(44100,16,2)),Some(),Some())))
-</span>
-<span class="k">val</span> <span class="n">ack</span> <span class="k">=</span> <span class="s">"ACK [50@2] {play} file not found\n"</span>
-<span class="c1">// ack: String =
-// "ACK [50@2] {play} file not found
-// "
-</span>
-<span class="n">codec</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="n">ack</span><span class="o">)</span>
-<span class="c1">// res3: mpc4s.protocol.codec.Result[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = Right(MpdError(Ack(FileNotFound,2,play,file not found)))
-</span></code></pre></div></div>
+<span class="c1">// mpdResponse: String =</span>
+<span class="c1">// "volume: 90</span>
+<span class="c1">// repeat: 0</span>
+<span class="c1">// random: 0</span>
+<span class="c1">// single: 0</span>
+<span class="c1">// consume: 0</span>
+<span class="c1">// playlist: 2</span>
+<span class="c1">// playlistlength: 1</span>
+<span class="c1">// mixrampdb: 0.000000</span>
+<span class="c1">// state: play</span>
+<span class="c1">// song: 0</span>
+<span class="c1">// songid: 1</span>
+<span class="c1">// time: 36:780</span>
+<span class="c1">// elapsed: 36.223</span>
+<span class="c1">// bitrate: 457</span>
+<span class="c1">// duration: 780.000</span>
+<span class="c1">// audio: 44100:16:2</span>
+<span class="c1">// OK</span>
+<span class="c1">// "</span>
+
+<span class="nv">codec</span><span class="o">.</span><span class="py">parseValue</span><span class="o">(</span><span class="n">mpdResponse</span><span class="o">)</span>
+<span class="c1">// res2: mpc4s.protocol.codec.Result[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = Right(MpdResult(StatusAnswer(90,false,false,Off,false,2,1,Play,Some(0),Some(Id(1)),None,None,Some(Range(36,780)),Some(36.223),Some(780.0),Some(457),None,Some(0.0),Some(AudioFormat(44100,16,2)),Some(),Some())))</span>
+
+<span class="k">val</span> <span class="nv">ack</span> <span class="k">=</span> <span class="s">"ACK [50@2] {play} file not found\n"</span>
+<span class="c1">// ack: String =</span>
+<span class="c1">// "ACK [50@2] {play} file not found</span>
+<span class="c1">// "</span>
+
+<span class="nv">codec</span><span class="o">.</span><span class="py">parseValue</span><span class="o">(</span><span class="n">ack</span><span class="o">)</span>
+<span class="c1">// res3: mpc4s.protocol.codec.Result[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = Right(MpdError(Ack(FileNotFound,2,play,file not found)))</span>
+</code></pre></div></div>
 
 <h3 id="selecting-the-correct-response-codec">Selecting the correct response codec</h3>
 
@@ -190,23 +190,23 @@ commands specify their answer type using an implicit value of
 to be a <code class="highlighter-rouge">ListAnswer</code>. So it there is this line it the companion object
 of <code class="highlighter-rouge">List</code>:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">implicit</span> <span class="k">val</span> <span class="n">selectAnswer</span> <span class="k">=</span> <span class="nc">SelectAnswer</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">ListAnswer</span><span class="o">]</span>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">implicit</span> <span class="k">val</span> <span class="nv">selectAnswer</span> <span class="k">=</span> <span class="nc">SelectAnswer</span><span class="o">[</span><span class="kt">List</span>, <span class="kt">ListAnswer</span><span class="o">]</span>
 </code></pre></div></div>
 
 <p>This can be used to let the compiler select the correct codec for a
 response given the command:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol._</span><span class="o">,</span> <span class="n">mpc4s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="k">_</span>
-<span class="c1">// import mpc4s.protocol._
-// import mpc4s.protocol.commands._
-</span>
-<span class="k">def</span> <span class="n">chooseCodec</span><span class="o">[</span><span class="kt">C</span> <span class="k">&lt;:</span> <span class="kt">Command</span>, <span class="kt">A</span> <span class="k">&lt;:</span> <span class="kt">Answer</span><span class="o">](</span><span class="n">cmd</span><span class="k">:</span> <span class="kt">C</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">s</span><span class="k">:</span> <span class="kt">SelectAnswer</span><span class="o">[</span><span class="kt">C</span>, <span class="kt">A</span><span class="o">])</span> <span class="k">=</span>
-  <span class="n">s</span><span class="o">.</span><span class="n">codec</span>
-<span class="c1">// chooseCodec: [C &lt;: mpc4s.protocol.Command, A &lt;: mpc4s.protocol.Answer](cmd: C)(implicit s: mpc4s.protocol.SelectAnswer[C,A])mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[A]]
-</span>
-<span class="n">chooseCodec</span><span class="o">(</span><span class="nc">Status</span><span class="o">)</span>
-<span class="c1">// res4: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = mpc4s.protocol.codec.LineCodec$$anon$1@24df7b73
-</span></code></pre></div></div>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol._</span><span class="o">,</span> <span class="nv">mpc4s</span><span class="o">.</span><span class="py">protocol</span><span class="o">.</span><span class="py">commands</span><span class="o">.</span><span class="py">_</span>
+<span class="c1">// import mpc4s.protocol._</span>
+<span class="c1">// import mpc4s.protocol.commands._</span>
+
+<span class="k">def</span> <span class="nf">chooseCodec</span><span class="o">[</span><span class="kt">C</span> <span class="k">&lt;:</span> <span class="kt">Command</span>, <span class="kt">A</span> <span class="k">&lt;:</span> <span class="kt">Answer</span><span class="o">](</span><span class="n">cmd</span><span class="k">:</span> <span class="kt">C</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">s</span><span class="k">:</span> <span class="kt">SelectAnswer</span><span class="o">[</span><span class="kt">C</span>, <span class="kt">A</span><span class="o">])</span> <span class="k">=</span>
+  <span class="nv">s</span><span class="o">.</span><span class="py">codec</span>
+<span class="c1">// chooseCodec: [C &lt;: mpc4s.protocol.Command, A &lt;: mpc4s.protocol.Answer](cmd: C)(implicit s: mpc4s.protocol.SelectAnswer[C,A])mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[A]]</span>
+
+<span class="nf">chooseCodec</span><span class="o">(</span><span class="nc">Status</span><span class="o">)</span>
+<span class="c1">// res4: mpc4s.protocol.codec.LineCodec[mpc4s.protocol.Response[mpc4s.protocol.answer.StatusAnswer]] = mpc4s.protocol.codec.LineCodec$$anon$1@4b9187de</span>
+</code></pre></div></div>
 
 <p>All this is pulled together in a map in <code class="highlighter-rouge">CommandCodec</code> that can be
 used to select codecs at runtime. It is called <code class="highlighter-rouge">ProtocolConfig</code> which
@@ -224,22 +224,22 @@ be created. <code class="highlighter-rouge">CommandCodec.defaultConfig</code> is
 
 <p>Using that, a response and command codec can be looked up at runtime:</p>
 
-<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol.commands._</span><span class="o">,</span> <span class="n">mpc4s</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">codec</span><span class="o">.</span><span class="k">_</span>
-<span class="c1">// import mpc4s.protocol.commands._
-// import mpc4s.protocol.codec._
-</span>
-<span class="c1">// Using type Command, simulating we do not know the concrete type
-</span><span class="k">val</span> <span class="n">cmd</span><span class="k">:</span> <span class="kt">Command</span> <span class="o">=</span> <span class="nc">Status</span>
-<span class="c1">// cmd: mpc4s.protocol.Command = Status
-</span>
-<span class="c1">// Looking up a CommandName.Config object using the command name
-</span><span class="k">val</span> <span class="n">cfg</span> <span class="k">=</span> <span class="nc">CommandCodec</span><span class="o">.</span><span class="n">defaultConfig</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">name</span><span class="o">)</span>
-<span class="c1">// cfg: mpc4s.protocol.CommandName.Config = mpc4s.protocol.CommandName$Config$$anon$2@5fe03e78
-</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">commandCodec</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="s">"status"</span><span class="o">)</span>
-<span class="c1">// res7: mpc4s.protocol.codec.Result[cfg.Cmd] = Right(Status)
-</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">responseCodec</span><span class="o">.</span><span class="n">parseValue</span><span class="o">(</span><span class="s">"""volume: 90
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">mpc4s.protocol.commands._</span><span class="o">,</span> <span class="nv">mpc4s</span><span class="o">.</span><span class="py">protocol</span><span class="o">.</span><span class="py">codec</span><span class="o">.</span><span class="py">_</span>
+<span class="c1">// import mpc4s.protocol.commands._</span>
+<span class="c1">// import mpc4s.protocol.codec._</span>
+
+<span class="c1">// Using type Command, simulating we do not know the concrete type</span>
+<span class="k">val</span> <span class="nv">cmd</span><span class="k">:</span> <span class="kt">Command</span> <span class="o">=</span> <span class="nc">Status</span>
+<span class="c1">// cmd: mpc4s.protocol.Command = Status</span>
+
+<span class="c1">// Looking up a CommandName.Config object using the command name</span>
+<span class="k">val</span> <span class="nv">cfg</span> <span class="k">=</span> <span class="nv">CommandCodec</span><span class="o">.</span><span class="py">defaultConfig</span><span class="o">(</span><span class="nv">cmd</span><span class="o">.</span><span class="py">name</span><span class="o">)</span>
+<span class="c1">// cfg: mpc4s.protocol.CommandName.Config = mpc4s.protocol.CommandName$Config$$anon$2@65c6a7a</span>
+
+<span class="nv">cfg</span><span class="o">.</span><span class="py">commandCodec</span><span class="o">.</span><span class="py">parseValue</span><span class="o">(</span><span class="s">"status"</span><span class="o">)</span>
+<span class="c1">// res7: mpc4s.protocol.codec.Result[cfg.Cmd] = Right(Status)</span>
+
+<span class="nv">cfg</span><span class="o">.</span><span class="py">responseCodec</span><span class="o">.</span><span class="py">parseValue</span><span class="o">(</span><span class="s">"""volume: 90
 repeat: 0
 random: 0
 single: 0
@@ -257,11 +257,26 @@ duration: 780.000
 audio: 44100:16:2
 OK
 """</span><span class="o">)</span>
-<span class="c1">// res8: mpc4s.protocol.codec.Result[mpc4s.protocol.Response[cfg.Ans]] = Right(MpdResult(StatusAnswer(90,false,false,Off,false,2,1,Play,Some(0),Some(Id(1)),None,None,Some(Range(36,780)),Some(36.223),Some(780.0),Some(457),None,Some(0.0),Some(AudioFormat(44100,16,2)),Some(),Some())))
-</span></code></pre></div></div>
+<span class="c1">// res8: mpc4s.protocol.codec.Result[mpc4s.protocol.Response[cfg.Ans]] = Right(MpdResult(StatusAnswer(90,false,false,Off,false,2,1,Play,Some(0),Some(Id(1)),None,None,Some(Range(36,780)),Some(36.223),Some(780.0),Some(457),None,Some(0.0),Some(AudioFormat(44100,16,2)),Some(),Some())))</span>
+</code></pre></div></div>
 
 <p>As you can see all the concrete types are gone, since we only have
 that information at runtime.</p>
-</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="/mpc4s/highlight/highlight.pack.js"></script><script>hljs.configure({languages:['scala','java','bash']});
-hljs.initHighlighting();
-              </script><script src="/mpc4s/js/main.js"></script></body></html>
+</section></div></div></div></div><script src="/mpc4s/highlight/highlight.pack.js"></script><script>
+// For all code blocks, copy the language from the containing div
+// to the inner code tag (where hljs expects it to be)
+const langPrefix = 'language-';
+document.querySelectorAll(`div[class^='${langPrefix}']`).forEach(function(div) {
+  div.classList.forEach(function(cssClass) {
+    if (cssClass.startsWith(langPrefix)) {
+      const lang = cssClass.substring(langPrefix.length);
+      div.querySelectorAll('pre code').forEach(function(code) {
+        code.classList.add(lang);
+      });
+    }
+  });
+});
+
+hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlightingOnLoad();
+      </script><script>console.info('\x57\x65\x62\x73\x69\x74\x65\x20\x62\x75\x69\x6c\x74\x20\x77\x69\x74\x68\x3a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x5f\x5f\x0a\x20\x20\x20\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x5f\x20\x20\x2f\x20\x2f\x5f\x20\x20\x20\x20\x20\x20\x5f\x5f\x5f\x5f\x20\x5f\x5f\x5f\x20\x20\x28\x5f\x29\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x28\x5f\x29\x20\x2f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x0a\x20\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x60\x5f\x5f\x20\x5c\x2f\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x20\x2f\x20\x5f\x5f\x2f\x20\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x0a\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x5f\x2f\x20\x2f\x20\x2f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x5f\x5f\x2f\x20\x2f\x20\x20\x2f\x20\x2f\x5f\x2f\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x20\x2f\x5f\x2f\x20\x20\x5f\x5f\x28\x5f\x5f\x20\x20\x29\x0a\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2e\x5f\x5f\x5f\x2f\x5c\x5f\x5f\x2f\x20\x20\x20\x20\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x2f\x20\x20\x20\x5c\x5f\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x0a\x0a\x68\x74\x74\x70\x73\x3a\x2f\x2f\x34\x37\x64\x65\x67\x2e\x67\x69\x74\x68\x75\x62\x2e\x69\x6f\x2f\x73\x62\x74\x2d\x6d\x69\x63\x72\x6f\x73\x69\x74\x65\x73')</script><script src="/mpc4s/js/docs.js"></script></body></html>
