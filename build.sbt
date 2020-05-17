@@ -1,6 +1,9 @@
 import libs._
 import Path.relativeTo
 import com.typesafe.sbt.SbtGit.GitKeys._
+import xerial.sbt.Sonatype._
+import ReleaseTransformations._
+
 
 lazy val sharedSettings = Seq(
   scalaVersion := `scala-version`,
@@ -29,7 +32,7 @@ lazy val sharedSettings = Seq(
       "scm:git:git@github.com:eikek/mpc4s.git"
     )
   )
-)
+) ++ publishSettings
 
 lazy val runSettings = Seq(
   fork in run := true,
@@ -43,7 +46,14 @@ lazy val runSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
+  publishTo := sonatypePublishToBundle.value,
   publishMavenStyle := true,
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/eikek/mpc4s.git"),
+      "scm:git:git@github.com:eikek/mpc4s.git"
+    )
+  ),
   developers := List(
     Developer(
       id = "eikek",
@@ -52,14 +62,31 @@ lazy val publishSettings = Seq(
       email = ""
     )
   ),
-  publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (isSnapshot.value)
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-  },
-  publishArtifact in Test := false
+  publishArtifact in Test := false,
+  releaseCrossBuild := false,
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    releaseStepCommand("publishSigned"),
+    //For cross-build projects, use releaseStepCommandAndRemaining("+publishSigned"),
+    releaseStepCommand("sonatypeBundleRelease"),
+    setNextVersion,
+    commitNextVersion,
+    pushChanges
+  ),
+  sonatypeProjectHosting := Some(GitHubHosting("eikek", "mpc4s", "eike.kettner@posteo.de"))
+)
+
+
+lazy val noPublish = Seq(
+  publish := {},
+  publishLocal := {},
+  publishArtifact := false
 )
 
 lazy val testDeps = Seq(minitest, `logback-classic`).map(_ % "test")
@@ -67,7 +94,6 @@ lazy val testDeps = Seq(minitest, `logback-classic`).map(_ % "test")
 lazy val protocol = project.in(file("modules/protocol")).
   enablePlugins(BuildInfoPlugin).
   settings(sharedSettings).
-  settings(publishSettings).
   settings(
     name := "mpc4s-protocol",
     description := "The MPD (Music Player Daemon) protocol",
@@ -80,7 +106,6 @@ lazy val protocol = project.in(file("modules/protocol")).
 
 lazy val client = project.in(file("modules/client")).
   settings(sharedSettings).
-  settings(publishSettings).
   settings(
     name := "mpc4s-client",
     description := "A mpd client library based on fs2",
@@ -108,7 +133,6 @@ lazy val http = project.in(file("modules/http")).
     , DebianPlugin
     , SystemdPlugin).
   settings(sharedSettings).
-  settings(publishSettings).
   settings(runSettings).
   settings(debianSettings(project)).
   settings(
@@ -125,6 +149,7 @@ lazy val player = project.in(file("modules/player")).
     , DebianPlugin
     , SystemdPlugin).
   settings(sharedSettings).
+  settings(noPublish).
   settings(runSettings).
   settings(debianSettings(http)).
   settings(
@@ -168,6 +193,7 @@ lazy val player = project.in(file("modules/player")).
 lazy val benchmark = project.in(file("modules/benchmark")).
   enablePlugins(JmhPlugin).
   settings(sharedSettings).
+  settings(noPublish).
   settings(
     name := "mpc4s-benchmark",
     publishArtifact := false,
@@ -180,6 +206,7 @@ lazy val microsite = project.in(file("microsite")).
   enablePlugins(MicrositesPlugin).
   disablePlugins(RevolverPlugin).
   settings(sharedSettings).
+  settings(noPublish).
   settings(
     name := "mpc4s-microsite",
     publishArtifact := false,
@@ -214,6 +241,7 @@ lazy val microsite = project.in(file("microsite")).
 
 lazy val root = project.in(file(".")).
   settings(sharedSettings).
+  settings(noPublish).
   settings(
     name := "root"
   ).
