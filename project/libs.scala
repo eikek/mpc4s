@@ -2,7 +2,7 @@ import sbt._
 
 object libs {
 
-  val `scala-version` = "2.12.8"
+  val `scala-version` = "2.12.13"
 
   def webjar(name: String, version: String): ModuleID =
     "org.webjars" % name % version
