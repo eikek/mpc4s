@@ -74,7 +74,7 @@ object libs {
 
   // https://github.com/jquery/jquery
   // MIT
-  val jquery = webjar("jquery", "3.5.1")
+  val jquery = webjar("jquery", "3.6.0")
 
   // https://github.com/eikek/yamusca
   // MIT
