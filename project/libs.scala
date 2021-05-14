@@ -35,7 +35,7 @@ object libs {
 
   // https://github.com/monix/minitest
   // Apache 2.0
-  val minitest = "io.monix" %% "minitest" % "2.9.4"
+  val minitest = "io.monix" %% "minitest" % "2.9.6"
   val `minitest-laws` = "io.monix" %% "minitest-laws" % "2.4.0"
 
   // https://github.com/rickynils/scalacheck
