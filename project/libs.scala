@@ -9,7 +9,7 @@ object libs {
 
   // https://github.com/milessabin/shapeless
   // Apache 2.0
-  val shapeless = "com.chuusai" %% "shapeless" % "2.3.4"
+  val shapeless = "com.chuusai" %% "shapeless" % "2.3.7"
 
   // https://github.com/melrief/pureconfig
   // MPL 2.0
