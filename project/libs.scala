@@ -66,7 +66,7 @@ object libs {
 
   // http://logback.qos.ch/
   // EPL1.0 or LGPL 2.1
-  val `logback-classic` = "ch.qos.logback" % "logback-classic" % "1.2.3"
+  val `logback-classic` = "ch.qos.logback" % "logback-classic" % "1.2.4"
 
   // https://github.com/Semantic-Org/Semantic-UI
   // MIT
