@@ -1,6 +1,6 @@
 libraryDependencies ++= Seq(
   // elm plugin: minify elm js file
-  "com.google.javascript" % "closure-compiler" % "v20210406",
+  "com.google.javascript" % "closure-compiler" % "v20210808",
 
   // webjar plugin
   "org.apache.tika" % "tika-core" % "1.26"
