@@ -58,7 +58,7 @@ object libs {
 
   // http://tika.apache.org
   // ASL 2.0
-  val tika = "org.apache.tika" % "tika-core" % "1.26"
+  val tika = "org.apache.tika" % "tika-core" % "2.0.0"
 
   // https://github.com/Log4s/log4s
   // ASL 2.0
@@ -66,7 +66,7 @@ object libs {
 
   // http://logback.qos.ch/
   // EPL1.0 or LGPL 2.1
-  val `logback-classic` = "ch.qos.logback" % "logback-classic" % "1.2.3"
+  val `logback-classic` = "ch.qos.logback" % "logback-classic" % "1.2.5"
 
   // https://github.com/Semantic-Org/Semantic-UI
   // MIT
