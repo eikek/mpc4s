@@ -58,7 +58,7 @@ object libs {
 
   // http://tika.apache.org
   // ASL 2.0
-  val tika = "org.apache.tika" % "tika-core" % "2.0.0"
+  val tika = "org.apache.tika" % "tika-core" % "2.1.0"
 
   // https://github.com/Log4s/log4s
   // ASL 2.0
